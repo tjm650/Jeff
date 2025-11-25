@@ -294,7 +294,7 @@ JEFF_SETTINGS = {
     # Payment fee configuration (editable via .env)
     # Amounts should be set as decimals in the environment, e.g. TOKEN_PRICE_USD=1.20 TOKEN_PRICE_ZWG=15.00
     'TOKEN_PRICE_USD': float(os.getenv('TOKEN_PRICE_USD', '1.00')),
-    'TOKEN_PRICE_ZWG': float(os.getenv('TOKEN_PRICE_ZWG', 25,7')),
+    'TOKEN_PRICE_ZWG': float(os.getenv('TOKEN_PRICE_ZWG', '25.7')),
     # Payment timeout in seconds for polling before notifying user of timeout
     'PAYMENT_TIMEOUT_SECONDS': int(os.getenv('PAYMENT_TIMEOUT_SECONDS', '3000')),
 
