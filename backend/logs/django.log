@@ -1818,3 +1818,19 @@ INFO 2025-11-25 19:27:55,719 api_handlers 19700 24084 Anthropic client initializ
 INFO 2025-11-25 19:27:55,719 ai_enhancer 19700 24084 AI Enhancer initialized with available handlers
 INFO 2025-11-25 19:27:55,720 nlp_processor 19700 24084 OpenAI API Key received: True
 INFO 2025-11-25 19:27:55,720 nlp_processor 19700 24084 Gemini API Key received: True
+INFO 2025-11-25 20:42:45,170 autoreload 22080 23964 C:\Users\tinot\OneDrive\Documents\GitHub\Jeff\backend\backend\settings.py changed, reloading.
+INFO 2025-11-25 20:42:50,708 autoreload 11596 25168 Watching for file changes with StatReloader
+INFO 2025-11-25 20:42:57,000 integration 11596 22868 Initializing MCP Integration...
+INFO 2025-11-25 20:42:57,001 integration 11596 22868 Anthropic API key found: True
+INFO 2025-11-25 20:42:57,905 api_handlers 11596 22868 Anthropic client initialized successfully
+INFO 2025-11-25 20:42:57,905 integration 11596 22868 Anthropic handler initialized
+INFO 2025-11-25 20:42:57,906 integration 11596 22868 Gemini API key found: True
+INFO 2025-11-25 20:42:57,906 api_handlers 11596 22868 Gemini client initialized successfully
+INFO 2025-11-25 20:42:57,907 integration 11596 22868 Gemini handler initialized
+INFO 2025-11-25 20:42:57,907 integration 11596 22868 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-11-25 20:42:57,907 integration 11596 22868 MCP components initialized
+INFO 2025-11-25 20:42:57,907 integration 11596 22868 Recommendation service initialized
+INFO 2025-11-25 20:42:57,908 __init__ 11596 22868 MCP integration initialized successfully
+INFO 2025-11-25 20:42:57,908 __init__ 11596 22868 Recommendation service initialized successfully
+ERROR 2025-11-25 20:42:57,909 api_handlers 11596 22868 Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-11-25 20:42:57,909 api_handlers 11596 22868 Gemini client initialized successfully
