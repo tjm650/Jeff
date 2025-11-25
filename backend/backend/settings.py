@@ -269,9 +269,9 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 16 * 1024 * 1024  # 16MB
 # Load environment variables from .env file
 #-----------------------------------------------------------------------------
 JEFF_SETTINGS = { 
-    'TOKEN_PRICE': float(os.getenv('TOKEN_PRICE')),
-    'TOKEN_USES': int(os.getenv('TOKEN_USES')),
-    'MAX_PROPERTY_RESULTS': int(os.getenv('MAX_PROPERTY_RESULTS')),
+    'TOKEN_PRICE': float(os.getenv('TOKEN_PRICE', '1.00')),
+    'TOKEN_USES': int(os.getenv('TOKEN_USES', '1')),
+    'MAX_PROPERTY_RESULTS': int(os.getenv('MAX_PROPERTY_RESULTS', '5')),
     'ADMIN_PHONE': os.getenv('ADMIN_PHONE'),
     'WEBHOOK_SECRET': os.getenv('WEBHOOK_SECRET'),
 
@@ -293,10 +293,10 @@ JEFF_SETTINGS = {
 
     # Payment fee configuration (editable via .env)
     # Amounts should be set as decimals in the environment, e.g. TOKEN_PRICE_USD=1.20 TOKEN_PRICE_ZWG=15.00
-    'TOKEN_PRICE_USD': float(os.getenv('TOKEN_PRICE_USD')),
-    'TOKEN_PRICE_ZWG': float(os.getenv('TOKEN_PRICE_ZWG')),
+    'TOKEN_PRICE_USD': float(os.getenv('TOKEN_PRICE_USD', '1.00')),
+    'TOKEN_PRICE_ZWG': float(os.getenv('TOKEN_PRICE_ZWG', 25,7')),
     # Payment timeout in seconds for polling before notifying user of timeout
-    'PAYMENT_TIMEOUT_SECONDS': int(os.getenv('PAYMENT_TIMEOUT_SECONDS')),
+    'PAYMENT_TIMEOUT_SECONDS': int(os.getenv('PAYMENT_TIMEOUT_SECONDS', '3000')),
 
     # File upload settings
     'MAX_UPLOAD_SIZE': 16 * 1024 * 1024,  # 16MB
