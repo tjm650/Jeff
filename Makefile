@@ -18,4 +18,10 @@ createsuperuser:
 
 
 GAK:
-	python manage.py create_api_key --name "Frontend API Key"  
+	python manage.py create_api_key --name "Frontend API Key" 
+
+
+cd backend
+fly launch
+fly secrets set SECRET_KEY=your-generated-key
+fly deploy 
