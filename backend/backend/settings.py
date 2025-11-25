@@ -33,10 +33,10 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS','.fly.dev').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS','jeff-ixl3.onrender.com,jeff-one.vercel.app').split(',')
 
 # CORS configuration
-CORS_ALLOWED_ORIGINS = []
+CORS_ALLOWED_ORIGINS = ['https://jeff-ixl3.onrender.com,https://jeff-one.vercel.app']
 
 # Add additional origins from environment
 additional_origins = os.getenv('CORS_ALLOWED_ORIGINS')
