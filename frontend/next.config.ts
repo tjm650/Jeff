@@ -7,14 +7,6 @@ const nextConfig: NextConfig = {
   assetPrefix: process.env.NODE_ENV === 'production' ? '/Jeff/' : '',
   images: {
     unoptimized: true
-  },
-  // Optional: Add if you're using TypeScript strict mode
-  typescript: {
-    ignoreBuildErrors: false,
-  },
-  // Optional: Add if you're using ESLint
-  eslint: {
-    ignoreDuringBuilds: false,
   }
 };
 
