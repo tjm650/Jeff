@@ -373,8 +373,9 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
 
-    # Add Render host to allowed hosts
-    ALLOWED_HOSTS.append('https://jeff-backend-n5kb.onrender.com')
+    # Add Render host to allowed hosts (domain only, not full URL)
+    if 'jeff-backend-n5kb.onrender.com' not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append('jeff-backend-n5kb.onrender.com')
 
 # # Ngrok dynamic configuration
 # if USE_NGROK:
