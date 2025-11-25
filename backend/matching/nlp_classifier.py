@@ -12,7 +12,6 @@ class NLPClassifier:
         # Check for payment message formats (USD PAY or ZWL PAY)
         if re.search(r'(usd|zwl)\s+pay\s+[0-9]+', message_lower) or '0717718865' in message_lower or 'payment' in message_lower:
             return 'P'
-            return 'P'
 
         if 'help' in message_lower or 'assist' in message_lower or 'how' in message_lower:
             return 'H'

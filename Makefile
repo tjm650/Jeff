@@ -18,4 +18,4 @@ createsuperuser:
 
 
 GAK:
-	python manage.py create_api_key --name "Frontend API Key" 
+	python manage.py create_api_key --name "Frontend API Key"  

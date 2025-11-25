@@ -49,16 +49,16 @@ def whatsapp_webhook(request):
         logger.error(f"DUPLICATED WEBHOOK URL DETECTED: {request.path}")
         logger.error("This suggests an external configuration issue with Twilio webhook URL")
 
-        # Extract the correct path from the duplicated URL
-        correct_path = '/webhook/whatsapp/'
-        if request.path.endswith('/webhook/whatsapp/'):
-            # Redirect to correct URL by returning 404 and letting client retry with correct URL
-            logger.info(f"Request should be made to: {correct_path}")
-            return JsonResponse({
-                'error': 'Incorrect webhook URL',
-                'correct_url': correct_path,
-                'message': 'Please update your Twilio webhook URL configuration'
-            }, status=404)
+        # # Extract the correct path from the duplicated URL
+        # correct_path = '/webhook/whatsapp/'
+        # if request.path.endswith('/webhook/whatsapp/'):
+        #     # Redirect to correct URL by returning 404 and letting client retry with correct URL
+        #     logger.info(f"Request should be made to: {correct_path}")
+        #     return JsonResponse({
+        #         'error': 'Incorrect webhook URL',
+        #         'correct_url': correct_path,
+        #         'message': 'Please update your Twilio webhook URL configuration'
+        #     }, status=404)
 
     try:
         # Check if this is a message status update
@@ -99,7 +99,7 @@ def whatsapp_webhook(request):
             # Send a helpful message to the user if we have their number
             if from_number and len(from_number) >= 10:
                 try:
-                    from ..whatsapp.utils.whatsapp_service import whatsapp_service
+                    from whatsapp.utils.whatsapp_service import whatsapp_service
                     welcome_message = """Hi! I'm Jeff👋, I help students at NUST find accommodation near campus."""
 
                     whatsapp_service.send_text_message(from_number, welcome_message)

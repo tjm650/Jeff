@@ -32,7 +32,8 @@ urlpatterns = [
     path('api/matching/', include('matching.urls')),
     path('api/providers/', include('providers.urls')),
     path('webhook/', include('core.urls')),
-    path('privacy/', include('core.urls')),  # Include core URLs for privacy documentation downloads
+    # path('privacy/', include('core.urls')),  # Include core URLs for privacy documentation downloads
+
 ]
 
 # Serve media files in development

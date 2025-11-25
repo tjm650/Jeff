@@ -24,7 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!'
+# SECRET_KEY = os.getenv('SECRET_KEY')
 SECRET_KEY = os.getenv('SECRET_KEY')
+
+# # Disable automatic slash appending
+# APPEND_SLASH = False
 
 # SECURITY WARNING: don't run with debug turned on in production
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
@@ -32,9 +36,7 @@ DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 
 # CORS configuration
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-]
+CORS_ALLOWED_ORIGINS = []
 
 # Add additional origins from environment
 additional_origins = os.getenv('CORS_ALLOWED_ORIGINS')
@@ -223,11 +225,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Security settings
 SECURE_SSL_REDIRECT = False  # Set to True in production
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Security headers
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
+
+# HTTP Strict Transport Security
+# SECURE_HSTS_SECONDS = 3600  # 1 hour
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
 
 # Rate limiting (basic implementation)
 RATELIMIT_ENABLE = True

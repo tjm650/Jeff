@@ -17,7 +17,7 @@ This service now uses modular components in the conversation/ subfolder for bett
 import logging
 from typing import Dict, List, Optional
 
-from ...whatsapp.utils.whatsapp_service import whatsapp_service
+from whatsapp.utils.whatsapp_service import whatsapp_service
 from core.models import ConversationState, AccommodationProvider
 
 # Import specialized conversation components
@@ -125,7 +125,7 @@ class ConversationWorkflow:
             elif message_classification == 'P':
                 # Payment message - handle payment request directly
                 logger.info(f"Payment message detected for {cell_number}")
-                return self.message_classifier.handle_payment_classification(message)
+                return self.payment_integration.handle_payment_request(conversation, message)
 
             elif message_classification == 'G':
                 # Greeting message - handle with enhanced greeting flow

@@ -26,8 +26,8 @@ class PaymentIntegrationHandler:
         """
         try:
             import re
-            from ....payment.models import Payment
-            from ....payment.services import PaynowService
+            from payment.models import Payment
+            from payment.services import PaynowService
 
             cell_number = conversation.cell_number
 
@@ -123,7 +123,7 @@ Please try again or contact support if the issue persists."""
     def handle_payment_confirmation_step(self, conversation, message: str) -> str:
         """Handle payment confirmation step"""
         try:
-            from ....payment.models import Payment
+            from payment.models import Payment
 
             cell_number = conversation.cell_number
             pending_payment = conversation.context_data.get('pending_payment', {})

@@ -9,8 +9,8 @@ from django.db import models
 from datetime import timedelta
 
 from core.models import ConversationState, Booking, Property, AccommodationProvider
-from ....whatsapp.utils.whatsapp_service import whatsapp_service
-from ....providers.services.workflow import provider_workflow
+from whatsapp.utils.whatsapp_service import whatsapp_service
+from providers.services.workflow import provider_workflow
 from .message_classifier import message_classifier
 from .property_search import property_search_handler
 from .payment_integration import payment_integration_handler

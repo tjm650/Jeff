@@ -54,7 +54,7 @@ class PropertySearchHandler:
 
             # Find matching properties using enhanced requirements
             logger.info(f"Calling property_matcher.match_properties for {conversation.cell_number}")
-            from ....matching.property_matcher import property_matcher
+            from matching.property_matcher import property_matcher
             matched_properties = property_matcher.match_properties(validated_requirements, limit=5)
             logger.info(f"Property matcher returned {len(matched_properties) if matched_properties else 0} properties")
 

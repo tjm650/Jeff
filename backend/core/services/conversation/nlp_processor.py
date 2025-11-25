@@ -38,7 +38,7 @@ class NLPProcessorHandler:
             # Get rental period if specified
             message = processed_requirements.get('original_message', '')
             if message:
-                from ....matching.rental_period_extractor import rental_period_extractor
+                from matching.rental_period_extractor import rental_period_extractor
                 rental_period = rental_period_extractor.extract_rental_period(message)
                 if rental_period:
                     processed_requirements['rental_period'] = rental_period
@@ -80,7 +80,7 @@ class NLPProcessorHandler:
 
                 nlp_processor = MockNLPProcessor()
             else:
-                from ....matching.nlp_processor import nlp_processor
+                from matching.nlp_processor import nlp_processor
                 raw_requirements = nlp_processor.extract_requirements(message)
                 raw_requirements['original_message'] = message
 
@@ -89,7 +89,7 @@ class NLPProcessorHandler:
 
             # Check if rental period needs clarification
             if not processed_requirements.get('rental_period'):
-                from ....matching.rental_period_extractor import rental_period_extractor
+                from matching.rental_period_extractor import rental_period_extractor
                 clarification_msg = rental_period_extractor.suggest_rental_period()
                 processed_requirements['needs_rental_period_clarification'] = True
                 processed_requirements['rental_period_clarification_message'] = clarification_msg
@@ -153,7 +153,7 @@ class NLPProcessorHandler:
     def _generate_requirement_summary(self, requirements: Dict) -> str:
         """Generate a human-readable summary of requirements"""
         try:
-            from ....matching.nlp_processor import nlp_processor
+            from matching.nlp_processor import nlp_processor
             return nlp_processor.format_requirements_for_display(requirements)
         except Exception as e:
             logger.error(f"Error generating requirement summary: {str(e)}")
@@ -210,7 +210,7 @@ class NLPProcessorHandler:
             else:
                 # Fallback to existing NLP processor
                 logger.warning("MCP integration not configured, using existing NLP processor")
-                from ....matching.nlp_processor import nlp_processor
+                from matching.nlp_processor import nlp_processor
                 raw_requirements = nlp_processor.extract_requirements(message)
                 requirements = self.process_nlp_requirements(raw_requirements, nlp_processor)
 

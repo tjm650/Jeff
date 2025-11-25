@@ -16,5 +16,4 @@ urlpatterns = [
     path('analytics/conversations/', conversation_analytics, name='conversation_analytics'),
     path('analytics/properties/', property_analytics, name='property_analytics'),
     path('analytics/revenue/', revenue_analytics, name='revenue_analytics'),
-    path('<str:filename>', download_documentation, name='download_documentation'),
 ]

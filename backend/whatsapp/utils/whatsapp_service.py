@@ -157,7 +157,7 @@ class WhatsAppService:
         token_price_usd = jeff_settings.get('TOKEN_PRICE_USD', 1.00)
         token_price_zwg = jeff_settings.get('TOKEN_PRICE_ZWG', None)
         token_uses = jeff_settings.get('TOKEN_USES', 2)
-        frontend_url = os.getenv('NEXT_PUBLIC_FRONTEND_URL', 'https://jeff-platform.com')
+        frontend_url = os.getenv('NEXT_PUBLIC_FRONTEND_URL')
 
         lines: List[str] = [
             '*JEFF Payment Instructions*',

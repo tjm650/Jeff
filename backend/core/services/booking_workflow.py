@@ -17,10 +17,10 @@ import logging
 from typing import Dict, List, Optional
 
 from core.models import Booking, Property, ConversationState, Token, AccommodationProvider
-from ...whatsapp.utils.whatsapp_service import whatsapp_service
+from whatsapp.utils.whatsapp_service import whatsapp_service
 
 # Import specialized booking components from providers
-from ...providers.services.handlers import provider_handlers
+from providers.services.handlers import provider_handlers
 from .booking.handlers import booking_handlers
 from .booking.notifications import booking_notifications
 

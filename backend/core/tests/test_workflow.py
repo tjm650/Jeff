@@ -13,7 +13,7 @@ from datetime import datetime
 from django.utils import timezone
 
 # Setup Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'jeffapi.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.backend.settings')
 django.setup()
 
 from core.models import (
