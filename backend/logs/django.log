@@ -1878,3 +1878,23 @@ INFO 2025-11-25 20:43:30,989 api_handlers 24588 20904 Anthropic client initializ
 INFO 2025-11-25 20:43:30,989 ai_enhancer 24588 20904 AI Enhancer initialized with available handlers
 INFO 2025-11-25 20:43:30,989 nlp_processor 24588 20904 OpenAI API Key received: True
 INFO 2025-11-25 20:43:30,989 nlp_processor 24588 20904 Gemini API Key received: True
+INFO 2025-11-25 21:30:06,440 autoreload 24588 24492 C:\Users\tinot\OneDrive\Documents\GitHub\Jeff\backend\backend\settings.py changed, reloading.
+INFO 2025-11-25 21:30:11,597 autoreload 27084 16220 Watching for file changes with StatReloader
+INFO 2025-11-25 21:30:18,055 integration 27084 18396 Initializing MCP Integration...
+INFO 2025-11-25 21:30:18,055 integration 27084 18396 Anthropic API key found: True
+INFO 2025-11-25 21:30:18,963 api_handlers 27084 18396 Anthropic client initialized successfully
+INFO 2025-11-25 21:30:18,963 integration 27084 18396 Anthropic handler initialized
+INFO 2025-11-25 21:30:18,963 integration 27084 18396 Gemini API key found: True
+INFO 2025-11-25 21:30:18,963 api_handlers 27084 18396 Gemini client initialized successfully
+INFO 2025-11-25 21:30:18,963 integration 27084 18396 Gemini handler initialized
+INFO 2025-11-25 21:30:18,963 integration 27084 18396 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-11-25 21:30:18,965 integration 27084 18396 MCP components initialized
+INFO 2025-11-25 21:30:18,965 integration 27084 18396 Recommendation service initialized
+INFO 2025-11-25 21:30:18,966 __init__ 27084 18396 MCP integration initialized successfully
+INFO 2025-11-25 21:30:18,966 __init__ 27084 18396 Recommendation service initialized successfully
+ERROR 2025-11-25 21:30:18,966 api_handlers 27084 18396 Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-11-25 21:30:18,967 api_handlers 27084 18396 Gemini client initialized successfully
+INFO 2025-11-25 21:30:19,691 api_handlers 27084 18396 Anthropic client initialized successfully
+INFO 2025-11-25 21:30:19,691 ai_enhancer 27084 18396 AI Enhancer initialized with available handlers
+INFO 2025-11-25 21:30:19,691 nlp_processor 27084 18396 OpenAI API Key received: True
+INFO 2025-11-25 21:30:19,692 nlp_processor 27084 18396 Gemini API Key received: True
