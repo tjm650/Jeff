@@ -1899,3 +1899,21 @@ INFO 2025-11-25 21:30:19,691 ai_enhancer 27084 18396 AI Enhancer initialized wit
 INFO 2025-11-25 21:30:19,691 nlp_processor 27084 18396 OpenAI API Key received: True
 INFO 2025-11-25 21:30:19,692 nlp_processor 27084 18396 Gemini API Key received: True
 INFO 2025-11-25 23:01:15,363 autoreload 27084 16220 C:\Users\tinot\OneDrive\Documents\GitHub\Jeff\backend\backend\settings.py changed, reloading.
+INFO 2025-11-26 01:16:12,916 integration 17196 12204 Initializing MCP Integration...
+INFO 2025-11-26 01:16:12,917 integration 17196 12204 Anthropic API key found: True
+INFO 2025-11-26 01:16:13,698 api_handlers 17196 12204 Anthropic client initialized successfully
+INFO 2025-11-26 01:16:13,699 integration 17196 12204 Anthropic handler initialized
+INFO 2025-11-26 01:16:13,699 integration 17196 12204 Gemini API key found: True
+INFO 2025-11-26 01:16:13,700 api_handlers 17196 12204 Gemini client initialized successfully
+INFO 2025-11-26 01:16:13,700 integration 17196 12204 Gemini handler initialized
+INFO 2025-11-26 01:16:13,700 integration 17196 12204 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-11-26 01:16:13,700 integration 17196 12204 MCP components initialized
+INFO 2025-11-26 01:16:13,700 integration 17196 12204 Recommendation service initialized
+INFO 2025-11-26 01:16:13,701 __init__ 17196 12204 MCP integration initialized successfully
+INFO 2025-11-26 01:16:13,702 __init__ 17196 12204 Recommendation service initialized successfully
+ERROR 2025-11-26 01:16:13,702 api_handlers 17196 12204 Failed to initialize OpenAI client: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-11-26 01:16:13,702 api_handlers 17196 12204 Gemini client initialized successfully
+INFO 2025-11-26 01:16:14,372 api_handlers 17196 12204 Anthropic client initialized successfully
+INFO 2025-11-26 01:16:14,372 ai_enhancer 17196 12204 AI Enhancer initialized with available handlers
+INFO 2025-11-26 01:16:14,372 nlp_processor 17196 12204 OpenAI API Key received: True
+INFO 2025-11-26 01:16:14,373 nlp_processor 17196 12204 Gemini API Key received: True
