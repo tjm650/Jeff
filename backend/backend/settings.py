@@ -27,13 +27,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key-for-development-only')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1,jeff-backend-n5kb.onrender.com').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*.onrender.com').split(',')
 
 # CORS configuration
 CORS_ALLOWED_ORIGINS = [
-    'https://jeff-ixl3.onrender.com',
+    'https://jeff-backend-n5kb.onrender.com',
     'https://jeff-one.vercel.app'
 ]
 
@@ -233,7 +233,7 @@ if not DEBUG:
 
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = [
-    'https://*.fly.dev',
+    'https://jeff-backend-n5kb.onrender.com',
 ]
 
 
@@ -374,28 +374,28 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
 
     # Add Render host to allowed hosts
-    ALLOWED_HOSTS.append('jeff-ixl3.onrender.com')
+    ALLOWED_HOSTS.append('https://jeff-backend-n5kb.onrender.com')
 
-# Ngrok dynamic configuration
-if USE_NGROK:
-    try:
-        from pyngrok import ngrok # type: ignore
+# # Ngrok dynamic configuration
+# if USE_NGROK:
+#     try:
+#         from pyngrok import ngrok # type: ignore
 
-        # Set auth token if provided
-        if NGROK_AUTH_TOKEN:
-            ngrok.set_auth_token(NGROK_AUTH_TOKEN)
+#         # Set auth token if provided
+#         if NGROK_AUTH_TOKEN:
+#             ngrok.set_auth_token(NGROK_AUTH_TOKEN)
 
-        # Start ngrok tunnel
-        public_url = ngrok.connect(8000).public_url
-        print(f"Ngrok tunnel established: {public_url}")
+#         # Start ngrok tunnel
+#         public_url = ngrok.connect(8000).public_url
+#         print(f"Ngrok tunnel established: {public_url}")
 
-        # Add ngrok URL to allowed hosts
-        ALLOWED_HOSTS.append(public_url.replace('https://', '').replace('http://', ''))
+#         # Add ngrok URL to allowed hosts
+#         ALLOWED_HOSTS.append(public_url.replace('https://', '').replace('http://', ''))
 
-        # Add ngrok URL to CORS origins
-        CORS_ALLOWED_ORIGINS.append(public_url)
+#         # Add ngrok URL to CORS origins
+#         CORS_ALLOWED_ORIGINS.append(public_url)
 
-    except ImportError:
-        print("Warning: pyngrok not installed. Install with: pip install pyngrok")
-    except Exception as e:
-        print(f"Warning: Failed to start ngrok: {e}")
+#     except ImportError:
+#         print("Warning: pyngrok not installed. Install with: pip install pyngrok")
+#     except Exception as e:
+#         print(f"Warning: Failed to start ngrok: {e}")
