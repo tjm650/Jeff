@@ -48,7 +48,7 @@ class WhatsAppService:
             return True
 
         # Check if we're using Twilio sandbox (which has restrictions)
-        if self.from_number == 'whatsapp:+14155238886':
+        if 'whatsapp:+14155238886' in self.from_number:
             logger.warning('Using Twilio sandbox number - messages may fail for unverified numbers')
             logger.info(f'Would send WhatsApp message to {to_number}: {message[:100]}...')
             # For sandbox, we can only send to verified numbers
