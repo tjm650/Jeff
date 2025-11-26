@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Jeff Frontend - Student Accommodation Platform
+
+This is the frontend application for Jeff, an AI-powered student accommodation platform that helps students at NUST find suitable accommodation near campus.
+
+## Overview
+
+The Jeff frontend is built with Next.js 16.0.1 and provides:
+- Landing page with project information
+- Cart functionality for token purchases
+- Privacy policy documentation
+
+## Tech Stack
+
+- **Framework**: Next.js 16.0.1 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Animation**: Motion library for smooth UI interactions
+- **Icons**: FontAwesome for iconography
+- **Content Security**: DOMPurify and sanitize-html for safe content rendering
+
+## Project Structure
+
+```
+frontend/
+├── app/                    # App router directory
+│   ├── pages/              # Page components
+│   │   ├── home/           # Home page
+│   │    └── HomePage.tsx
+├── components/              # Reusable UI components
+│   ├── footer/              # Footer component
+│    └── navigation/           # Navigation components
+├── controller/              # API route handlers
+│   ├── cartController/     # Cart functionality
+├── public/                  # Static assets
+│   ├── header-image.png
+│   ├── jeff-header-msg-r.png
+│   ├── jeff-header-msg-s.png
+│    └── jeff-confirm-msg.png
+└── package.json            # Dependencies and scripts
+```
 
 ## Getting Started
 
-First, run the development server:
+First, install dependencies:
+
+```bash
+npm install
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Pages
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Home Page (`/`)
+- Landing page with project introduction
+- WhatsApp integration call-to-action
+- Privacy policy information
 
-## Learn More
+### Cart Page (`/cart`)
+- Token purchase functionality
+- Payment integration
 
-To learn more about Next.js, take a look at the following resources:
+### Privacy Page (`/privacy`)
+- Privacy policy and terms of service
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Available Scripts
 
-## Deploy on Vercel
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run export` - Export static site
+- `npm run lint` - Run ESLint
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Features
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
+- **Smooth Animations**: Motion library for enhanced user experience
+- **Type Safety**: Full TypeScript implementation
+- **Modern UI**: Clean, professional interface
+
+## Backend Integration
+
+The frontend communicates with the Jeff backend API for:
+- Token purchases and payment processing
+- Property search functionality
+- User authentication and session management
+
+## Deployment
+
+The frontend is configured for deployment on Vercel. The project includes:
+
+- Next.js configuration (`next.config.ts`)
+- TypeScript configuration (`tsconfig.json`)
+- ESLint configuration (`eslint.config.mjs`)
+
+## Environment Variables
+
+Create a `.env.local` file for local development:
+
+```env
+NEXT_PUBLIC_FRONTEND_URL=http://localhost:3000
+JEFF_WA_NUMBER=+263XXXXXXXXX
+```
+
+## Contributing
+
+This frontend is part of the larger Jeff platform. For development guidelines, refer to the main project README.
