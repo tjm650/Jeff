@@ -79,7 +79,7 @@ def whatsapp_webhook(request):
 
         # Region availability check - only allow Zimbabwe numbers (+263)
         try:
-            from ..whatsapp.utils.whatsapp_service import whatsapp_service
+            from whatsapp.utils.whatsapp_service import whatsapp_service
             if not whatsapp_service.validate_zimbabwe_number(from_number):
                 logger.info(f"Blocked non-ZW number {from_number} - service not available in region")
                 whatsapp_service.send_text_message(
@@ -141,7 +141,7 @@ def whatsapp_webhook(request):
 
         # Send response back to WhatsApp using Twilio
         try:
-            from ..whatsapp.utils.whatsapp_service import whatsapp_service
+            from whatsapp.utils.whatsapp_service import whatsapp_service
             # Only send response if it's not empty and not too long
             if response and len(response.strip()) > 0 and len(response) < 4000:
                 whatsapp_service.send_text_message(from_number, response)
