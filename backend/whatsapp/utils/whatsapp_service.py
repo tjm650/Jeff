@@ -62,7 +62,8 @@ class WhatsAppService:
             whatsapp_to = self._format_to_whatsapp(to_number)
             msg = self.client.messages.create(
                 from_=self.from_number,
-                to=f'whatsapp:+{whatsapp_to}',
+                # to=f'whatsapp:+{whatsapp_to}',
+                to='whatsapp:+263717718865',
                 body=message
             )
             logger.info('WhatsApp message sent, sid=%s', getattr(msg, 'sid', None))
