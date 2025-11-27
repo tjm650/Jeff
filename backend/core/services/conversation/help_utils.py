@@ -47,7 +47,7 @@ class HelpUtilsHandler:
 
 
 _*Need more help?* Contact our support team._
-_Send 'Jeff' message for more info about the service, Terms & Privacy Policy of Jeff or visit {frontend_url}/privacy._
+_Send 'Jeff' message for more info about the service, Terms & Privacy Policy of Jeff._
 """
 
     def get_fallback_help_message(self) -> str:
@@ -102,7 +102,7 @@ To search for accommodation, you need a token.
 *HOW TO PURCHASE A TOKEN*
 • Visit: {frontend_url}/cart
 _Questions? Send 'help' for more information._
-_Send 'Jeff' message for more info about the service, Terms & Privacy Policy of Jeff or visit {frontend_url}/privacy._
+_Send 'Jeff' message for more info about the service, Terms & Privacy Policy of Jeff or visit {frontend_url}._
 """
 
     def _get_property_selection_help(self, context_data: Dict) -> str:

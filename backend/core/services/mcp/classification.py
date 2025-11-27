@@ -68,6 +68,10 @@ class MessageClassifier:
         if message_lower.startswith('name-'):
             return 'N'  # N for Name
 
+        # Check for jeff message
+        if message_lower in ['jeff', 'j']:
+            return 'J'
+
         # Check for accommodation enquiry (requirement-like content)
         if self._has_requirement_content(message_lower):
             return 'A'

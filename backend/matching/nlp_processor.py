@@ -230,17 +230,21 @@ Send me your requirements and I'll find matching properties for you!"""
     def _classify_message_fallback(self, message: str) -> str:
         """Fallback rule-based classification"""
         if not message:
-            return 'A'
+            return 'H' # Default to help for empty messages
 
         message_lower = message.lower().strip()
 
         # Check for payment messages first
-        if re.search(r'(USD|ZWL)\s+PAY\s+[0-9]+', message_lower) or '0717718865' in message_lower or 'payment' in message_lower:
-            return 'P'
+        # if re.search(r'(USD|ZWL)\s+PAY\s+[0-9]+', message_lower) or '0717718865' in message_lower or 'payment' in message_lower:
+        #     return 'P'
 
         # Check for help messages
         if 'help' in message_lower or 'assist' in message_lower or 'how' in message_lower:
             return 'H'
+
+        # Check for jeff message
+        if message_lower in ['jeff', 'j']:
+            return 'J'
 
         # Check for accommodation enquiry (requirement-like content)
         if self._has_requirement_content(message_lower):
