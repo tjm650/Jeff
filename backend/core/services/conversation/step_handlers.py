@@ -742,7 +742,7 @@ Response Time: {conversation.context_data['provider_response_timestamp']}
 
             frontend_url = os.getenv('NEXT_PUBLIC_FRONTEND_URL')
             instructions = (f"""*HOW TO PURCHASE A TOKEN*
-• _Visit: {frontend_url}/cart._
+• Visit: {frontend_url}/cart.
 
 • _*Questions*? Send 'help' anytime._
 • _Send 'Jeff' message for more info about the service, Terms & Privacy Policy of Jeff._

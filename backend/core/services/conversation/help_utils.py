@@ -24,14 +24,16 @@ class HelpUtilsHandler:
         return f"""*JEFF HELP & SUPPORT*
 
 *How Jeff Works* 📑
-• I help NUST students find accommodation near campus
-• Send me your requirements and I'll find matching properties
+• Jeff helps NUST students find accommodation near campus
+• Jeff is reliable, fast, secure and easy to use, accessible on WhatsApp
+• Visit {frontend_url} for more info
+• Send your requirements and find matching properties
 • Token cost $1.00 (USD or ZWL equivalent)
 
 *How to Pay 💳*
 • Visit: {frontend_url}/cart
 
-*What I Can Find 🏠*
+*What Jeff Can Find 🏠*
 • Single, double rooms and BNBs
 • Properties with WiFi, parking, etc
 • Properties near campus
