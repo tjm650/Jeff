@@ -745,7 +745,7 @@ Response Time: {conversation.context_data['provider_response_timestamp']}
 • Visit: {frontend_url}/cart
 
 • _*Questions*? Send 'help' anytime._
-• _Send 'Jeff' message for more info about the service, Terms & Privacy Policy of Jeff or visit {frontend_url+'/privacy'}._
+• _Send 'Jeff' message for more info about the service, Terms & Privacy Policy of Jeff or visit {frontend_url}._
 • _After purchasing a token, send your accommodation requirements again to continue searching for properties._"""
 )
 
