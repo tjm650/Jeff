@@ -146,6 +146,17 @@ class OpenAIHandler(APIHandler):
             try:
                 self.client = openai.OpenAI(api_key=self.api_key)
                 logger.info("OpenAI client initialized successfully")
+            except TypeError as e:
+                if "unexpected keyword argument 'proxies'" in str(e).lower():
+                    logger.warning("OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.")
+                    try:
+                        # Attempt to initialize without proxies or other unexpected arguments
+                        self.client = openai.OpenAI(api_key=self.api_key)
+                        logger.info("OpenAI client initialized successfully after retry")
+                    except Exception as e2:
+                        logger.error(f"Failed to initialize OpenAI client after retry: {str(e2)}")
+                else:
+                    logger.error(f"Failed to initialize OpenAI client: {str(e)}")
             except Exception as e:
                 logger.error(f"Failed to initialize OpenAI client: {str(e)}")
         else:
