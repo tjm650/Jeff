@@ -9,7 +9,7 @@ This module handles property search operations including:
 - Match reason calculation
 """
 
-import logging
+import logging, os
 from typing import Dict, List
 from django.utils import timezone
 
@@ -556,14 +556,16 @@ class PropertySearchHandler:
                     continue
             # Add property count info and pagination status if applicable
             total_properties = len(properties)
+            
+            frontend_url = os.getenv('NEXT_PUBLIC_FRONTEND_URL')
             if total_properties > 5:
                 message += f"\n*Showing properties {start_idx + 1}-{min(end_idx, total_properties)} of {total_properties}*\n"
 
             # Add helpful footer
-            message += """\n\n_1. Reply with 'option-(number)' to proceed for booking (e.g. 'option-1')_
+            message += f"""\n\n_1. Reply with 'option-(number)' to proceed for booking (e.g. 'option-1')_
 _2. Send an abort message to cancel your enquiry and start a different search._
 • _By selecting a property listing, you agree to the terms and usage of the service_
-• _Send 'Jeff' message for more info about the service, Privacy Policy and Terms & Conditions of service_
+• _Send 'Jeff' message for more info about the service, Privacy Policy and Terms & Conditions of service or visit {frontend_url}_
 """
 
 

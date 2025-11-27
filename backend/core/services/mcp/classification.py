@@ -144,7 +144,7 @@ class MessageClassifier:
             'G': 'Greeting message - Simple greetings like "hi", "hello", "good morning", introductions',
             'A': 'Accommodation enquiry message - Messages asking about accommodation, rooms, housing',
             'H': 'Help message - Messages asking for help, assistance, or information',
-            'P': 'Payment message - Messages like "USD PAY number" or "ZWL PAY number"',
+            # 'P': 'Payment message - Messages like "USD PAY number" or "ZWL PAY number"',
             'X': 'Cancel message - Messages like "x", "abort", "restart", "start over", "cancel" (universal cancel command)',
             'S': 'Property selection message - Messages selecting a property like "option-1", "option-2"',
             'N': 'Name collection message - Messages providing name like "name-John", "name-Mary"',
