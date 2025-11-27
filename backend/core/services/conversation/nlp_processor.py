@@ -107,7 +107,7 @@ class NLPProcessorHandler:
         # Check for core accommodation requirements
         valid_criteria = [
             requirements.get('heads'),
-            requirements.get('amenities'),
+            requirements.get('amenities'), 
             requirements.get('budget_max'),
             requirements.get('location_context'),
             requirements.get('gender_preference')

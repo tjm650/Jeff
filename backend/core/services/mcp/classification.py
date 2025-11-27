@@ -76,7 +76,7 @@ class MessageClassifier:
         if self.is_greeting_message(message_lower):
             return 'G'
 
-        return 'A'  # Default to accommodation enquiry
+        return 'H'  # Default to help
 
     def is_greeting_message(self, message: str) -> bool:
         """Check if message is a greeting"""
@@ -117,7 +117,7 @@ class MessageClassifier:
         for term in location_with_context:
             if term in message:
                 return True
-
+ 
         return False
 
     def classify_with_ai(self, message: str, gemini_handler, anthropic_handler, categories: List[str] = ['G', 'A', 'H', 'P', 'S', 'N', 'X', 'J']) -> str:

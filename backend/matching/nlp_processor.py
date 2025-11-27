@@ -250,7 +250,7 @@ Send me your requirements and I'll find matching properties for you!"""
         if self.is_greeting_message(message_lower):
             return 'G'
 
-        return 'A'  # Default to accommodation enquiry
+        return 'H'  # Default to help
 
     def _has_requirement_content(self, message: str) -> bool:
         """Check if message contains accommodation requirement content"""
