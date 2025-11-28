@@ -97,7 +97,7 @@ const NavigationBar: React.FC = () => {
           </div>
 
           <motion.div
-            className="hidden md:block "
+            className="hidden md:block " 
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }} 
           >
