@@ -9,6 +9,7 @@ import logging
 from typing import Dict, List, Optional
 from django.db.models import Q
 from core.models import Property
+from .security import validate_ai_data_access
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +59,10 @@ class RecommendationService:
                 available_rooms__gt=0
             ).select_related('provider')[:limit]
 
-            return list(properties)
+            props_list = list(properties)
+            # Enforce AI data-access policy: only Property listings may be exposed
+            validate_ai_data_access(props_list, context="RecommendationService._get_available_properties")
+            return props_list
         except Exception as e:
             logger.error(f"Error fetching available properties: {str(e)}")
             return []

@@ -18,15 +18,16 @@ class SecurityMiddleware(MiddlewareMixin):
     
     def process_request(self, request):
         """Process incoming requests for security checks"""
-        # Rate limiting for webhook endpoints (disabled for debugging)
-        if request.path.startswith('/webhook/'):
+        # Rate limiting for webhook endpoints
+        # Keep this lightweight: we only rate‑limit POST requests hitting webhook
+        # style endpoints to protect against abuse and accidental loops.
+        if request.method == 'POST' and request.path.startswith('/webhook/'):
             client_ip = self.get_client_ip(request)
-            # Temporarily disable rate limiting to debug webhook duplication issue
-            # if self.is_rate_limited(client_ip):
-            #     logger.warning(f"Rate limit exceeded for IP: {client_ip}")
-            #     return JsonResponse({
-            #         'error': 'Rate limit exceeded'
-            #     }, status=429)
+            if self.is_rate_limited(client_ip):
+                logger.warning(f"Rate limit exceeded for IP: {client_ip} on webhook endpoint")
+                return JsonResponse({
+                    'error': 'Rate limit exceeded'
+                }, status=429)
         
         # Validate content type for POST requests
         if request.method == 'POST' and request.content_type:

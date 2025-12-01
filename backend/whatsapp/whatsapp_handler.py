@@ -13,6 +13,41 @@ from core.models import Transaction, Token
 logger = logging.getLogger(__name__)
 
 
+def _verify_twilio_signature(request) -> bool:
+    """
+    Verify Twilio X-Twilio-Signature header for incoming webhooks.
+
+    Uses the official Twilio validator and the TWILIO_AUTH_TOKEN stored in
+    settings.JEFF_SETTINGS. If the auth token is not configured, we log a
+    warning and accept the request (so local/dev environments continue to work).
+    """
+    from twilio.request_validator import RequestValidator  # type: ignore
+
+    auth_token = dj_settings.JEFF_SETTINGS.get("TWILIO_AUTH_TOKEN") or ""
+    if not auth_token:
+        logger.warning("TWILIO_AUTH_TOKEN not configured; skipping Twilio signature verification")
+        return True
+
+    signature = request.META.get("HTTP_X_TWILIO_SIGNATURE", "")
+    if not signature:
+        logger.warning("Missing X-Twilio-Signature header on WhatsApp webhook")
+        return False
+
+    validator = RequestValidator(auth_token)
+
+    # Build full URL as seen by Twilio (includes query string)
+    url = request.build_absolute_uri()
+
+    # Twilio validator expects a plain dict of POST params
+    post_data = {k: v for k, v in request.POST.items()}
+
+    if not validator.validate(url, post_data, signature):
+        logger.warning("Invalid Twilio webhook signature; rejecting request")
+        return False
+
+    return True
+
+
 @csrf_exempt
 @require_http_methods(["POST"])
 def whatsapp_webhook(request):
@@ -24,6 +59,10 @@ def whatsapp_webhook(request):
       - "status" to check latest payment status
     """
     try:
+        # Verify Twilio signature before processing
+        if not _verify_twilio_signature(request):
+            return JsonResponse({'status': 'error', 'message': 'Invalid signature'}, status=403)
+
         # Basic validation
         if not (request.POST or request.body):
             return JsonResponse({'status': 'error', 'message': 'Empty request'}, status=400)

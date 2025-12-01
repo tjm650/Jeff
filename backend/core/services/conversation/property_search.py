@@ -224,6 +224,15 @@ class PropertySearchHandler:
     def _get_no_properties_message(self, requirements: Dict) -> str:
         """Generate recommendation summary when no properties found"""
         try:
+            # If there are generally no properties available in the database,
+            # return a clear, user-friendly message.
+            try:
+                from core.models import Property
+                if not Property.objects.filter(is_active=True).exists():
+                    return "No available Accommodation at the moment."
+            except Exception as e:
+                logger.warning(f"Failed checking global property availability: {e}")
+
             # Import recommendation service from MCP integration
             from ..mcp.integration import get_mcp_integration
             mcp_integration = get_mcp_integration()
@@ -262,6 +271,7 @@ class PropertySearchHandler:
                     enhanced_property = {
                         'id': str(property.id),
                         'name': property.name,
+                        'rating': float(getattr(property, 'rating', 0.0) or 0.0),
                         'price_per_month': float(property.price_per_month) if property.price_per_month else 0.0,
                         'price_per_week': float(property.price_per_week) if property.price_per_week else 0.0,
                         'price_per_day': float(property.price_per_day) if property.price_per_day else 0.0,
@@ -361,14 +371,9 @@ class PropertySearchHandler:
         """Format enhanced property listings with NLP-derived insights"""
         try:
             if not properties:
-                # Import recommendation service from MCP integration
-                from ..mcp.integration import get_mcp_integration
-                mcp_integration = get_mcp_integration()
-                if mcp_integration and mcp_integration.recommendation_service:
-                    return mcp_integration.recommendation_service.generate_recommendation_summary(requirements)
-                else:
-                    # Fallback when MCP integration is not available
-                    return self._get_fallback_recommendation_message(requirements)
+                # Delegate to the shared "no properties" handler which also checks
+                # for global availability and MCP recommendations.
+                return self._get_no_properties_message(requirements)
 
             if not isinstance(properties, list):
                 logger.error(f"Properties is not a list: {type(properties)}")
@@ -431,8 +436,15 @@ class PropertySearchHandler:
                     # For inverted sort: wifi_flag so wifi=1 sorts last
                     return wifi_flag if invert_sort else -wifi_flag
 
-                # Sort by price, distance, wifi (direction depends on invert_sort)
+                def _sort_rating(p):
+                    # Higher rating should come first; default 0 for unrated
+                    rating = float(p.get('rating', 0.0) or 0.0)
+                    # For inverted sort, lowest rating first
+                    return rating if invert_sort else -rating
+
+                # Sort by rating, price, distance, wifi (direction depends on invert_sort)
                 properties.sort(key=lambda p: (
+                    _sort_rating(p),
                     _sort_price(p),
                     _sort_distance(p),
                     _has_wifi(p)

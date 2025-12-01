@@ -3,6 +3,7 @@ from django.db.models import Q, Avg
 from django.core.cache import cache
 from django.conf import settings
 from core.models import Property
+from core.services.mcp.security import validate_ai_data_access
 from .nlp_processor import nlp_processor
 import math
 import logging
@@ -74,6 +75,9 @@ class DjangoPropertyMatcher:
             # Sort by score (descending) and return top matches
             scored_properties.sort(key=lambda x: x['score'], reverse=True)
             result = scored_properties[:limit]
+
+            # Enforce AI data-access policy: only Property listings may be exposed
+            validate_ai_data_access((m['property'] for m in result), context="DjangoPropertyMatcher.match_properties")
 
             # Cache the result for 5 minutes
             cache.set(cache_key, result, 300)

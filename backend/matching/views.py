@@ -161,8 +161,8 @@ def list_properties(request):
             elif heads == 4:
                 properties = properties.filter(available_4h_rooms__gt=0)
 
-        # Limit results
-        properties = properties[:20]
+        # Apply default ordering: rating (desc), then price, then distance
+        properties = properties.order_by('-rating', 'price_per_month', 'distance_from_campus')[:20]
 
         # Format response
         props_list = []

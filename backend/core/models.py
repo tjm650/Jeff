@@ -5,6 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator, RegexVa
 from django.utils.crypto import get_random_string
 import uuid
 import string
+import hashlib
 
 def generate_property_no():
     """Generate a unique property number (2 letters + hyphen + 4 digits, e.g. AB-1234)."""
@@ -80,6 +81,10 @@ class Property(models.Model):
         default='any'
     )
 
+    # Ratings (per-property)
+    rating = models.FloatField(default=0.0, validators=[MinValueValidator(0.0), MaxValueValidator(5.0)])
+    total_reviews = models.PositiveIntegerField(default=0)
+
     # Status
     is_active = models.BooleanField(default=True)
 
@@ -88,13 +93,14 @@ class Property(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['-rating', 'price_per_month', 'distance_from_campus']
         indexes = [
             models.Index(fields=['is_active', 'available_rooms']),
             models.Index(fields=['campus_name']),
             models.Index(fields=['gender_preference']),
             models.Index(fields=['price_per_month']),
             models.Index(fields=['distance_from_campus']),
+            models.Index(fields=['rating']),
             models.Index(fields=['is_active', 'campus_name', 'available_rooms']),
         ]
 
@@ -342,7 +348,12 @@ class APIKey(models.Model):
     """API Key model for authenticating API requests from frontend"""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100, unique=True)
+    # Historically this field stored the raw API key. To improve security we now
+    # store a hash of the key instead (and use key_hash for lookups). Existing
+    # rows will be migrated lazily on save.
     key = models.CharField(max_length=64, unique=True, db_index=True)
+    # New field used for verification; stores a SHA‑256 hex digest of the key.
+    key_hash = models.CharField(max_length=64, unique=True, db_index=True, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField(blank=True, null=True)
@@ -351,7 +362,40 @@ class APIKey(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'{self.name} - {self.key[:8]}...'
+        # Avoid leaking the full key or hash; only show a short prefix.
+        display = (self.key or '')[:8]
+        return f'{self.name} - {display}...'
+
+    @staticmethod
+    def hash_key(raw_key: str) -> str:
+        """
+        Hash an API key using SHA‑256.
+
+        The resulting 64‑character hex digest is what we persist for verification.
+        """
+        return hashlib.sha256(raw_key.encode("utf-8")).hexdigest()
+
+    def set_key(self, raw_key: str) -> None:
+        """
+        Helper to set the key and its hash from a raw API key string.
+
+        Call this when creating or rotating keys so that we never need to
+        persist the raw secret beyond initial generation.
+        """
+        digest = self.hash_key(raw_key)
+        self.key = digest
+        self.key_hash = digest
+
+    def save(self, *args, **kwargs):
+        """
+        Ensure key_hash is always populated when a key value exists.
+
+        This gives us a backwards‑compatible migration path: existing rows with
+        only `key` set will get a hash computed on next save.
+        """
+        if self.key and not self.key_hash:
+            self.key_hash = self.hash_key(self.key)
+        super().save(*args, **kwargs)
 
     def is_valid(self):
         """Check if API key is valid"""

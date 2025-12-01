@@ -21,8 +21,19 @@ class APIKeyAuthentication(authentication.BaseAuthentication):
         if not api_key:
             return None
 
+        # Primary path: look up by hashed key value. This avoids relying on any
+        # stored plaintext key material.
+        candidate_hash = APIKey.hash_key(api_key)
+
         try:
-            key_obj = APIKey.objects.get(key=api_key, is_active=True)
+            try:
+                key_obj = APIKey.objects.get(key_hash=candidate_hash, is_active=True)
+            except APIKey.DoesNotExist:
+                # Backwards‑compatibility: fall back to matching the legacy `key`
+                # field directly. This allows existing keys to keep working
+                # while you migrate them to hashed storage.
+                key_obj = APIKey.objects.get(key=api_key, is_active=True)
+
             if not key_obj.is_valid():
                 raise exceptions.AuthenticationFailed('API key expired or inactive')
 

@@ -286,6 +286,8 @@ JEFF_SETTINGS = {
     'PAYNOW_INTEGRATION_KEY': os.getenv('PAYNOW_INTEGRATION_KEY'),
     'PAYNOW_RETURN_URL': os.getenv('PAYNOW_RETURN_URL'),
     'PAYNOW_RESULT_URL': os.getenv('PAYNOW_RESULT_URL'),
+    # Optional additional secret just for webhook verification; falls back to integration key
+    'PAYNOW_WEBHOOK_SECRET': os.getenv('PAYNOW_WEBHOOK_SECRET', os.getenv('PAYNOW_INTEGRATION_KEY', '')),
 
     # EcoCash integration removed; using Paynow only
 
@@ -303,6 +305,16 @@ JEFF_SETTINGS = {
     # Documentation download URLs
     'PRIVACY_POLICY_URL': f"{os.getenv('NEXT_PUBLIC_FRONTEND_URL')}/privacy",
 }
+
+#-----------------------------------------------------------------------------
+# AI data-access restrictions
+#-----------------------------------------------------------------------------
+# By default, AI code paths (matching, recommendation, MCP) are only allowed
+# to access the Property listings model from the database. Any attempt to
+# expose other models to external AI providers will raise a PermissionError.
+AI_ALLOWED_MODELS = [
+    'core.Property',
+]
 
 
 #-----------------------------------------------------------------------------

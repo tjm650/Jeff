@@ -1,13 +1,66 @@
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings as dj_settings
 from .models import Payment
 from .services import PaynowService
 import logging
 import json
 import re
+import hashlib
+import hmac
+from typing import Mapping, Any
 
 logger = logging.getLogger(__name__)
+
+
+def _verify_paynow_signature(params: Mapping[str, Any]) -> bool:
+    """
+    Verify Paynow webhook signature using a shared secret.
+
+    Paynow typically sends a `hash` value which is calculated from the other
+    fields in the payload and the integration key. We recompute that value
+    here and compare using a constant‑time comparison.
+
+    NOTE: If your Paynow account uses a different hashing scheme, update this
+    function accordingly to match their documentation.
+    """
+    secret = dj_settings.JEFF_SETTINGS.get("PAYNOW_WEBHOOK_SECRET") or ""
+    provided_hash = (params.get("hash") or params.get("HASH") or "").strip()
+
+    if not secret:
+        # Fail closed if the webhook secret is not configured – this prevents
+        # anyone from spoofing webhook calls in production environments.
+        logger.error(
+            "PAYNOW_WEBHOOK_SECRET is not configured; rejecting Paynow webhook. "
+            "Set PAYNOW_WEBHOOK_SECRET (or PAYNOW_INTEGRATION_KEY) in JEFF_SETTINGS."
+        )
+        return False
+
+    if not provided_hash:
+        logger.warning("Paynow webhook missing hash; rejecting")
+        return False
+
+    # Build the data string Paynow signs: concat all values except the hash,
+    # in key‑sorted order, separated by '&'. This matches common Paynow examples.
+    items = []
+    for key in sorted(params.keys()):
+        if key.lower() == "hash":
+            continue
+        value = params.get(key)
+        if value is None:
+            value = ""
+        items.append(str(value))
+
+    data_string = "&".join(items)
+
+    computed_hash = hashlib.sha512(f"{secret}{data_string}".encode("utf-8")).hexdigest()
+
+    if not hmac.compare_digest(computed_hash.lower(), provided_hash.lower()):
+        logger.warning("Invalid Paynow webhook hash; rejecting webhook")
+        return False
+
+    return True
 
 def parse_get_token_message(message):
     """
@@ -254,6 +307,13 @@ def paynow_webhook(request):
     try:
         # Log webhook data
         logger.info(f"Webhook received: {request.POST}")
+
+        # Verify webhook signature before doing any processing
+        if not _verify_paynow_signature(request.POST):
+            return JsonResponse(
+                {"status": "error", "message": "Invalid Paynow signature"},
+                status=403,
+            )
 
         # Get webhook data
         webhook_data = {
