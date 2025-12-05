@@ -27,23 +27,13 @@ def health_check(request):
 
 def api_info(request):
     return JsonResponse({
-        'name': 'Jeff Backend API',
+        'name': 'jeff.endpoint',
         'version': '1.0.0',
-        'status': 'running',
-        'endpoints': {
-            'health': '/api/health/',
-            'payment': '/api/payment/',
-            'matching': '/api/matching/',
-            'providers': '/api/providers/',
-            'webhook': '/webhook/',
-            'admin': '/admin/',
-        },
-        'documentation': 'API endpoints available for Jeff property matching platform'
     })
 
 urlpatterns = [
     path('', api_info, name='api_info'),
-    path('admin/', admin.site.urls),
+    path('jeffadminstration/', admin.site.urls),
     path('api/health/', health_check, name='health_check'),
     path('api/payment/', include('payment.urls')),
     path('api/matching/', include('matching.urls')),
