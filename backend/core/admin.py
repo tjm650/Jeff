@@ -27,7 +27,7 @@ class AccommodationProviderAdmin(admin.ModelAdmin):
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
-    list_display = ['name', 'provider', 'property_no', 'available_rooms', 'price_per_month', 'campus_name', 'is_active']
+    list_display = ['name', 'provider', 'property_no', 'available_rooms', 'price_per_month', 'total_reviews', 'rating', 'campus_name', 'is_active']
     list_filter = ['is_active', 'campus_name', 'gender_preference', 'created_at']
     search_fields = ['name', 'provider__name', 'campus_name', 'address']
     readonly_fields = ['id', 'created_at', 'updated_at']
@@ -46,6 +46,9 @@ class PropertyAdmin(admin.ModelAdmin):
                 'available_3h_rooms',
                 'available_4h_rooms',
             )
+        }),
+        ('Rating', {
+            'fields': ('rating', 'total_reviews'),
         }),
         ('Amenities & Pricing', {
             'fields': ('amenities', 'price_per_semester', 'price_per_month', 'price_per_week', 'price_per_day')

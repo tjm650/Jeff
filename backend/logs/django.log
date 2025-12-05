@@ -1993,3 +1993,212 @@ INFO 2025-12-01 19:13:10,290 api_handlers 17820 32180 Anthropic client initializ
 INFO 2025-12-01 19:13:10,355 ai_enhancer 17820 32180 AI Enhancer initialized with available handlers
 INFO 2025-12-01 19:13:10,389 nlp_processor 17820 32180 OpenAI API Key received: True
 INFO 2025-12-01 19:13:10,407 nlp_processor 17820 32180 Gemini API Key received: True
+INFO 2025-12-05 18:26:41,016 integration 5696 25240 Initializing MCP Integration...
+INFO 2025-12-05 18:26:41,017 integration 5696 25240 Anthropic API key found: True
+INFO 2025-12-05 18:26:41,906 api_handlers 5696 25240 Anthropic client initialized successfully
+INFO 2025-12-05 18:26:41,907 integration 5696 25240 Anthropic handler initialized
+INFO 2025-12-05 18:26:41,907 integration 5696 25240 Gemini API key found: True
+INFO 2025-12-05 18:26:41,907 api_handlers 5696 25240 Gemini client initialized successfully
+INFO 2025-12-05 18:26:41,907 integration 5696 25240 Gemini handler initialized
+INFO 2025-12-05 18:26:41,908 integration 5696 25240 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-05 18:26:41,908 integration 5696 25240 MCP components initialized
+INFO 2025-12-05 18:26:41,908 integration 5696 25240 Recommendation service initialized
+INFO 2025-12-05 18:26:41,908 __init__ 5696 25240 MCP integration initialized successfully
+INFO 2025-12-05 18:26:41,909 __init__ 5696 25240 Recommendation service initialized successfully
+WARNING 2025-12-05 18:26:41,909 api_handlers 5696 25240 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-05 18:26:41,910 api_handlers 5696 25240 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-05 18:26:41,911 api_handlers 5696 25240 Gemini client initialized successfully
+INFO 2025-12-05 18:26:43,009 api_handlers 5696 25240 Anthropic client initialized successfully
+INFO 2025-12-05 18:26:43,011 ai_enhancer 5696 25240 AI Enhancer initialized with available handlers
+INFO 2025-12-05 18:26:43,011 nlp_processor 5696 25240 OpenAI API Key received: True
+INFO 2025-12-05 18:26:43,015 nlp_processor 5696 25240 Gemini API Key received: True
+INFO 2025-12-05 18:27:03,116 integration 28616 3948 Initializing MCP Integration...
+INFO 2025-12-05 18:27:03,117 integration 28616 3948 Anthropic API key found: True
+INFO 2025-12-05 18:27:03,838 api_handlers 28616 3948 Anthropic client initialized successfully
+INFO 2025-12-05 18:27:03,839 integration 28616 3948 Anthropic handler initialized
+INFO 2025-12-05 18:27:03,839 integration 28616 3948 Gemini API key found: True
+INFO 2025-12-05 18:27:03,839 api_handlers 28616 3948 Gemini client initialized successfully
+INFO 2025-12-05 18:27:03,841 integration 28616 3948 Gemini handler initialized
+INFO 2025-12-05 18:27:03,841 integration 28616 3948 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-05 18:27:03,841 integration 28616 3948 MCP components initialized
+INFO 2025-12-05 18:27:03,842 integration 28616 3948 Recommendation service initialized
+INFO 2025-12-05 18:27:03,842 __init__ 28616 3948 MCP integration initialized successfully
+INFO 2025-12-05 18:27:03,842 __init__ 28616 3948 Recommendation service initialized successfully
+WARNING 2025-12-05 18:27:03,844 api_handlers 28616 3948 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-05 18:27:03,845 api_handlers 28616 3948 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-05 18:27:03,845 api_handlers 28616 3948 Gemini client initialized successfully
+INFO 2025-12-05 18:27:04,615 api_handlers 28616 3948 Anthropic client initialized successfully
+INFO 2025-12-05 18:27:04,616 ai_enhancer 28616 3948 AI Enhancer initialized with available handlers
+INFO 2025-12-05 18:27:04,617 nlp_processor 28616 3948 OpenAI API Key received: True
+INFO 2025-12-05 18:27:04,618 nlp_processor 28616 3948 Gemini API Key received: True
+INFO 2025-12-05 18:29:07,928 integration 1424 29220 Initializing MCP Integration...
+INFO 2025-12-05 18:29:07,929 integration 1424 29220 Anthropic API key found: True
+INFO 2025-12-05 18:29:09,013 api_handlers 1424 29220 Anthropic client initialized successfully
+INFO 2025-12-05 18:29:09,014 integration 1424 29220 Anthropic handler initialized
+INFO 2025-12-05 18:29:09,014 integration 1424 29220 Gemini API key found: True
+INFO 2025-12-05 18:29:09,017 api_handlers 1424 29220 Gemini client initialized successfully
+INFO 2025-12-05 18:29:09,017 integration 1424 29220 Gemini handler initialized
+INFO 2025-12-05 18:29:09,019 integration 1424 29220 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-05 18:29:09,020 integration 1424 29220 MCP components initialized
+INFO 2025-12-05 18:29:09,021 integration 1424 29220 Recommendation service initialized
+INFO 2025-12-05 18:29:09,021 __init__ 1424 29220 MCP integration initialized successfully
+INFO 2025-12-05 18:29:09,024 __init__ 1424 29220 Recommendation service initialized successfully
+WARNING 2025-12-05 18:29:09,028 api_handlers 1424 29220 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-05 18:29:09,032 api_handlers 1424 29220 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-05 18:29:09,033 api_handlers 1424 29220 Gemini client initialized successfully
+INFO 2025-12-05 18:29:09,863 api_handlers 1424 29220 Anthropic client initialized successfully
+INFO 2025-12-05 18:29:09,863 ai_enhancer 1424 29220 AI Enhancer initialized with available handlers
+INFO 2025-12-05 18:29:09,864 nlp_processor 1424 29220 OpenAI API Key received: True
+INFO 2025-12-05 18:29:09,864 nlp_processor 1424 29220 Gemini API Key received: True
+INFO 2025-12-05 18:29:36,580 integration 6048 6704 Initializing MCP Integration...
+INFO 2025-12-05 18:29:36,580 integration 6048 6704 Anthropic API key found: True
+INFO 2025-12-05 18:29:37,293 api_handlers 6048 6704 Anthropic client initialized successfully
+INFO 2025-12-05 18:29:37,293 integration 6048 6704 Anthropic handler initialized
+INFO 2025-12-05 18:29:37,294 integration 6048 6704 Gemini API key found: True
+INFO 2025-12-05 18:29:37,294 api_handlers 6048 6704 Gemini client initialized successfully
+INFO 2025-12-05 18:29:37,295 integration 6048 6704 Gemini handler initialized
+INFO 2025-12-05 18:29:37,295 integration 6048 6704 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-05 18:29:37,295 integration 6048 6704 MCP components initialized
+INFO 2025-12-05 18:29:37,296 integration 6048 6704 Recommendation service initialized
+INFO 2025-12-05 18:29:37,296 __init__ 6048 6704 MCP integration initialized successfully
+INFO 2025-12-05 18:29:37,297 __init__ 6048 6704 Recommendation service initialized successfully
+WARNING 2025-12-05 18:29:37,297 api_handlers 6048 6704 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-05 18:29:37,298 api_handlers 6048 6704 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-05 18:29:37,299 api_handlers 6048 6704 Gemini client initialized successfully
+INFO 2025-12-05 18:29:37,893 api_handlers 6048 6704 Anthropic client initialized successfully
+INFO 2025-12-05 18:29:37,893 ai_enhancer 6048 6704 AI Enhancer initialized with available handlers
+INFO 2025-12-05 18:29:37,894 nlp_processor 6048 6704 OpenAI API Key received: True
+INFO 2025-12-05 18:29:37,895 nlp_processor 6048 6704 Gemini API Key received: True
+INFO 2025-12-05 18:29:48,293 integration 26512 11032 Initializing MCP Integration...
+INFO 2025-12-05 18:29:48,294 integration 26512 11032 Anthropic API key found: True
+INFO 2025-12-05 18:29:48,950 api_handlers 26512 11032 Anthropic client initialized successfully
+INFO 2025-12-05 18:29:48,951 integration 26512 11032 Anthropic handler initialized
+INFO 2025-12-05 18:29:48,951 integration 26512 11032 Gemini API key found: True
+INFO 2025-12-05 18:29:48,952 api_handlers 26512 11032 Gemini client initialized successfully
+INFO 2025-12-05 18:29:48,952 integration 26512 11032 Gemini handler initialized
+INFO 2025-12-05 18:29:48,953 integration 26512 11032 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-05 18:29:48,954 integration 26512 11032 MCP components initialized
+INFO 2025-12-05 18:29:48,954 integration 26512 11032 Recommendation service initialized
+INFO 2025-12-05 18:29:48,955 __init__ 26512 11032 MCP integration initialized successfully
+INFO 2025-12-05 18:29:48,956 __init__ 26512 11032 Recommendation service initialized successfully
+WARNING 2025-12-05 18:29:48,956 api_handlers 26512 11032 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-05 18:29:48,957 api_handlers 26512 11032 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-05 18:29:48,957 api_handlers 26512 11032 Gemini client initialized successfully
+INFO 2025-12-05 18:29:49,575 api_handlers 26512 11032 Anthropic client initialized successfully
+INFO 2025-12-05 18:29:49,575 ai_enhancer 26512 11032 AI Enhancer initialized with available handlers
+INFO 2025-12-05 18:29:49,576 nlp_processor 26512 11032 OpenAI API Key received: True
+INFO 2025-12-05 18:29:49,576 nlp_processor 26512 11032 Gemini API Key received: True
+INFO 2025-12-05 18:31:00,962 integration 22688 25336 Initializing MCP Integration...
+INFO 2025-12-05 18:31:00,962 integration 22688 25336 Anthropic API key found: True
+INFO 2025-12-05 18:31:01,651 api_handlers 22688 25336 Anthropic client initialized successfully
+INFO 2025-12-05 18:31:01,651 integration 22688 25336 Anthropic handler initialized
+INFO 2025-12-05 18:31:01,653 integration 22688 25336 Gemini API key found: True
+INFO 2025-12-05 18:31:01,654 api_handlers 22688 25336 Gemini client initialized successfully
+INFO 2025-12-05 18:31:01,654 integration 22688 25336 Gemini handler initialized
+INFO 2025-12-05 18:31:01,654 integration 22688 25336 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-05 18:31:01,654 integration 22688 25336 MCP components initialized
+INFO 2025-12-05 18:31:01,654 integration 22688 25336 Recommendation service initialized
+INFO 2025-12-05 18:31:01,654 __init__ 22688 25336 MCP integration initialized successfully
+INFO 2025-12-05 18:31:01,656 __init__ 22688 25336 Recommendation service initialized successfully
+WARNING 2025-12-05 18:31:01,657 api_handlers 22688 25336 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-05 18:31:01,659 api_handlers 22688 25336 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-05 18:31:01,659 api_handlers 22688 25336 Gemini client initialized successfully
+INFO 2025-12-05 18:31:02,246 api_handlers 22688 25336 Anthropic client initialized successfully
+INFO 2025-12-05 18:31:02,247 ai_enhancer 22688 25336 AI Enhancer initialized with available handlers
+INFO 2025-12-05 18:31:02,247 nlp_processor 22688 25336 OpenAI API Key received: True
+INFO 2025-12-05 18:31:02,248 nlp_processor 22688 25336 Gemini API Key received: True
+INFO 2025-12-05 18:34:29,263 integration 9740 5160 Initializing MCP Integration...
+INFO 2025-12-05 18:34:29,264 integration 9740 5160 Anthropic API key found: True
+INFO 2025-12-05 18:34:31,290 api_handlers 9740 5160 Anthropic client initialized successfully
+INFO 2025-12-05 18:34:31,294 integration 9740 5160 Anthropic handler initialized
+INFO 2025-12-05 18:34:31,295 integration 9740 5160 Gemini API key found: True
+INFO 2025-12-05 18:34:31,296 api_handlers 9740 5160 Gemini client initialized successfully
+INFO 2025-12-05 18:34:31,298 integration 9740 5160 Gemini handler initialized
+INFO 2025-12-05 18:34:31,299 integration 9740 5160 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-05 18:34:31,300 integration 9740 5160 MCP components initialized
+INFO 2025-12-05 18:34:31,302 integration 9740 5160 Recommendation service initialized
+INFO 2025-12-05 18:34:31,302 __init__ 9740 5160 MCP integration initialized successfully
+INFO 2025-12-05 18:34:31,303 __init__ 9740 5160 Recommendation service initialized successfully
+WARNING 2025-12-05 18:34:31,304 api_handlers 9740 5160 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-05 18:34:31,338 api_handlers 9740 5160 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-05 18:34:31,358 api_handlers 9740 5160 Gemini client initialized successfully
+INFO 2025-12-05 18:34:32,523 api_handlers 9740 5160 Anthropic client initialized successfully
+INFO 2025-12-05 18:34:32,533 ai_enhancer 9740 5160 AI Enhancer initialized with available handlers
+INFO 2025-12-05 18:34:32,535 nlp_processor 9740 5160 OpenAI API Key received: True
+INFO 2025-12-05 18:34:32,536 nlp_processor 9740 5160 Gemini API Key received: True
+INFO 2025-12-05 18:35:17,893 integration 17132 6896 Initializing MCP Integration...
+INFO 2025-12-05 18:35:17,894 integration 17132 6896 Anthropic API key found: True
+INFO 2025-12-05 18:35:18,542 api_handlers 17132 6896 Anthropic client initialized successfully
+INFO 2025-12-05 18:35:18,542 integration 17132 6896 Anthropic handler initialized
+INFO 2025-12-05 18:35:18,543 integration 17132 6896 Gemini API key found: True
+INFO 2025-12-05 18:35:18,543 api_handlers 17132 6896 Gemini client initialized successfully
+INFO 2025-12-05 18:35:18,543 integration 17132 6896 Gemini handler initialized
+INFO 2025-12-05 18:35:18,544 integration 17132 6896 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-05 18:35:18,544 integration 17132 6896 MCP components initialized
+INFO 2025-12-05 18:35:18,544 integration 17132 6896 Recommendation service initialized
+INFO 2025-12-05 18:35:18,544 __init__ 17132 6896 MCP integration initialized successfully
+INFO 2025-12-05 18:35:18,545 __init__ 17132 6896 Recommendation service initialized successfully
+WARNING 2025-12-05 18:35:18,545 api_handlers 17132 6896 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-05 18:35:18,546 api_handlers 17132 6896 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-05 18:35:18,546 api_handlers 17132 6896 Gemini client initialized successfully
+INFO 2025-12-05 18:35:19,180 api_handlers 17132 6896 Anthropic client initialized successfully
+INFO 2025-12-05 18:35:19,181 ai_enhancer 17132 6896 AI Enhancer initialized with available handlers
+INFO 2025-12-05 18:35:19,181 nlp_processor 17132 6896 OpenAI API Key received: True
+INFO 2025-12-05 18:35:19,182 nlp_processor 17132 6896 Gemini API Key received: True
+INFO 2025-12-05 18:37:16,996 integration 17888 11284 Initializing MCP Integration...
+INFO 2025-12-05 18:37:16,996 integration 17888 11284 Anthropic API key found: True
+INFO 2025-12-05 18:37:17,547 api_handlers 17888 11284 Anthropic client initialized successfully
+INFO 2025-12-05 18:37:17,548 integration 17888 11284 Anthropic handler initialized
+INFO 2025-12-05 18:37:17,548 integration 17888 11284 Gemini API key found: True
+INFO 2025-12-05 18:37:17,548 api_handlers 17888 11284 Gemini client initialized successfully
+INFO 2025-12-05 18:37:17,549 integration 17888 11284 Gemini handler initialized
+INFO 2025-12-05 18:37:17,549 integration 17888 11284 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-05 18:37:17,549 integration 17888 11284 MCP components initialized
+INFO 2025-12-05 18:37:17,549 integration 17888 11284 Recommendation service initialized
+INFO 2025-12-05 18:37:17,550 __init__ 17888 11284 MCP integration initialized successfully
+INFO 2025-12-05 18:37:17,550 __init__ 17888 11284 Recommendation service initialized successfully
+WARNING 2025-12-05 18:37:17,551 api_handlers 17888 11284 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-05 18:37:17,551 api_handlers 17888 11284 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-05 18:37:17,552 api_handlers 17888 11284 Gemini client initialized successfully
+INFO 2025-12-05 18:37:18,032 api_handlers 17888 11284 Anthropic client initialized successfully
+INFO 2025-12-05 18:37:18,032 ai_enhancer 17888 11284 AI Enhancer initialized with available handlers
+INFO 2025-12-05 18:37:18,033 nlp_processor 17888 11284 OpenAI API Key received: True
+INFO 2025-12-05 18:37:18,033 nlp_processor 17888 11284 Gemini API Key received: True
+INFO 2025-12-05 18:37:46,271 integration 11944 9664 Initializing MCP Integration...
+INFO 2025-12-05 18:37:46,272 integration 11944 9664 Anthropic API key found: True
+INFO 2025-12-05 18:37:46,809 api_handlers 11944 9664 Anthropic client initialized successfully
+INFO 2025-12-05 18:37:46,810 integration 11944 9664 Anthropic handler initialized
+INFO 2025-12-05 18:37:46,810 integration 11944 9664 Gemini API key found: True
+INFO 2025-12-05 18:37:46,810 api_handlers 11944 9664 Gemini client initialized successfully
+INFO 2025-12-05 18:37:46,811 integration 11944 9664 Gemini handler initialized
+INFO 2025-12-05 18:37:46,811 integration 11944 9664 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-05 18:37:46,811 integration 11944 9664 MCP components initialized
+INFO 2025-12-05 18:37:46,811 integration 11944 9664 Recommendation service initialized
+INFO 2025-12-05 18:37:46,812 __init__ 11944 9664 MCP integration initialized successfully
+INFO 2025-12-05 18:37:46,812 __init__ 11944 9664 Recommendation service initialized successfully
+WARNING 2025-12-05 18:37:46,813 api_handlers 11944 9664 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-05 18:37:46,813 api_handlers 11944 9664 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-05 18:37:46,814 api_handlers 11944 9664 Gemini client initialized successfully
+INFO 2025-12-05 18:37:47,291 api_handlers 11944 9664 Anthropic client initialized successfully
+INFO 2025-12-05 18:37:47,291 ai_enhancer 11944 9664 AI Enhancer initialized with available handlers
+INFO 2025-12-05 18:37:47,291 nlp_processor 11944 9664 OpenAI API Key received: True
+INFO 2025-12-05 18:37:47,291 nlp_processor 11944 9664 Gemini API Key received: True
+INFO 2025-12-05 18:39:36,007 integration 12208 3288 Initializing MCP Integration...
+INFO 2025-12-05 18:39:36,007 integration 12208 3288 Anthropic API key found: True
+INFO 2025-12-05 18:39:36,880 api_handlers 12208 3288 Anthropic client initialized successfully
+INFO 2025-12-05 18:39:36,880 integration 12208 3288 Anthropic handler initialized
+INFO 2025-12-05 18:39:36,880 integration 12208 3288 Gemini API key found: True
+INFO 2025-12-05 18:39:36,881 api_handlers 12208 3288 Gemini client initialized successfully
+INFO 2025-12-05 18:39:36,881 integration 12208 3288 Gemini handler initialized
+INFO 2025-12-05 18:39:36,882 integration 12208 3288 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-05 18:39:36,882 integration 12208 3288 MCP components initialized
+INFO 2025-12-05 18:39:36,883 integration 12208 3288 Recommendation service initialized
+INFO 2025-12-05 18:39:36,883 __init__ 12208 3288 MCP integration initialized successfully
+INFO 2025-12-05 18:39:36,884 __init__ 12208 3288 Recommendation service initialized successfully
+WARNING 2025-12-05 18:39:36,885 api_handlers 12208 3288 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-05 18:39:36,886 api_handlers 12208 3288 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-05 18:39:36,886 api_handlers 12208 3288 Gemini client initialized successfully
+INFO 2025-12-05 18:39:37,466 api_handlers 12208 3288 Anthropic client initialized successfully
+INFO 2025-12-05 18:39:37,468 ai_enhancer 12208 3288 AI Enhancer initialized with available handlers
+INFO 2025-12-05 18:39:37,468 nlp_processor 12208 3288 OpenAI API Key received: True
+INFO 2025-12-05 18:39:37,469 nlp_processor 12208 3288 Gemini API Key received: True

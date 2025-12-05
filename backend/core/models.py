@@ -81,7 +81,7 @@ class Property(models.Model):
         default='any'
     )
 
-    # Ratings (per-property)
+    # Ratings
     rating = models.FloatField(default=0.0, validators=[MinValueValidator(0.0), MaxValueValidator(5.0)])
     total_reviews = models.PositiveIntegerField(default=0)
 
