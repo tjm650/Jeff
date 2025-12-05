@@ -36,6 +36,9 @@ class PropertyAdmin(admin.ModelAdmin):
         ('Basic Information', {
             'fields': ('provider', 'name', 'property_no', 'address', 'description')
         }),
+        ('Rating', {
+            'fields': ('rating', 'total_reviews'),
+        }),
         ('Room Configuration', {
             'fields': (
                 # 'heads_per_room',
@@ -46,9 +49,6 @@ class PropertyAdmin(admin.ModelAdmin):
                 'available_3h_rooms',
                 'available_4h_rooms',
             )
-        }),
-        ('Rating', {
-            'fields': ('rating', 'total_reviews'),
         }),
         ('Amenities & Pricing', {
             'fields': ('amenities', 'price_per_semester', 'price_per_month', 'price_per_week', 'price_per_day')
