@@ -91,8 +91,13 @@ class NLPProcessorHandler:
             if not processed_requirements.get('rental_period'):
                 from matching.rental_period_extractor import rental_period_extractor
                 clarification_msg = rental_period_extractor.suggest_rental_period()
-                processed_requirements['needs_rental_period_clarification'] = True
-                processed_requirements['rental_period_clarification_message'] = clarification_msg
+                # Set flag to show recommendation but ALLOW search to continue with default period
+                processed_requirements['needs_period_recommendation'] = True
+                processed_requirements['period_recommendation_message'] = clarification_msg
+                # Set default rental period to 'month' to allow search to continue
+                processed_requirements['rental_period'] = 'month'
+                # Mark that this is a default period (user didn't specify)
+                processed_requirements['rental_period_auto_selected'] = True
 
             return processed_requirements
         except Exception as e:

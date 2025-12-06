@@ -89,19 +89,22 @@ class StepHandlers:
                     conversation.save()
                     return self._show_payment_instructions(conversation)
                 
-                # Check if rental period needs clarification
-                if requirements.get('needs_rental_period_clarification'):
-                    return requirements['rental_period_clarification_message']
-                elif requirements.get('original_message') and requirements.get('rental_period'):
-                    # Already have rental period, proceed to search
-                    conversation.current_step = 'property_listings'
-                    conversation.save()
-                    return self.property_search.proceed_to_property_search(conversation, requirements)
-                else:
-                    # Proceed with existing flow
-                    conversation.current_step = 'property_listings'
-                    conversation.save()
-                    return self.property_search.proceed_to_property_search(conversation, requirements)
+                # Proceed to property search
+                # If period was auto-selected (not specified by user), show recommendation message first
+                response_parts = []
+                if requirements.get('needs_period_recommendation'):
+                    # Add recommendation message, but continue with search using auto-selected period
+                    response_parts.append(f"{requirements.get('period_recommendation_message', '')}\n\n")
+                    logger.info(f"Period recommendation shown for {conversation.cell_number}, proceeding with auto-selected period")
+                
+                conversation.current_step = 'property_listings'
+                conversation.save()
+                search_result = self.property_search.proceed_to_property_search(conversation, requirements)
+                
+                # Prepend recommendation message if shown
+                if response_parts:
+                    return response_parts[0] + search_result
+                return search_result
             else:
                 return "Please provide your accommodation requirements (location, budget, number of people, etc.)."
         except Exception as e:
