@@ -12,9 +12,14 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv # type: ignore
+import environ
 
 # Load environment variables
 load_dotenv()
+
+# Initialize django-environ
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -147,26 +152,84 @@ ASGI_APPLICATION = 'backend.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# Check if running on Cloud Run or GAE
+CLOUD_SQL_CONNECTION_NAME = os.getenv('CLOUD_SQL_CONNECTION_NAME')
+IS_CLOUD_RUN = os.getenv('GAE_ENV') or os.getenv('K_SERVICE') or CLOUD_SQL_CONNECTION_NAME
 
-# Cache configuration (using in-memory for development)
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+if IS_CLOUD_RUN and CLOUD_SQL_CONNECTION_NAME:
+    # Running on Cloud Run with Cloud SQL
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME', 'jeffdb'),
+            'USER': os.getenv('DB_USER', 'jeffuser'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': f"/cloudsql/{CLOUD_SQL_CONNECTION_NAME}",
+            'PORT': '5432',
+            'OPTIONS': {
+                'connect_timeout': 10,
+            }
+        }
     }
-}
-
-# Channels configuration for WebSockets (using in-memory for development)
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
-    },
-}
+    
+    # Use in-memory cache (free tier - no Redis)
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+    }
+    
+    # Channels in-memory (no Redis on free tier)
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        },
+    }
+    
+    # Update ALLOWED_HOSTS for Cloud Run
+    if '*' not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS = ['*']  # Cloud Run handles host validation
+    
+elif os.getenv('DATABASE_URL'):
+    # Use DATABASE_URL if provided (e.g., for local PostgreSQL or other providers)
+    DATABASES = {
+        'default': env.db('DATABASE_URL')
+    }
+    
+    # Use in-memory cache for development
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+    }
+    
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        },
+    }
+else:
+    # Local development - SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+    
+    # Cache configuration (using in-memory for development)
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+    }
+    
+    # Channels configuration for WebSockets (using in-memory for development)
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        },
+    }
 
 
 
