@@ -69,7 +69,7 @@ class PropertySearchHandler:
 
                 if not matched_properties:
                     logger.info(f"No properties found even with relaxed criteria for {conversation.cell_number}")
-                    return self._get_no_properties_message(validated_requirements)
+                    return self._get_no_properties_message(validated_requirements, conversation.cell_number)
 
             # Process and enhance property data
             logger.info(f"Processing {len(matched_properties)} search results for {conversation.cell_number}")
@@ -221,8 +221,12 @@ class PropertySearchHandler:
             logger.error(f"Error relaxing search criteria: {str(e)}")
             return requirements
 
-    def _get_no_properties_message(self, requirements: Dict) -> str:
-        """Generate recommendation summary when no properties found"""
+    def _get_no_properties_message(self, requirements: Dict, cell_number: str = None) -> str:
+        """Generate recommendation summary when no properties found
+        
+        Notifies both token-paid and non-token users with recommendations.
+        No payment instructions for this notification.
+        """
         try:
             # If there are generally no properties available in the database,
             # return a clear, user-friendly message.
@@ -233,17 +237,42 @@ class PropertySearchHandler:
             except Exception as e:
                 logger.warning(f"Failed checking global property availability: {e}")
 
+            # Check if user has a valid token
+            has_valid_token = False
+            if cell_number:
+                try:
+                    from payment.handlers.token import token_handler
+                    valid_token = token_handler.get_valid_token(cell_number)
+                    has_valid_token = valid_token and token_handler.validate_token_usage(valid_token)
+                    logger.info(f"Token status for {cell_number}: has_valid_token={has_valid_token}")
+                except Exception as e:
+                    logger.warning(f"Failed to check token status for {cell_number}: {e}")
+
             # Import recommendation service from MCP integration
             from ..mcp.integration import get_mcp_integration
             mcp_integration = get_mcp_integration()
 
-            # Check if MCP integration is available and has recommendation service
+            # Generate recommendation summary based on token status
+            recommendation = None
             if mcp_integration and mcp_integration.recommendation_service:
-                # Generate recommendation summary using MCP
-                return mcp_integration.recommendation_service.generate_recommendation_summary(requirements)
+                # Generate recommendation summary using MCP for both token and non-token users
+                recommendation = mcp_integration.recommendation_service.generate_recommendation_summary(requirements)
             else:
                 # Fallback when MCP integration is not available
-                return self._get_fallback_recommendation_message(requirements)
+                recommendation = self._get_fallback_recommendation_message(requirements)
+
+            # Add appropriate notification based on token status
+            if has_valid_token:
+                # Token user - show recommendation without payment instructions
+                notification_header = "*No Properties Found*\n\n"
+                notification_footer = "\n\n_Please try refining your search criteria or contact support for assistance._"
+            else:
+                # Non-token user - show recommendation without payment instructions
+                notification_header = "*No Properties Found*\n\n"
+                notification_footer = "\n\n_Please try refining your search criteria or contact support for assistance._"
+
+            # Combine header, recommendation, and footer
+            return notification_header + (recommendation or "") + notification_footer
 
         except Exception as e:
             logger.error(f"Error generating recommendation message: {str(e)}")
@@ -373,7 +402,8 @@ class PropertySearchHandler:
             if not properties:
                 # Delegate to the shared "no properties" handler which also checks
                 # for global availability and MCP recommendations.
-                return self._get_no_properties_message(requirements)
+                cell_number = conversation.cell_number if conversation else None
+                return self._get_no_properties_message(requirements, cell_number)
 
             if not isinstance(properties, list):
                 logger.error(f"Properties is not a list: {type(properties)}")
