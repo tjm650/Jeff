@@ -72,21 +72,21 @@ def whatsapp_webhook(request):
         message_body = (request.POST.get('Body', '') or '').strip()
         media_url = request.POST.get('MediaUrl0', '')
 
-        if not from_number:
-            return JsonResponse({'status': 'error', 'message': 'Missing sender number'}, status=400)
+        # if not from_number:
+        #     return JsonResponse({'status': 'error', 'message': 'Missing sender number'}, status=400)
 
-        # Region availability check - only allow Zimbabwe numbers (+263)
-        try:
-            from whatsapp.utils.whatsapp_service import whatsapp_service
-            if not whatsapp_service.validate_zimbabwe_number(from_number):
-                logger.info(f"Blocked non-ZW number {from_number} - service not available in region (payment)")
-                whatsapp_service.send_text_message(
-                    from_number,
-                    "Sorry, this service is not available in your region."
-                )
-                return JsonResponse({'status': 'error', 'message': 'Service not available in your region'}, status=403)
-        except Exception:
-            logger.exception('Region availability check failed')
+        # # Region availability check - only allow Zimbabwe numbers (+263)
+        # try:
+        #     from whatsapp.utils.whatsapp_service import whatsapp_service
+        #     if not whatsapp_service.validate_zimbabwe_number(from_number):
+        #         logger.info(f"Blocked non-ZW number {from_number} - service not available in region (payment)")
+        #         whatsapp_service.send_text_message(
+        #             from_number,
+        #             "Sorry, this service is not available in your region."
+        #         )
+        #         return JsonResponse({'status': 'error', 'message': 'Service not available in your region'}, status=403)
+        # except Exception:
+        #     logger.exception('Region availability check failed')
 
         message_data = {
             'from_number': from_number,
