@@ -29,13 +29,12 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key-for-developmen
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*.onrender.com,*.run.app').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*.onrender.com').split(',')
 
 # CORS configuration
 CORS_ALLOWED_ORIGINS = [
     'https://jeff-backend-n5kb.onrender.com',
-    'https://jeff-one.vercel.app',
-    'https://*.run.app',
+    'https://jeff-one.vercel.app'
 ]
 
 # Add additional origins from environment
@@ -148,36 +147,12 @@ ASGI_APPLICATION = 'backend.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# Check if running on Google Cloud Run
-if os.getenv('USE_CLOUD_SQL', 'false').lower() == 'true':
-    # Google Cloud SQL configuration
-    import sqlalchemy
-    from sqlalchemy import text
-    
-    db_socket_dir = os.getenv("DB_SOCKET_DIR", "/cloudsql")
-    cloud_sql_connection_name = os.getenv("CLOUD_SQL_CONNECTION_NAME")
-    db_user = os.getenv("DB_USER")
-    db_pass = os.getenv("DB_PASS")
-    db_name = os.getenv("DB_NAME")
-    
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'USER': db_user,
-            'PASSWORD': db_pass,
-            'NAME': db_name,
-            'HOST': f"{db_socket_dir}/{cloud_sql_connection_name}",
-            'PORT': '',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    # Local SQLite configuration for development
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 # Cache configuration (using in-memory for development)
 CACHES = {
