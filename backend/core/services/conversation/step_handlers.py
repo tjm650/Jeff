@@ -372,8 +372,8 @@ class StepHandlers:
             if selection:
                 # Calculate the actual index based on the current page
                 current_page = conversation.context_data.get('current_property_page', 0)
-                real_index = selection + (current_page * 5)
-                if real_index <= len(search_results):
+                real_index = selection - 1 + (current_page * 5)  # Convert to 0-indexed
+                if 0 <= real_index < len(search_results):
                     return self._process_property_selection(conversation, real_index)
                 else:
                     return "Invalid selection. Please choose a property number from the displayed list."
@@ -793,14 +793,14 @@ Response Time: {conversation.context_data['provider_response_timestamp']}
         try:
             # Get the selected property from search results
             search_results = conversation.context_data.get('search_results', [])
-            if not search_results or selection < 1 or selection > len(search_results):
+            if not search_results or selection < 0 or selection >= len(search_results):
                 return "Invalid selection. Please reply with a valid property number from the listings."
 
-            selected_property = search_results[selection - 1]
+            selected_property = search_results[selection]
 
             # Store selected property in conversation context
             conversation.context_data['selected_property'] = selected_property
-            conversation.context_data['selected_property_index'] = selection
+            conversation.context_data['selected_property_index'] = selection + 1  # Store 1-indexed for user reference
             conversation.current_step = 'name_collection'
             conversation.save()
 
