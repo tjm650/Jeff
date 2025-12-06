@@ -15,11 +15,15 @@ from dotenv import load_dotenv # type: ignore
 import environ
 
 # Load environment variables
-load_dotenv()
+# Only load .env file if not on Render (Render provides env vars directly)
+if not os.getenv('RENDER'):
+    load_dotenv()
 
 # Initialize django-environ
 env = environ.Env()
-environ.Env.read_env()
+# Only read .env file if not on Render
+if not os.getenv('RENDER'):
+    environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -194,6 +198,12 @@ elif os.getenv('DATABASE_URL'):
     # Use DATABASE_URL if provided (e.g., for local PostgreSQL or Render)
     database_url = os.getenv('DATABASE_URL')
     
+    # Log the DATABASE_URL (without password for security)
+    import logging
+    logger = logging.getLogger(__name__)
+    safe_url = database_url.split('@')[1] if '@' in database_url else '***'
+    logger.info(f"Using DATABASE_URL with host: {safe_url}")
+    
     # Try to parse with django-environ, with fallback to manual parsing
     try:
         DATABASES = {
@@ -202,7 +212,11 @@ elif os.getenv('DATABASE_URL'):
         # Verify the database config has an ENGINE
         if not DATABASES['default'].get('ENGINE'):
             raise ValueError("No ENGINE in parsed database config")
+        # Verify we have a valid HOST (not localhost on Render)
+        if DATABASES['default'].get('HOST') == 'localhost' and os.getenv('RENDER'):
+            raise ValueError("DATABASE_URL points to localhost on Render - this is incorrect")
     except (ValueError, Exception) as e:
+        logger.warning(f"django-environ parsing failed: {e}. Trying manual parsing...")
         # Fallback: manually parse DATABASE_URL
         import urllib.parse
         try:
@@ -213,8 +227,20 @@ elif os.getenv('DATABASE_URL'):
             db_name = result.path[1:] if result.path.startswith('/') else result.path
             db_user = result.username
             db_password = result.password
-            db_host = result.hostname or 'localhost'
+            db_host = result.hostname
             db_port = result.port or '5432'
+            
+            # Validate we have all required components
+            if not db_host:
+                raise ValueError("DATABASE_URL missing hostname")
+            if not db_name:
+                raise ValueError("DATABASE_URL missing database name")
+            if not db_user:
+                raise ValueError("DATABASE_URL missing username")
+            
+            # Don't allow localhost on Render
+            if db_host == 'localhost' and os.getenv('RENDER'):
+                raise ValueError("DATABASE_URL cannot point to localhost on Render. Check your database service link.")
             
             DATABASES = {
                 'default': {
@@ -229,11 +255,10 @@ elif os.getenv('DATABASE_URL'):
                     }
                 }
             }
+            logger.info(f"Successfully parsed DATABASE_URL manually. Host: {db_host}, Database: {db_name}")
         except Exception as parse_error:
             # If parsing fails completely, log and use SQLite as fallback
-            import logging
-            logger = logging.getLogger(__name__)
-            logger.warning(f"Failed to parse DATABASE_URL: {parse_error}. Falling back to SQLite.")
+            logger.error(f"Failed to parse DATABASE_URL: {parse_error}. Falling back to SQLite.")
             DATABASES = {
                 'default': {
                     'ENGINE': 'django.db.backends.sqlite3',
