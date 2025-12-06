@@ -47,12 +47,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Django
-*.pyc
-__pycache__/
-*.log
-db.sqlite3
-db.sqlite3-journal
-*.sqlite3
-/staticfiles/
-/media/
+# # Django
+# *.pyc
+# __pycache__/
+# *.log
+# db.sqlite3
+# db.sqlite3-journal
+# *.sqlite3
+# /staticfiles/
+# /media/
