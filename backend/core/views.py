@@ -78,17 +78,18 @@ def whatsapp_webhook(request):
             return JsonResponse({'error': 'Invalid phone number'}, status=400)
 
         # Region availability check - only allow Zimbabwe numbers (+263)
-        try:
-            from whatsapp.utils.whatsapp_service import whatsapp_service
-            if not whatsapp_service.validate_zimbabwe_number(from_number):
-                logger.info(f"Blocked non-ZW number {from_number} - service not available in region")
-                whatsapp_service.send_text_message(
-                    from_number,
-                    "Sorry, this service is not available in your region."
-                )
-                return JsonResponse({'error': 'Service not available in your region'}, status=403)
-        except Exception as e:
-            logger.error(f"Region check failed for {from_number}: {str(e)}")
+        # TEMPORARILY DISABLED FOR TESTING - REMOVE COMMENTS AFTER TESTING
+        # try:
+        #     from whatsapp.utils.whatsapp_service import whatsapp_service
+        #     if not whatsapp_service.validate_zimbabwe_number(from_number):
+        #         logger.info(f"Blocked non-ZW number {from_number} - service not available in region")
+        #         whatsapp_service.send_text_message(
+        #             from_number,
+        #             "Sorry, this service is not available in your region."
+        #         )
+        #         return JsonResponse({'error': 'Service not available in your region'}, status=403)
+        # except Exception as e:
+        #     logger.error(f"Region check failed for {from_number}: {str(e)}")
 
         # Handle empty requests more gracefully
         if not message_body and not media_url:
