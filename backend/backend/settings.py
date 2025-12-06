@@ -191,10 +191,55 @@ if IS_CLOUD_RUN and CLOUD_SQL_CONNECTION_NAME:
         ALLOWED_HOSTS = ['*']  # Cloud Run handles host validation
     
 elif os.getenv('DATABASE_URL'):
-    # Use DATABASE_URL if provided (e.g., for local PostgreSQL or other providers)
-    DATABASES = {
-        'default': env.db('DATABASE_URL')
-    }
+    # Use DATABASE_URL if provided (e.g., for local PostgreSQL or Render)
+    database_url = os.getenv('DATABASE_URL')
+    
+    # Try to parse with django-environ, with fallback to manual parsing
+    try:
+        DATABASES = {
+            'default': env.db('DATABASE_URL')
+        }
+        # Verify the database config has an ENGINE
+        if not DATABASES['default'].get('ENGINE'):
+            raise ValueError("No ENGINE in parsed database config")
+    except (ValueError, Exception) as e:
+        # Fallback: manually parse DATABASE_URL
+        import urllib.parse
+        try:
+            # Parse the database URL
+            result = urllib.parse.urlparse(database_url)
+            
+            # Extract components
+            db_name = result.path[1:] if result.path.startswith('/') else result.path
+            db_user = result.username
+            db_password = result.password
+            db_host = result.hostname or 'localhost'
+            db_port = result.port or '5432'
+            
+            DATABASES = {
+                'default': {
+                    'ENGINE': 'django.db.backends.postgresql',
+                    'NAME': db_name,
+                    'USER': db_user,
+                    'PASSWORD': db_password,
+                    'HOST': db_host,
+                    'PORT': db_port,
+                    'OPTIONS': {
+                        'connect_timeout': 10,
+                    }
+                }
+            }
+        except Exception as parse_error:
+            # If parsing fails completely, log and use SQLite as fallback
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning(f"Failed to parse DATABASE_URL: {parse_error}. Falling back to SQLite.")
+            DATABASES = {
+                'default': {
+                    'ENGINE': 'django.db.backends.sqlite3',
+                    'NAME': BASE_DIR / 'db.sqlite3',
+                }
+            }
     
     # Use in-memory cache for development
     CACHES = {

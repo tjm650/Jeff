@@ -46,3 +46,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Allow db.sqlite3 to be committed (explicitly allow)
+!db.sqlite3
