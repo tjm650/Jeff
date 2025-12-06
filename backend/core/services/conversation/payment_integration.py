@@ -159,7 +159,7 @@ Your payment is still being processed.
     def _create_token_after_payment(self, conversation, payment) -> str:
         """Create token after successful payment"""
         try:
-            from ....payment.models import Payment
+            from payment.models import Payment
             from core.models import Transaction, Token
 
             cell_number = conversation.cell_number
@@ -212,7 +212,7 @@ Your payment is still being processed.
     def handle_payment_webhook(self, payment_data: Dict) -> Dict:
         """Handle payment webhook from PayNow and update conversation workflow"""
         try:
-            from ....payment.models import Payment
+            from payment.models import Payment
 
             # Extract payment information from webhook
             # Accept multiple possible key names from Paynow payloads
@@ -293,7 +293,7 @@ Your payment is still being processed.
         """Create token after successful webhook payment"""
         try:
             from core.models import Transaction, Token
-            from ....whatsapp.utils.whatsapp_service import whatsapp_service
+            from whatsapp.utils.whatsapp_service import whatsapp_service
 
             cell_number = payment.whatsapp_number
 
@@ -328,7 +328,7 @@ Your payment is still being processed.
 
             # Find and reset the conversation
             try:
-                from ...models import ConversationState
+                from core.models import ConversationState
                 conversation = ConversationState.objects.filter(
                     cell_number=cell_number,
                     is_active=True

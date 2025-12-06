@@ -168,7 +168,7 @@ class ConversationWorkflow:
                 
                 # Check if we're waiting for rental period clarification
                 if conversation.context_data.get('requirements'):
-                    from ...matching.rental_period_extractor import rental_period_extractor
+                    from matching.rental_period_extractor import rental_period_extractor
                     rental_period = rental_period_extractor.extract_rental_period(message)
                     if rental_period:
                         # Update the stored requirements with the rental period
@@ -252,7 +252,7 @@ class ConversationWorkflow:
     def handle_provider_message(self, cell_number: str, message: str) -> str:
         """Handle messages from accommodation providers"""
         try:
-            from ...providers.services.workflow import provider_workflow
+            from providers.services.workflow import provider_workflow
             result = provider_workflow.handle_provider_response(cell_number, message)
             if result['success']:
                 return result['message']
@@ -363,7 +363,7 @@ class ConversationWorkflow:
     def handle_provider_response(self, provider_phone: str, message: str) -> str:
         """Handle responses from accommodation providers using booking workflow"""
         try:
-            from ...providers.services.workflow import provider_workflow
+            from providers.services.workflow import provider_workflow
             result = provider_workflow.handle_provider_response(provider_phone, message)
             if result['success']:
                 return f"Provider response processed: {result['message']}"

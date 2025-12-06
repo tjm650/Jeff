@@ -144,7 +144,7 @@ This helps the accommodation provider know who's requesting the booking."""
     def provide_nlp_suggestions(self, failed_requirements: Dict) -> str:
         """Provide intelligent suggestions based on failed NLP extraction"""
         try:
-            from ....matching.nlp_processor import nlp_processor
+            from matching.nlp_processor import nlp_processor
 
             suggestions = ["*Try these formats:*"]
 

@@ -50,7 +50,7 @@ class MessageClassifier:
             else:
                 # Fallback to existing NLP processor
                 logger.warning("MCP integration not configured, using existing NLP processor")
-                from ....matching.nlp_processor import nlp_processor
+                from matching.nlp_processor import nlp_processor
                 return nlp_processor.classify_message(message)
         except Exception as e:
             logger.error(f"Error classifying message with MCP integration: {str(e)}")
@@ -120,7 +120,7 @@ class MessageClassifier:
         """Handle greeting messages with enhanced greeting flow"""
         try:
             # Get conversation state
-            from ...models import ConversationState
+            from core.models import ConversationState
             conversation = ConversationState.objects.filter(
                 cell_number=cell_number,
                 is_active=True
@@ -150,7 +150,7 @@ class MessageClassifier:
                 return self._handle_greeting_flow(conversation, message, nlp_processor)
             else:
                 # Fallback to existing NLP processor
-                from ....matching.nlp_processor import nlp_processor
+                from matching.nlp_processor import nlp_processor
                 return self._handle_greeting_flow(conversation, message, nlp_processor)
 
         except Exception as e:
@@ -238,7 +238,7 @@ class MessageClassifier:
     def _get_help_message(self) -> str:
         """Get enhanced help message using NLP processor capabilities"""
         try:
-            from ....matching.nlp_processor import nlp_processor
+            from matching.nlp_processor import nlp_processor
             return nlp_processor._get_help_message()
         except Exception as e:
             logger.error(f"Error getting help message: {str(e)}")

@@ -11,7 +11,7 @@ This module handles utility functions including:
 import logging
 from typing import Dict
 
-from ...models import ConversationState
+from core.models import ConversationState
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +77,7 @@ class ConversationUtilsHandler:
     def get_help_message(self) -> str:
         """Get enhanced help message using NLP processor capabilities"""
         try:
-            from ....matching.nlp_processor import nlp_processor
+            from matching.nlp_processor import nlp_processor
             return nlp_processor._get_help_message()
         except Exception as e:
             logger.error(f"Error getting help message: {str(e)}")
