@@ -2278,3 +2278,41 @@ INFO 2025-12-06 17:51:35,627 api_handlers 27968 31992 Anthropic client initializ
 INFO 2025-12-06 17:51:35,628 ai_enhancer 27968 31992 AI Enhancer initialized with available handlers
 INFO 2025-12-06 17:51:35,631 nlp_processor 27968 31992 OpenAI API Key received: True
 INFO 2025-12-06 17:51:35,632 nlp_processor 27968 31992 Gemini API Key received: True
+INFO 2025-12-06 19:05:55,385 integration 22340 21112 Initializing MCP Integration...
+INFO 2025-12-06 19:05:55,388 integration 22340 21112 Anthropic API key found: True
+INFO 2025-12-06 19:05:56,100 api_handlers 22340 21112 Anthropic client initialized successfully
+INFO 2025-12-06 19:05:56,100 integration 22340 21112 Anthropic handler initialized
+INFO 2025-12-06 19:05:56,100 integration 22340 21112 Gemini API key found: True
+INFO 2025-12-06 19:05:56,100 api_handlers 22340 21112 Gemini client initialized successfully
+INFO 2025-12-06 19:05:56,101 integration 22340 21112 Gemini handler initialized
+INFO 2025-12-06 19:05:56,101 integration 22340 21112 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-06 19:05:56,101 integration 22340 21112 MCP components initialized
+INFO 2025-12-06 19:05:56,102 integration 22340 21112 Recommendation service initialized
+INFO 2025-12-06 19:05:56,102 __init__ 22340 21112 MCP integration initialized successfully
+INFO 2025-12-06 19:05:56,103 __init__ 22340 21112 Recommendation service initialized successfully
+WARNING 2025-12-06 19:05:56,105 api_handlers 22340 21112 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-06 19:05:56,105 api_handlers 22340 21112 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-06 19:05:56,106 api_handlers 22340 21112 Gemini client initialized successfully
+INFO 2025-12-06 19:05:56,718 api_handlers 22340 21112 Anthropic client initialized successfully
+INFO 2025-12-06 19:05:56,719 ai_enhancer 22340 21112 AI Enhancer initialized with available handlers
+INFO 2025-12-06 19:05:56,720 nlp_processor 22340 21112 OpenAI API Key received: True
+INFO 2025-12-06 19:05:56,720 nlp_processor 22340 21112 Gemini API Key received: True
+INFO 2025-12-06 19:06:22,506 integration 26868 19252 Initializing MCP Integration...
+INFO 2025-12-06 19:06:22,507 integration 26868 19252 Anthropic API key found: True
+INFO 2025-12-06 19:06:23,096 api_handlers 26868 19252 Anthropic client initialized successfully
+INFO 2025-12-06 19:06:23,096 integration 26868 19252 Anthropic handler initialized
+INFO 2025-12-06 19:06:23,096 integration 26868 19252 Gemini API key found: True
+INFO 2025-12-06 19:06:23,099 api_handlers 26868 19252 Gemini client initialized successfully
+INFO 2025-12-06 19:06:23,099 integration 26868 19252 Gemini handler initialized
+INFO 2025-12-06 19:06:23,100 integration 26868 19252 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-06 19:06:23,100 integration 26868 19252 MCP components initialized
+INFO 2025-12-06 19:06:23,100 integration 26868 19252 Recommendation service initialized
+INFO 2025-12-06 19:06:23,100 __init__ 26868 19252 MCP integration initialized successfully
+INFO 2025-12-06 19:06:23,100 __init__ 26868 19252 Recommendation service initialized successfully
+WARNING 2025-12-06 19:06:23,102 api_handlers 26868 19252 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-06 19:06:23,102 api_handlers 26868 19252 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-06 19:06:23,102 api_handlers 26868 19252 Gemini client initialized successfully
+INFO 2025-12-06 19:06:23,646 api_handlers 26868 19252 Anthropic client initialized successfully
+INFO 2025-12-06 19:06:23,647 ai_enhancer 26868 19252 AI Enhancer initialized with available handlers
+INFO 2025-12-06 19:06:23,648 nlp_processor 26868 19252 OpenAI API Key received: True
+INFO 2025-12-06 19:06:23,649 nlp_processor 26868 19252 Gemini API Key received: True
