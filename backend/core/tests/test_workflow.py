@@ -12,8 +12,11 @@ import django
 from datetime import datetime
 from django.utils import timezone
 
+# Add backend directory to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 # Setup Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.backend.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 django.setup()
 
 from core.models import (
@@ -44,28 +47,28 @@ def create_test_data():
     if created:
         print(f"Created provider: {provider.name}")
 
-    # Create test properties
+    # Get or filter existing test properties
     properties_data = [
         {
+            'property_no': 'BH-1001',
             'name': 'Blue Haven Lodge',
             'address': '123 Campus Street',
-                # 'heads_per_room': 2,
             'total_rooms': 10,
             'available_rooms': 5,
             'amenities': ['wifi', 'parking', 'DSTV'],
-            'price_per_semester': 540.00,  # 3 months * 180
+            'price_per_semester': 540.00,
             'price_per_month': 180.00,
             'distance_from_campus': 1.2,
             'campus_name': 'University of Zimbabwe'
         },
         {
+            'property_no': 'CA-2001',
             'name': 'Campus View Apartments',
             'address': '456 University Ave',
-            # 'heads_per_room': 2,
             'total_rooms': 8,
             'available_rooms': 3,
             'amenities': ['wifi', 'kitchen', 'security'],
-            'price_per_semester': 600.00,  # 3 months * 200
+            'price_per_semester': 600.00,
             'price_per_month': 200.00,
             'distance_from_campus': 0.8,
             'campus_name': 'University of Zimbabwe'
@@ -74,12 +77,16 @@ def create_test_data():
 
     properties = []
     for prop_data in properties_data:
-        property, created = Property.objects.get_or_create(
-            name=prop_data['name'],
-            provider=provider,
-            defaults=prop_data
-        )
-        if created:
+        try:
+            property = Property.objects.get(
+                property_no=prop_data['property_no']
+            )
+            print(f"Found existing property: {property.name}")
+        except Property.DoesNotExist:
+            property = Property.objects.create(
+                provider=provider,
+                **prop_data
+            )
             print(f"Created property: {property.name}")
         properties.append(property)
 

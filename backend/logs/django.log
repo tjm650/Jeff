@@ -2373,3 +2373,1206 @@ INFO 2025-12-06 19:35:59,299 api_handlers 29516 13000 Anthropic client initializ
 INFO 2025-12-06 19:35:59,299 ai_enhancer 29516 13000 AI Enhancer initialized with available handlers
 INFO 2025-12-06 19:35:59,300 nlp_processor 29516 13000 OpenAI API Key received: True
 INFO 2025-12-06 19:35:59,300 nlp_processor 29516 13000 Gemini API Key received: True
+INFO 2025-12-08 18:17:46,652 integration 30072 1256 Initializing MCP Integration...
+INFO 2025-12-08 18:17:46,652 integration 30072 1256 Anthropic API key found: True
+INFO 2025-12-08 18:17:47,394 api_handlers 30072 1256 Anthropic client initialized successfully
+INFO 2025-12-08 18:17:47,394 integration 30072 1256 Anthropic handler initialized
+INFO 2025-12-08 18:17:47,394 integration 30072 1256 Gemini API key found: True
+INFO 2025-12-08 18:17:47,394 api_handlers 30072 1256 Gemini client initialized successfully
+INFO 2025-12-08 18:17:47,394 integration 30072 1256 Gemini handler initialized
+INFO 2025-12-08 18:17:47,394 integration 30072 1256 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-08 18:17:47,394 integration 30072 1256 MCP components initialized
+INFO 2025-12-08 18:17:47,394 integration 30072 1256 Recommendation service initialized
+INFO 2025-12-08 18:17:47,402 __init__ 30072 1256 MCP integration initialized successfully
+INFO 2025-12-08 18:17:47,402 __init__ 30072 1256 Recommendation service initialized successfully
+INFO 2025-12-08 18:18:21,352 integration 22936 13744 Initializing MCP Integration...
+INFO 2025-12-08 18:18:21,352 integration 22936 13744 Anthropic API key found: True
+INFO 2025-12-08 18:18:22,816 api_handlers 22936 13744 Anthropic client initialized successfully
+INFO 2025-12-08 18:18:22,816 integration 22936 13744 Anthropic handler initialized
+INFO 2025-12-08 18:18:22,816 integration 22936 13744 Gemini API key found: True
+INFO 2025-12-08 18:18:22,816 api_handlers 22936 13744 Gemini client initialized successfully
+INFO 2025-12-08 18:18:22,816 integration 22936 13744 Gemini handler initialized
+INFO 2025-12-08 18:18:22,816 integration 22936 13744 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-08 18:18:22,816 integration 22936 13744 MCP components initialized
+INFO 2025-12-08 18:18:22,816 integration 22936 13744 Recommendation service initialized
+INFO 2025-12-08 18:18:22,816 __init__ 22936 13744 MCP integration initialized successfully
+INFO 2025-12-08 18:18:22,816 __init__ 22936 13744 Recommendation service initialized successfully
+INFO 2025-12-08 18:19:11,404 integration 24144 19588 Initializing MCP Integration...
+INFO 2025-12-08 18:19:11,404 integration 24144 19588 Anthropic API key found: True
+INFO 2025-12-08 18:19:12,147 api_handlers 24144 19588 Anthropic client initialized successfully
+INFO 2025-12-08 18:19:12,147 integration 24144 19588 Anthropic handler initialized
+INFO 2025-12-08 18:19:12,147 integration 24144 19588 Gemini API key found: True
+INFO 2025-12-08 18:19:12,147 api_handlers 24144 19588 Gemini client initialized successfully
+INFO 2025-12-08 18:19:12,147 integration 24144 19588 Gemini handler initialized
+INFO 2025-12-08 18:19:12,147 integration 24144 19588 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-08 18:19:12,147 integration 24144 19588 MCP components initialized
+INFO 2025-12-08 18:19:12,147 integration 24144 19588 Recommendation service initialized
+INFO 2025-12-08 18:19:12,147 __init__ 24144 19588 MCP integration initialized successfully
+INFO 2025-12-08 18:19:12,147 __init__ 24144 19588 Recommendation service initialized successfully
+INFO 2025-12-08 18:19:12,267 conversation_workflow 24144 19588 Processing message from +263712345678: 'Hello'
+INFO 2025-12-08 18:19:12,287 utils 24144 19588 Created new conversation state for +263712345678
+INFO 2025-12-08 18:19:12,290 classification 24144 19588 Classifying message with AI: 'Hello'
+INFO 2025-12-08 18:19:12,292 conversation_workflow 24144 19588 Message classified as: G for +263712345678
+INFO 2025-12-08 18:19:12,292 conversation_workflow 24144 19588 Greeting message detected for +263712345678
+ERROR 2025-12-08 18:19:13,440 api_handlers 24144 19588 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:19:15,272 _client 24144 19588 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:19:15,272 api_handlers 24144 19588 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuXKLrTjEujxf3eYuCcx'}
+ERROR 2025-12-08 18:19:15,492 api_handlers 24144 19588 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:19:16,052 _client 24144 19588 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:19:16,052 api_handlers 24144 19588 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuXKP7tYM6zFewWr1z6D'}
+ERROR 2025-12-08 18:19:16,302 api_handlers 24144 19588 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:19:16,622 _client 24144 19588 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:19:16,622 api_handlers 24144 19588 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuXKSeDVSMkcpDsU5iNE'}
+ERROR 2025-12-08 18:19:26,290 api_handlers 24144 19588 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:19:26,637 _client 24144 19588 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:19:26,642 api_handlers 24144 19588 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuXLBXuSGPDXCxeNREw5'}
+WARNING 2025-12-08 18:19:26,642 greeting_handler 24144 19588 Both APIs failed for greeting, using static response
+INFO 2025-12-08 18:19:26,660 message_classifier 24144 19588 Greeting flow completed for +263712345678
+INFO 2025-12-08 18:19:26,660 conversation_workflow 24144 19588 Processing message from +263712345678: 'I need a 2 head room with wifi near campus for $20...'
+INFO 2025-12-08 18:19:26,663 classification 24144 19588 Classifying message with AI: 'I need a 2 head room with wifi near campus for $20...'
+ERROR 2025-12-08 18:19:26,663 message_classifier 24144 19588 Error classifying message with MCP integration: 'P'
+INFO 2025-12-08 18:19:26,664 conversation_workflow 24144 19588 Message classified as: A for +263712345678
+INFO 2025-12-08 18:19:26,664 conversation_workflow 24144 19588 Accommodation enquiry detected for +263712345678
+ERROR 2025-12-08 18:19:27,102 api_handlers 24144 19588 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:19:27,412 _client 24144 19588 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:19:27,412 api_handlers 24144 19588 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuXLEqqBoiiH8wtrrHbg'}
+WARNING 2025-12-08 18:19:27,682 api_handlers 24144 19588 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-08 18:19:27,687 api_handlers 24144 19588 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-08 18:19:27,687 api_handlers 24144 19588 Gemini client initialized successfully
+INFO 2025-12-08 18:19:28,282 api_handlers 24144 19588 Anthropic client initialized successfully
+INFO 2025-12-08 18:19:28,282 ai_enhancer 24144 19588 AI Enhancer initialized with available handlers
+INFO 2025-12-08 18:19:28,282 nlp_processor 24144 19588 OpenAI API Key received: True
+INFO 2025-12-08 18:19:28,282 nlp_processor 24144 19588 Gemini API Key received: True
+INFO 2025-12-08 18:19:28,292 property_search 24144 19588 Starting property search for +263712345678
+INFO 2025-12-08 18:19:28,292 property_search 24144 19588 Validated requirements: {'heads': 2, 'amenities': ['wifi'], 'budget_max': 200.0, 'distance_preference': 'near', 'location_context': 'campus for', 'gender_preference': None, 'urgency': None, 'raw_message': 'I need a 2 head room with wifi near campus for $200', 'keyword_tokens': ['head', 'room', 'wifi', 'near', 'campus', '200'], 'expanded_keywords': ['head', 'room', 'wifi', 'near', 'campus', '200'], 'original_message': 'I need a 2 head room with wifi near campus for $200', 'nlp_processing_timestamp': '2025-12-08T16:19:27.412756+00:00', 'confidence_score': 0.23, 'price_per_head': 100.0, 'requirement_summary': '2 heads |  wifi |  Max $200.0 |  near to campus', 'needs_period_recommendation': True, 'period_recommendation_message': "Please specify your preferred rental period:\n• Daily rental (short stays)\n• Weekly rental (medium stays)\n• Monthly rental (long-term stays)\n\n_Example: 'Looking for accommodation for the whole semester for $100 a month'_", 'rental_period': 'month', 'rental_period_auto_selected': True}
+INFO 2025-12-08 18:19:28,292 property_search 24144 19588 Calling property_matcher.match_properties for +263712345678
+ERROR 2025-12-08 18:19:28,377 property_matcher 24144 19588 Error in property matching: contains lookup is not supported on this database backend.
+INFO 2025-12-08 18:19:28,377 property_search 24144 19588 Property matcher returned 0 properties
+INFO 2025-12-08 18:19:28,377 property_search 24144 19588 No properties found, trying relaxed criteria for +263712345678
+INFO 2025-12-08 18:19:28,378 property_search 24144 19588 Retrying search with relaxed criteria for +263712345678
+ERROR 2025-12-08 18:19:28,392 property_matcher 24144 19588 Error in property matching: contains lookup is not supported on this database backend.
+INFO 2025-12-08 18:19:28,392 property_search 24144 19588 Relaxed search returned 0 properties
+INFO 2025-12-08 18:19:28,392 property_search 24144 19588 No properties found even with relaxed criteria for +263712345678
+INFO 2025-12-08 18:19:28,392 property_search 24144 19588 Token status for +263712345678: has_valid_token=None
+INFO 2025-12-08 18:19:28,403 recommendation 24144 19588 Trying Gemini - handler: True, model: genai.GenerativeModel(
+    model_name='models/gemini-2.5-flash-lite',
+    generation_config={},
+    safety_settings={},
+    tools=None,
+    system_instruction=None,
+    cached_content=None
+)
+INFO 2025-12-08 18:19:50,802 integration 11048 29276 Initializing MCP Integration...
+INFO 2025-12-08 18:19:50,802 integration 11048 29276 Anthropic API key found: True
+INFO 2025-12-08 18:19:51,393 api_handlers 11048 29276 Anthropic client initialized successfully
+INFO 2025-12-08 18:19:51,393 integration 11048 29276 Anthropic handler initialized
+INFO 2025-12-08 18:19:51,393 integration 11048 29276 Gemini API key found: True
+INFO 2025-12-08 18:19:51,393 api_handlers 11048 29276 Gemini client initialized successfully
+INFO 2025-12-08 18:19:51,394 integration 11048 29276 Gemini handler initialized
+INFO 2025-12-08 18:19:51,394 integration 11048 29276 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-08 18:19:51,395 integration 11048 29276 MCP components initialized
+INFO 2025-12-08 18:19:51,395 integration 11048 29276 Recommendation service initialized
+INFO 2025-12-08 18:19:51,395 __init__ 11048 29276 MCP integration initialized successfully
+INFO 2025-12-08 18:19:51,395 __init__ 11048 29276 Recommendation service initialized successfully
+INFO 2025-12-08 18:19:51,427 conversation_workflow 11048 29276 Processing message from +263712345678: 'Hello'
+INFO 2025-12-08 18:19:51,438 utils 11048 29276 Created new conversation state for +263712345678
+INFO 2025-12-08 18:19:51,439 classification 11048 29276 Classifying message with AI: 'Hello'
+INFO 2025-12-08 18:19:51,441 conversation_workflow 11048 29276 Message classified as: G for +263712345678
+INFO 2025-12-08 18:19:51,441 conversation_workflow 11048 29276 Greeting message detected for +263712345678
+ERROR 2025-12-08 18:19:52,719 api_handlers 11048 29276 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:19:53,375 _client 11048 29276 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:19:53,375 api_handlers 11048 29276 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuXN9jJvAyMy4HG4ivUz'}
+ERROR 2025-12-08 18:19:53,582 api_handlers 11048 29276 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:19:53,952 _client 11048 29276 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:19:53,952 api_handlers 11048 29276 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuXNC4TLXrJ4Nu3rb4VD'}
+ERROR 2025-12-08 18:19:54,432 api_handlers 11048 29276 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:19:54,762 _client 11048 29276 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:19:54,762 api_handlers 11048 29276 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuXNFf1EQuWjyvhW11p7'}
+ERROR 2025-12-08 18:19:55,142 api_handlers 11048 29276 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:19:55,522 _client 11048 29276 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:19:55,522 api_handlers 11048 29276 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuXNJm34SRSo3F66s6Z7'}
+WARNING 2025-12-08 18:19:55,522 greeting_handler 11048 29276 Both APIs failed for greeting, using static response
+INFO 2025-12-08 18:19:55,535 message_classifier 11048 29276 Greeting flow completed for +263712345678
+INFO 2025-12-08 18:19:55,535 conversation_workflow 11048 29276 Processing message from +263712345678: 'I need a 2 head room with wifi near campus for $20...'
+INFO 2025-12-08 18:19:55,535 classification 11048 29276 Classifying message with AI: 'I need a 2 head room with wifi near campus for $20...'
+ERROR 2025-12-08 18:19:55,541 message_classifier 11048 29276 Error classifying message with MCP integration: 'P'
+INFO 2025-12-08 18:19:55,541 conversation_workflow 11048 29276 Message classified as: A for +263712345678
+INFO 2025-12-08 18:19:55,541 conversation_workflow 11048 29276 Accommodation enquiry detected for +263712345678
+ERROR 2025-12-08 18:19:55,965 api_handlers 11048 29276 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:19:56,422 _client 11048 29276 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:19:56,431 api_handlers 11048 29276 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuXNNDtgNMDbbvApDDpC'}
+WARNING 2025-12-08 18:19:56,532 api_handlers 11048 29276 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-08 18:19:56,537 api_handlers 11048 29276 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-08 18:19:56,537 api_handlers 11048 29276 Gemini client initialized successfully
+INFO 2025-12-08 18:19:57,150 api_handlers 11048 29276 Anthropic client initialized successfully
+INFO 2025-12-08 18:19:57,150 ai_enhancer 11048 29276 AI Enhancer initialized with available handlers
+INFO 2025-12-08 18:19:57,150 nlp_processor 11048 29276 OpenAI API Key received: True
+INFO 2025-12-08 18:19:57,151 nlp_processor 11048 29276 Gemini API Key received: True
+INFO 2025-12-08 18:19:57,152 property_search 11048 29276 Starting property search for +263712345678
+INFO 2025-12-08 18:19:57,152 property_search 11048 29276 Validated requirements: {'heads': 2, 'amenities': ['wifi'], 'budget_max': 200.0, 'distance_preference': 'near', 'location_context': 'campus for', 'gender_preference': None, 'urgency': None, 'raw_message': 'I need a 2 head room with wifi near campus for $200', 'keyword_tokens': ['head', 'room', 'wifi', 'near', 'campus', '200'], 'expanded_keywords': ['head', 'room', 'wifi', 'near', 'campus', '200'], 'original_message': 'I need a 2 head room with wifi near campus for $200', 'nlp_processing_timestamp': '2025-12-08T16:19:56.431050+00:00', 'confidence_score': 0.23, 'price_per_head': 100.0, 'requirement_summary': '2 heads |  wifi |  Max $200.0 |  near to campus', 'needs_period_recommendation': True, 'period_recommendation_message': "Please specify your preferred rental period:\n• Daily rental (short stays)\n• Weekly rental (medium stays)\n• Monthly rental (long-term stays)\n\n_Example: 'Looking for accommodation for the whole semester for $100 a month'_", 'rental_period': 'month', 'rental_period_auto_selected': True}
+INFO 2025-12-08 18:19:57,153 property_search 11048 29276 Calling property_matcher.match_properties for +263712345678
+ERROR 2025-12-08 18:19:57,159 property_matcher 11048 29276 Error in property matching: contains lookup is not supported on this database backend.
+INFO 2025-12-08 18:19:57,159 property_search 11048 29276 Property matcher returned 0 properties
+INFO 2025-12-08 18:19:57,159 property_search 11048 29276 No properties found, trying relaxed criteria for +263712345678
+INFO 2025-12-08 18:19:57,159 property_search 11048 29276 Retrying search with relaxed criteria for +263712345678
+ERROR 2025-12-08 18:19:57,166 property_matcher 11048 29276 Error in property matching: contains lookup is not supported on this database backend.
+INFO 2025-12-08 18:19:57,166 property_search 11048 29276 Relaxed search returned 0 properties
+INFO 2025-12-08 18:19:57,166 property_search 11048 29276 No properties found even with relaxed criteria for +263712345678
+INFO 2025-12-08 18:19:57,168 property_search 11048 29276 Token status for +263712345678: has_valid_token=None
+INFO 2025-12-08 18:19:57,170 recommendation 11048 29276 Trying Gemini - handler: True, model: genai.GenerativeModel(
+    model_name='models/gemini-2.5-flash-lite',
+    generation_config={},
+    safety_settings={},
+    tools=None,
+    system_instruction=None,
+    cached_content=None
+)
+ERROR 2025-12-08 18:19:57,374 api_handlers 11048 29276 Gemini connection test failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+WARNING 2025-12-08 18:19:57,375 recommendation 11048 29276 Gemini connection test failed
+INFO 2025-12-08 18:19:57,375 recommendation 11048 29276 Trying Anthropic - handler: <core.services.mcp.api_handlers.AnthropicHandler object at 0x0000014F337D3620>, client: <anthropic.Anthropic object at 0x0000014F33CEACC0>
+INFO 2025-12-08 18:19:57,859 _client 11048 29276 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:19:57,864 api_handlers 11048 29276 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuXNUHmVvfBdiiGtJPxJ'}
+INFO 2025-12-08 18:19:57,865 recommendation 11048 29276 Anthropic response: None
+INFO 2025-12-08 18:19:57,866 step_handlers 11048 29276 Property search returned message for +263712345678: *No Properties Found*
+
+No properties found matching your exact requirements.
+
+Available options summ
+INFO 2025-12-08 18:19:57,866 step_handlers 11048 29276 Returning no properties recommendation for +263712345678
+INFO 2025-12-08 18:19:57,904 conversation_workflow 11048 29276 Processing message from +263712345678: '1'
+INFO 2025-12-08 18:19:57,906 classification 11048 29276 Classifying message with AI: '1'
+INFO 2025-12-08 18:19:57,908 conversation_workflow 11048 29276 Message classified as: H for +263712345678
+INFO 2025-12-08 18:19:57,908 conversation_workflow 11048 29276 Help message detected for +263712345678
+INFO 2025-12-08 18:19:57,909 handlers 11048 29276 Processing provider response from +263771234567: 'YES confirmed'
+ERROR 2025-12-08 18:19:58,199 api_handlers 11048 29276 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:19:58,515 _client 11048 29276 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:19:58,521 api_handlers 11048 29276 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuXNXmNT8BVeFwiLE9YH'}
+ERROR 2025-12-08 18:19:58,968 api_handlers 11048 29276 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:19:59,302 _client 11048 29276 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:19:59,302 api_handlers 11048 29276 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuXNb6Yb4kV5PWNaiBWs'}
+WARNING 2025-12-08 18:19:59,312 handlers 11048 29276 No pending booking found for CN from provider +263771234567
+INFO 2025-12-08 18:19:59,312 handlers 11048 29276 Processing provider response from +263771234567: 'NO sorry it's full'
+ERROR 2025-12-08 18:19:59,580 api_handlers 11048 29276 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:19:59,898 _client 11048 29276 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:19:59,898 api_handlers 11048 29276 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuXNdeb5Pbs5i4etag9H'}
+ERROR 2025-12-08 18:20:00,358 api_handlers 11048 29276 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:20:00,678 _client 11048 29276 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:20:00,679 api_handlers 11048 29276 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuXNh2VQivuT7REfKx89'}
+WARNING 2025-12-08 18:20:00,682 handlers 11048 29276 No pending booking found for XN from provider +263771234567
+INFO 2025-12-08 18:20:00,682 handlers 11048 29276 Processing provider response from +263771234567: 'What program is the student studying?'
+ERROR 2025-12-08 18:20:00,925 api_handlers 11048 29276 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+WARNING 2025-12-08 18:20:00,925 api_handlers 11048 29276 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:20:00,926 api_handlers 11048 29276 Anthropic API rate limit exceeded
+WARNING 2025-12-08 18:20:00,926 api_handlers 11048 29276 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:20:00,926 api_handlers 11048 29276 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:20:00,927 api_handlers 11048 29276 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:20:00,927 api_handlers 11048 29276 Anthropic API rate limit exceeded
+WARNING 2025-12-08 18:20:00,930 handlers 11048 29276 No pending booking found for AX from provider +263771234567
+INFO 2025-12-08 18:22:52,582 integration 27888 17560 Initializing MCP Integration...
+INFO 2025-12-08 18:22:52,582 integration 27888 17560 Anthropic API key found: True
+INFO 2025-12-08 18:22:53,227 api_handlers 27888 17560 Anthropic client initialized successfully
+INFO 2025-12-08 18:22:53,227 integration 27888 17560 Anthropic handler initialized
+INFO 2025-12-08 18:22:53,227 integration 27888 17560 Gemini API key found: True
+INFO 2025-12-08 18:22:53,228 api_handlers 27888 17560 Gemini client initialized successfully
+INFO 2025-12-08 18:22:53,228 integration 27888 17560 Gemini handler initialized
+INFO 2025-12-08 18:22:53,228 integration 27888 17560 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-08 18:22:53,228 integration 27888 17560 MCP components initialized
+INFO 2025-12-08 18:22:53,228 integration 27888 17560 Recommendation service initialized
+INFO 2025-12-08 18:22:53,228 __init__ 27888 17560 MCP integration initialized successfully
+INFO 2025-12-08 18:22:53,228 __init__ 27888 17560 Recommendation service initialized successfully
+WARNING 2025-12-08 18:22:53,394 api_handlers 27888 17560 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-08 18:22:53,394 api_handlers 27888 17560 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-08 18:22:53,394 api_handlers 27888 17560 Gemini client initialized successfully
+INFO 2025-12-08 18:22:53,926 api_handlers 27888 17560 Anthropic client initialized successfully
+INFO 2025-12-08 18:22:53,926 ai_enhancer 27888 17560 AI Enhancer initialized with available handlers
+INFO 2025-12-08 18:22:53,926 nlp_processor 27888 17560 OpenAI API Key received: True
+INFO 2025-12-08 18:22:53,926 nlp_processor 27888 17560 Gemini API Key received: True
+INFO 2025-12-08 18:28:54,227 integration 31772 28036 Initializing MCP Integration...
+INFO 2025-12-08 18:28:54,227 integration 31772 28036 Anthropic API key found: True
+INFO 2025-12-08 18:28:55,447 api_handlers 31772 28036 Anthropic client initialized successfully
+INFO 2025-12-08 18:28:55,447 integration 31772 28036 Anthropic handler initialized
+INFO 2025-12-08 18:28:55,447 integration 31772 28036 Gemini API key found: True
+INFO 2025-12-08 18:28:55,447 api_handlers 31772 28036 Gemini client initialized successfully
+INFO 2025-12-08 18:28:55,447 integration 31772 28036 Gemini handler initialized
+INFO 2025-12-08 18:28:55,447 integration 31772 28036 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-08 18:28:55,447 integration 31772 28036 MCP components initialized
+INFO 2025-12-08 18:28:55,447 integration 31772 28036 Recommendation service initialized
+INFO 2025-12-08 18:28:55,447 __init__ 31772 28036 MCP integration initialized successfully
+INFO 2025-12-08 18:28:55,447 __init__ 31772 28036 Recommendation service initialized successfully
+WARNING 2025-12-08 18:28:55,647 api_handlers 31772 28036 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2025-12-08 18:28:55,647 api_handlers 31772 28036 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2025-12-08 18:28:55,647 api_handlers 31772 28036 Gemini client initialized successfully
+INFO 2025-12-08 18:28:56,398 api_handlers 31772 28036 Anthropic client initialized successfully
+INFO 2025-12-08 18:28:56,398 ai_enhancer 31772 28036 AI Enhancer initialized with available handlers
+INFO 2025-12-08 18:28:56,398 nlp_processor 31772 28036 OpenAI API Key received: True
+INFO 2025-12-08 18:28:56,398 nlp_processor 31772 28036 Gemini API Key received: True
+INFO 2025-12-08 18:28:56,531 classification 31772 28036 Classifying message with AI: 'Hi Jeff'
+INFO 2025-12-08 18:28:56,535 classification 31772 28036 Classifying message with AI: 'I need a single room'
+INFO 2025-12-08 18:28:56,537 classification 31772 28036 Classifying message with AI: 'help me'
+INFO 2025-12-08 18:28:56,537 classification 31772 28036 Classifying message with AI: 'get.token: 0717718865'
+ERROR 2025-12-08 18:28:58,317 api_handlers 31772 28036 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:28:59,091 _client 31772 28036 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:28:59,093 api_handlers 31772 28036 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuY4J9C1bSar3BbFDTUo'}
+ERROR 2025-12-08 18:28:59,310 api_handlers 31772 28036 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:28:59,673 _client 31772 28036 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:28:59,673 api_handlers 31772 28036 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuY4LfVyzCp9VyDH8egA'}
+ERROR 2025-12-08 18:29:00,111 api_handlers 31772 28036 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:29:00,457 _client 31772 28036 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:29:00,459 api_handlers 31772 28036 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuY4Q5sxZ3VDkNHbGq69'}
+ERROR 2025-12-08 18:29:00,727 api_handlers 31772 28036 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:29:01,127 _client 31772 28036 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:29:01,127 api_handlers 31772 28036 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuY4SgeZdezBSjXxDfZM'}
+ERROR 2025-12-08 18:29:01,507 api_handlers 31772 28036 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:29:01,847 _client 31772 28036 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:29:01,847 api_handlers 31772 28036 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuY4W6Xs2AQbjTWzbnGq'}
+ERROR 2025-12-08 18:29:02,163 api_handlers 31772 28036 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:29:02,587 _client 31772 28036 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:29:02,587 api_handlers 31772 28036 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuY4YtTYcQf9i9i6Qe6z'}
+ERROR 2025-12-08 18:29:03,171 property_matcher 31772 28036 Error in property matching: contains lookup is not supported on this database backend.
+ERROR 2025-12-08 18:29:03,172 property_matcher 31772 28036 Error in property matching: contains lookup is not supported on this database backend.
+ERROR 2025-12-08 18:29:03,172 property_matcher 31772 28036 Error in property matching: contains lookup is not supported on this database backend.
+INFO 2025-12-08 18:29:03,177 conversation_workflow 31772 28036 Processing message from +263712345678: 'Hi Jeff'
+INFO 2025-12-08 18:29:03,247 utils 31772 28036 Created new conversation state for +263712345678
+INFO 2025-12-08 18:29:03,250 classification 31772 28036 Classifying message with AI: 'Hi Jeff'
+INFO 2025-12-08 18:29:03,250 conversation_workflow 31772 28036 Message classified as: G for +263712345678
+INFO 2025-12-08 18:29:03,251 conversation_workflow 31772 28036 Greeting message detected for +263712345678
+ERROR 2025-12-08 18:29:03,474 api_handlers 31772 28036 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:29:03,777 _client 31772 28036 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:29:03,777 api_handlers 31772 28036 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuY4eW3Z4GEVUjBcV8SJ'}
+ERROR 2025-12-08 18:29:04,294 api_handlers 31772 28036 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:29:04,677 _client 31772 28036 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:29:04,691 api_handlers 31772 28036 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuY4hxAcCHCrw437TiCy'}
+ERROR 2025-12-08 18:29:04,910 api_handlers 31772 28036 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:29:05,457 _client 31772 28036 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:29:05,457 api_handlers 31772 28036 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuY4kaRCWySm7JdpdiSt'}
+ERROR 2025-12-08 18:29:05,777 api_handlers 31772 28036 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:29:06,127 _client 31772 28036 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:29:06,137 api_handlers 31772 28036 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuY4pHAsAZ2oB14n8zD1'}
+WARNING 2025-12-08 18:29:06,137 greeting_handler 31772 28036 Both APIs failed for greeting, using static response
+INFO 2025-12-08 18:29:06,182 message_classifier 31772 28036 Greeting flow completed for +263712345678
+INFO 2025-12-08 18:29:06,183 conversation_workflow 31772 28036 Processing message from +263712345678: 'I need a 2-head room with WiFi for $150'
+INFO 2025-12-08 18:29:06,184 classification 31772 28036 Classifying message with AI: 'I need a 2-head room with WiFi for $150'
+ERROR 2025-12-08 18:29:06,187 message_classifier 31772 28036 Error classifying message with MCP integration: 'P'
+INFO 2025-12-08 18:29:06,190 conversation_workflow 31772 28036 Message classified as: A for +263712345678
+INFO 2025-12-08 18:29:06,190 conversation_workflow 31772 28036 Accommodation enquiry detected for +263712345678
+WARNING 2025-12-08 18:29:06,191 api_handlers 31772 28036 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:29:06,192 api_handlers 31772 28036 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:29:06,192 api_handlers 31772 28036 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:29:06,192 api_handlers 31772 28036 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:29:06,232 step_handlers 31772 28036 Period recommendation shown for +263712345678, proceeding with auto-selected period
+INFO 2025-12-08 18:29:06,281 property_search 31772 28036 Starting property search for +263712345678
+INFO 2025-12-08 18:29:06,281 property_search 31772 28036 Validated requirements: {'heads': None, 'amenities': ['wifi'], 'budget_max': 150.0, 'distance_preference': None, 'location_context': None, 'gender_preference': None, 'urgency': None, 'raw_message': 'I need a 2-head room with WiFi for $150', 'keyword_tokens': ['head', 'room', 'wifi', '150'], 'expanded_keywords': ['head', 'room', 'wifi', '150'], 'original_message': 'I need a 2-head room with WiFi for $150', 'nlp_processing_timestamp': '2025-12-08T16:29:06.192248+00:00', 'confidence_score': 0.23, 'requirement_summary': ' wifi |  Max $150.0', 'needs_period_recommendation': True, 'period_recommendation_message': "Please specify your preferred rental period:\n• Daily rental (short stays)\n• Weekly rental (medium stays)\n• Monthly rental (long-term stays)\n\n_Example: 'Looking for accommodation for the whole semester for $100 a month'_", 'rental_period': 'month', 'rental_period_auto_selected': True, 'invert_sort': True}
+INFO 2025-12-08 18:29:06,281 property_search 31772 28036 Calling property_matcher.match_properties for +263712345678
+ERROR 2025-12-08 18:29:06,281 property_matcher 31772 28036 Error in property matching: contains lookup is not supported on this database backend.
+INFO 2025-12-08 18:29:06,281 property_search 31772 28036 Property matcher returned 0 properties
+INFO 2025-12-08 18:29:06,281 property_search 31772 28036 No properties found, trying relaxed criteria for +263712345678
+INFO 2025-12-08 18:29:06,281 property_search 31772 28036 Retrying search with relaxed criteria for +263712345678
+ERROR 2025-12-08 18:29:06,281 property_matcher 31772 28036 Error in property matching: contains lookup is not supported on this database backend.
+INFO 2025-12-08 18:29:06,281 property_search 31772 28036 Relaxed search returned 0 properties
+INFO 2025-12-08 18:29:06,281 property_search 31772 28036 No properties found even with relaxed criteria for +263712345678
+INFO 2025-12-08 18:29:06,287 property_search 31772 28036 Token status for +263712345678: has_valid_token=True
+INFO 2025-12-08 18:29:06,287 recommendation 31772 28036 Trying Gemini - handler: True, model: genai.GenerativeModel(
+    model_name='models/gemini-2.5-flash-lite',
+    generation_config={},
+    safety_settings={},
+    tools=None,
+    system_instruction=None,
+    cached_content=None
+)
+ERROR 2025-12-08 18:29:06,587 api_handlers 31772 28036 Gemini connection test failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+WARNING 2025-12-08 18:29:06,587 recommendation 31772 28036 Gemini connection test failed
+INFO 2025-12-08 18:29:06,587 recommendation 31772 28036 Trying Anthropic - handler: <core.services.mcp.api_handlers.AnthropicHandler object at 0x00000286B9E788C0>, client: <anthropic.Anthropic object at 0x00000286BD272450>
+WARNING 2025-12-08 18:29:06,587 api_handlers 31772 28036 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:29:06,587 api_handlers 31772 28036 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:29:06,587 recommendation 31772 28036 Anthropic response: None
+INFO 2025-12-08 18:29:06,597 conversation_workflow 31772 28036 Processing message from +263712345678: 'help'
+INFO 2025-12-08 18:29:06,603 classification 31772 28036 Classifying message with AI: 'help'
+INFO 2025-12-08 18:29:06,603 conversation_workflow 31772 28036 Message classified as: H for +263712345678
+INFO 2025-12-08 18:29:06,603 conversation_workflow 31772 28036 Help message detected for +263712345678
+INFO 2025-12-08 18:29:06,603 conversation_workflow 31772 28036 Processing message from +263712345678: 'get.token: 0717718865'
+INFO 2025-12-08 18:29:06,612 classification 31772 28036 Classifying message with AI: 'get.token: 0717718865'
+INFO 2025-12-08 18:29:06,612 conversation_workflow 31772 28036 Message classified as: P for +263712345678
+INFO 2025-12-08 18:29:06,613 conversation_workflow 31772 28036 Payment message detected for +263712345678
+INFO 2025-12-08 18:29:06,707 payment_integration 31772 28036 Processing classified payment request for +263712345678: get.token: 0717718865
+INFO 2025-12-08 18:29:06,895 conversation_workflow 31772 28036 Processing message from +263712345678: 'John Doe'
+INFO 2025-12-08 18:29:06,897 classification 31772 28036 Classifying message with AI: 'John Doe'
+INFO 2025-12-08 18:29:06,897 conversation_workflow 31772 28036 Message classified as: H for +263712345678
+INFO 2025-12-08 18:29:06,897 conversation_workflow 31772 28036 Help message detected for +263712345678
+INFO 2025-12-08 18:29:06,939 conversation_workflow 31772 28036 Processing message from +263712345678: '99'
+INFO 2025-12-08 18:29:06,943 classification 31772 28036 Classifying message with AI: '99'
+INFO 2025-12-08 18:29:06,944 conversation_workflow 31772 28036 Message classified as: H for +263712345678
+INFO 2025-12-08 18:29:06,944 conversation_workflow 31772 28036 Help message detected for +263712345678
+WARNING 2025-12-08 18:29:06,944 api_handlers 31772 28036 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:29:06,944 api_handlers 31772 28036 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:29:06,944 api_handlers 31772 28036 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:29:06,944 api_handlers 31772 28036 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:31:23,435 integration 28416 30216 Initializing MCP Integration...
+INFO 2025-12-08 18:31:23,435 integration 28416 30216 Anthropic API key found: True
+INFO 2025-12-08 18:31:24,319 api_handlers 28416 30216 Anthropic client initialized successfully
+INFO 2025-12-08 18:31:24,319 integration 28416 30216 Anthropic handler initialized
+INFO 2025-12-08 18:31:24,319 integration 28416 30216 Gemini API key found: True
+INFO 2025-12-08 18:31:24,319 api_handlers 28416 30216 Gemini client initialized successfully
+INFO 2025-12-08 18:31:24,319 integration 28416 30216 Gemini handler initialized
+INFO 2025-12-08 18:31:24,319 integration 28416 30216 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-08 18:31:24,319 integration 28416 30216 MCP components initialized
+INFO 2025-12-08 18:31:24,319 integration 28416 30216 Recommendation service initialized
+INFO 2025-12-08 18:31:24,319 __init__ 28416 30216 MCP integration initialized successfully
+INFO 2025-12-08 18:31:24,325 __init__ 28416 30216 Recommendation service initialized successfully
+ERROR 2025-12-08 18:31:26,040 api_handlers 28416 30216 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:31:26,551 _client 28416 30216 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:31:26,551 api_handlers 28416 30216 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYFAimNrNytD6mjfGJ2'}
+INFO 2025-12-08 18:34:05,481 integration 884 27380 Initializing MCP Integration...
+INFO 2025-12-08 18:34:05,483 integration 884 27380 Anthropic API key found: True
+INFO 2025-12-08 18:34:06,120 api_handlers 884 27380 Anthropic client initialized successfully
+INFO 2025-12-08 18:34:06,120 integration 884 27380 Anthropic handler initialized
+INFO 2025-12-08 18:34:06,120 integration 884 27380 Gemini API key found: True
+INFO 2025-12-08 18:34:06,120 api_handlers 884 27380 Gemini client initialized successfully
+INFO 2025-12-08 18:34:06,120 integration 884 27380 Gemini handler initialized
+INFO 2025-12-08 18:34:06,120 integration 884 27380 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-08 18:34:06,120 integration 884 27380 MCP components initialized
+INFO 2025-12-08 18:34:06,120 integration 884 27380 Recommendation service initialized
+INFO 2025-12-08 18:34:06,120 __init__ 884 27380 MCP integration initialized successfully
+INFO 2025-12-08 18:34:06,120 __init__ 884 27380 Recommendation service initialized successfully
+ERROR 2025-12-08 18:34:07,833 api_handlers 884 27380 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:08,340 _client 884 27380 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:08,350 api_handlers 884 27380 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYT6Trt1sbyAf1XmR8Q'}
+ERROR 2025-12-08 18:34:08,583 api_handlers 884 27380 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:08,948 _client 884 27380 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:08,950 api_handlers 884 27380 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYT93dxELNr88rhzXYA'}
+ERROR 2025-12-08 18:34:09,381 api_handlers 884 27380 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:09,781 _client 884 27380 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:09,781 api_handlers 884 27380 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYTCNoyu9bkFA7kGSWa'}
+ERROR 2025-12-08 18:34:10,014 api_handlers 884 27380 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:10,348 _client 884 27380 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:10,348 api_handlers 884 27380 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYTF4Hp2GXCoT6Ec12h'}
+ERROR 2025-12-08 18:34:10,831 api_handlers 884 27380 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:11,198 _client 884 27380 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:11,198 api_handlers 884 27380 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYTJaNuDkWdzU1wPRZj'}
+ERROR 2025-12-08 18:34:11,414 api_handlers 884 27380 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:11,721 _client 884 27380 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:11,721 api_handlers 884 27380 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYTM3Tia3n9zYPNUY5v'}
+ERROR 2025-12-08 18:34:12,264 api_handlers 884 27380 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:12,615 _client 884 27380 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:12,630 api_handlers 884 27380 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYTQhUYZSKgdbX4YAgU'}
+ERROR 2025-12-08 18:34:12,864 api_handlers 884 27380 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:13,171 _client 884 27380 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:13,171 api_handlers 884 27380 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYTTD37Wbc612UTSk2X'}
+ERROR 2025-12-08 18:34:13,661 api_handlers 884 27380 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:13,981 _client 884 27380 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:13,991 api_handlers 884 27380 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYTWge5sFhc7WQqxRq6'}
+ERROR 2025-12-08 18:34:14,201 api_handlers 884 27380 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:14,481 _client 884 27380 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:14,481 api_handlers 884 27380 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYTYvaTSDZPEE28Tg48'}
+WARNING 2025-12-08 18:34:14,481 api_handlers 884 27380 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:34:14,481 api_handlers 884 27380 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:34:14,481 api_handlers 884 27380 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:34:14,481 api_handlers 884 27380 Anthropic API rate limit exceeded
+WARNING 2025-12-08 18:34:14,481 api_handlers 884 27380 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:34:14,481 api_handlers 884 27380 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:34:14,481 api_handlers 884 27380 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:34:14,481 api_handlers 884 27380 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:34:45,624 integration 22048 3996 Initializing MCP Integration...
+INFO 2025-12-08 18:34:45,631 integration 22048 3996 Anthropic API key found: True
+INFO 2025-12-08 18:34:46,221 api_handlers 22048 3996 Anthropic client initialized successfully
+INFO 2025-12-08 18:34:46,221 integration 22048 3996 Anthropic handler initialized
+INFO 2025-12-08 18:34:46,221 integration 22048 3996 Gemini API key found: True
+INFO 2025-12-08 18:34:46,223 api_handlers 22048 3996 Gemini client initialized successfully
+INFO 2025-12-08 18:34:46,223 integration 22048 3996 Gemini handler initialized
+INFO 2025-12-08 18:34:46,224 integration 22048 3996 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-08 18:34:46,224 integration 22048 3996 MCP components initialized
+INFO 2025-12-08 18:34:46,224 integration 22048 3996 Recommendation service initialized
+INFO 2025-12-08 18:34:46,224 __init__ 22048 3996 MCP integration initialized successfully
+INFO 2025-12-08 18:34:46,224 __init__ 22048 3996 Recommendation service initialized successfully
+ERROR 2025-12-08 18:34:47,711 api_handlers 22048 3996 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:48,181 _client 22048 3996 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:48,181 api_handlers 22048 3996 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYW2vd5piuwJPXWqqNP'}
+ERROR 2025-12-08 18:34:48,401 api_handlers 22048 3996 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:48,707 _client 22048 3996 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:48,707 api_handlers 22048 3996 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYW5B4Rr25o5HuXJfCK'}
+ERROR 2025-12-08 18:34:49,221 api_handlers 22048 3996 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:49,531 _client 22048 3996 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:49,531 api_handlers 22048 3996 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYW8gPpwYFLCbHsVSui'}
+ERROR 2025-12-08 18:34:49,761 api_handlers 22048 3996 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:50,080 _client 22048 3996 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:50,080 api_handlers 22048 3996 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYWB13iJaNCGwZDbKif'}
+ERROR 2025-12-08 18:34:50,551 api_handlers 22048 3996 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:50,931 _client 22048 3996 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:50,941 api_handlers 22048 3996 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYWESfkhxNVa8qLxJPu'}
+ERROR 2025-12-08 18:34:51,161 api_handlers 22048 3996 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:51,461 _client 22048 3996 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:51,461 api_handlers 22048 3996 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYWGyxjoxKPXgtWgcFC'}
+ERROR 2025-12-08 18:34:52,041 api_handlers 22048 3996 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:52,370 _client 22048 3996 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:52,373 api_handlers 22048 3996 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYWLkRoADtbm5EFM4KP'}
+ERROR 2025-12-08 18:34:52,591 api_handlers 22048 3996 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:52,891 _client 22048 3996 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:52,891 api_handlers 22048 3996 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYWP6pZJbzcq5kqNbHf'}
+ERROR 2025-12-08 18:34:53,461 api_handlers 22048 3996 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:53,891 _client 22048 3996 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:53,891 api_handlers 22048 3996 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYWSoouUVMguZWhoVkp'}
+ERROR 2025-12-08 18:34:54,121 api_handlers 22048 3996 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:34:54,471 _client 22048 3996 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:34:54,471 api_handlers 22048 3996 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYWVigRsD5ieizw5wx2'}
+WARNING 2025-12-08 18:34:54,471 api_handlers 22048 3996 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:34:54,471 api_handlers 22048 3996 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:34:54,471 api_handlers 22048 3996 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:34:54,471 api_handlers 22048 3996 Anthropic API rate limit exceeded
+WARNING 2025-12-08 18:34:54,471 api_handlers 22048 3996 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:34:54,471 api_handlers 22048 3996 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:34:54,471 api_handlers 22048 3996 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:34:54,471 api_handlers 22048 3996 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:34:54,507 handlers 22048 3996 Processing provider response from +263771234567: 'YES confirmed'
+WARNING 2025-12-08 18:34:54,509 api_handlers 22048 3996 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:34:54,509 api_handlers 22048 3996 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:34:54,509 api_handlers 22048 3996 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:34:54,509 api_handlers 22048 3996 Anthropic API rate limit exceeded
+WARNING 2025-12-08 18:34:54,510 api_handlers 22048 3996 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:34:54,510 api_handlers 22048 3996 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:34:54,510 api_handlers 22048 3996 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:34:54,510 api_handlers 22048 3996 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:34:54,513 handlers 22048 3996 Processing confirmation for booking BK1765211694.491026
+ERROR 2025-12-08 18:34:54,529 handlers 22048 3996 Error processing provider confirmation: 'WhatsAppService' object has no attribute 'send_template_message'
+INFO 2025-12-08 18:34:54,529 handlers 22048 3996 Processing provider response from +263771234567: 'No sorry full'
+WARNING 2025-12-08 18:34:54,531 api_handlers 22048 3996 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:34:54,531 api_handlers 22048 3996 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:34:54,531 api_handlers 22048 3996 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:34:54,531 api_handlers 22048 3996 Anthropic API rate limit exceeded
+WARNING 2025-12-08 18:34:54,531 api_handlers 22048 3996 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:34:54,531 api_handlers 22048 3996 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:34:54,531 api_handlers 22048 3996 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:34:54,531 api_handlers 22048 3996 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:34:54,534 handlers 22048 3996 Processing rejection for booking BK1765211694.491026
+WARNING 2025-12-08 18:34:54,540 handlers 22048 3996 No active token found for student +263712345678
+ERROR 2025-12-08 18:34:54,546 handlers 22048 3996 Error processing provider rejection: 'WhatsAppService' object has no attribute 'send_template_message'
+INFO 2025-12-08 18:34:54,546 handlers 22048 3996 Processing provider response from +263771234567: 'What is your budget?'
+WARNING 2025-12-08 18:34:54,547 api_handlers 22048 3996 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:34:54,547 api_handlers 22048 3996 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:34:54,547 api_handlers 22048 3996 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:34:54,547 api_handlers 22048 3996 Anthropic API rate limit exceeded
+WARNING 2025-12-08 18:34:54,547 api_handlers 22048 3996 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:34:54,547 api_handlers 22048 3996 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:34:54,547 api_handlers 22048 3996 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:34:54,547 api_handlers 22048 3996 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:34:54,547 handlers 22048 3996 Processing info request for booking BK1765211694.491026
+WARNING 2025-12-08 18:34:54,566 whatsapp_service 22048 3996 Using Twilio sandbox number - messages may fail for unverified numbers
+INFO 2025-12-08 18:34:54,920 __init__ 22048 3996 -- BEGIN Twilio API Request --
+INFO 2025-12-08 18:34:54,920 __init__ 22048 3996 POST Request: https://api.twilio.com/2010-04-01/Accounts/ACbe21931a363ef9f5ea846d943393bdad/Messages.json
+INFO 2025-12-08 18:34:54,920 __init__ 22048 3996 Headers:
+INFO 2025-12-08 18:34:54,920 __init__ 22048 3996 User-Agent : twilio-python/8.10.0 (Windows AMD64) Python/3.12.3
+INFO 2025-12-08 18:34:54,920 __init__ 22048 3996 X-Twilio-Client : python-8.10.0
+INFO 2025-12-08 18:34:54,920 __init__ 22048 3996 Accept-Charset : utf-8
+INFO 2025-12-08 18:34:54,920 __init__ 22048 3996 Content-Type : application/x-www-form-urlencoded
+INFO 2025-12-08 18:34:54,920 __init__ 22048 3996 Accept : application/json
+INFO 2025-12-08 18:34:54,920 __init__ 22048 3996 -- END Twilio API Request --
+INFO 2025-12-08 18:34:56,801 __init__ 22048 3996 Response Status Code: 201
+INFO 2025-12-08 18:34:56,801 __init__ 22048 3996 Response Headers: {'Content-Type': 'application/json;charset=utf-8', 'Content-Length': '937', 'Connection': 'keep-alive', 'Date': 'Mon, 08 Dec 2025 16:34:56 GMT', 'Twilio-Concurrent-Requests': '1', 'Twilio-Request-Id': 'RQ012e4a8a7da0d08b4ba3740d00d963a8', 'Twilio-Request-Duration': '0.108', 'X-Home-Region': 'us1', 'X-API-Domain': 'api.twilio.com', 'Strict-Transport-Security': 'max-age=31536000', 'X-Cache': 'Miss from cloudfront', 'Via': '1.1 27be43bf12a72b6d1ab8d9706dde080a.cloudfront.net (CloudFront)', 'X-Amz-Cf-Pop': 'JNB51-P2', 'X-Amz-Cf-Id': 'bi1Mu4Y0GxbfY8cVyUMkqS_P97DzMiWdiBvYIe3PgpM7-fzlJP0f8Q==', 'X-Powered-By': 'AT-5000', 'X-Shenanigans': 'none', 'Vary': 'Origin'}
+INFO 2025-12-08 18:34:56,801 whatsapp_service 22048 3996 WhatsApp message sent, sid=SM012e4a8a7da0d08b4ba3740d00d963a8
+INFO 2025-12-08 18:34:56,801 handlers 22048 3996 Information request for booking BK1765211694.491026
+WARNING 2025-12-08 18:34:56,801 api_handlers 22048 3996 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:34:56,801 api_handlers 22048 3996 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:34:56,801 api_handlers 22048 3996 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:34:56,801 api_handlers 22048 3996 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:36:16,211 integration 16300 20200 Initializing MCP Integration...
+INFO 2025-12-08 18:36:16,211 integration 16300 20200 Anthropic API key found: True
+INFO 2025-12-08 18:36:17,007 api_handlers 16300 20200 Anthropic client initialized successfully
+INFO 2025-12-08 18:36:17,007 integration 16300 20200 Anthropic handler initialized
+INFO 2025-12-08 18:36:17,007 integration 16300 20200 Gemini API key found: True
+INFO 2025-12-08 18:36:17,007 api_handlers 16300 20200 Gemini client initialized successfully
+INFO 2025-12-08 18:36:17,007 integration 16300 20200 Gemini handler initialized
+INFO 2025-12-08 18:36:17,007 integration 16300 20200 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-08 18:36:17,007 integration 16300 20200 MCP components initialized
+INFO 2025-12-08 18:36:17,007 integration 16300 20200 Recommendation service initialized
+INFO 2025-12-08 18:36:17,007 __init__ 16300 20200 MCP integration initialized successfully
+INFO 2025-12-08 18:36:17,007 __init__ 16300 20200 Recommendation service initialized successfully
+ERROR 2025-12-08 18:36:18,381 api_handlers 16300 20200 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:36:18,810 _client 16300 20200 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:36:18,810 api_handlers 16300 20200 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYciR62pjzKCMUSnkTR'}
+ERROR 2025-12-08 18:36:19,046 api_handlers 16300 20200 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:36:19,405 _client 16300 20200 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:36:19,406 api_handlers 16300 20200 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYckmircMdzzRqzz31U'}
+ERROR 2025-12-08 18:36:19,881 api_handlers 16300 20200 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:36:20,201 _client 16300 20200 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:36:20,205 api_handlers 16300 20200 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYcpJ3jD6NEFe2WeHLp'}
+ERROR 2025-12-08 18:36:20,456 api_handlers 16300 20200 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:36:20,847 _client 16300 20200 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:36:20,951 api_handlers 16300 20200 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYcrpMjkWBRxCByXj6A'}
+ERROR 2025-12-08 18:36:21,291 api_handlers 16300 20200 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:36:21,581 _client 16300 20200 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:36:21,581 api_handlers 16300 20200 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYcvJDANGUzq6ExrPW3'}
+ERROR 2025-12-08 18:36:21,989 api_handlers 16300 20200 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:36:22,400 _client 16300 20200 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:36:22,400 api_handlers 16300 20200 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYcyJY4psewK7F4nvit'}
+ERROR 2025-12-08 18:36:22,611 api_handlers 16300 20200 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:36:22,981 _client 16300 20200 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:36:22,981 api_handlers 16300 20200 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYd1zktFGeTxbLz2PQR'}
+ERROR 2025-12-08 18:36:23,456 api_handlers 16300 20200 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:36:23,771 _client 16300 20200 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:36:23,772 api_handlers 16300 20200 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYd5YLKSEJFdXivAPm1'}
+ERROR 2025-12-08 18:36:24,024 api_handlers 16300 20200 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:36:24,331 _client 16300 20200 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:36:24,331 api_handlers 16300 20200 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYd7zuxrvhqGCQTd7mX'}
+ERROR 2025-12-08 18:36:24,841 api_handlers 16300 20200 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:36:25,173 _client 16300 20200 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:36:25,173 api_handlers 16300 20200 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYdBXFCbDuhXpdXx6Uv'}
+WARNING 2025-12-08 18:36:25,173 api_handlers 16300 20200 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:36:25,173 api_handlers 16300 20200 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:36:25,173 api_handlers 16300 20200 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:36:25,173 api_handlers 16300 20200 Anthropic API rate limit exceeded
+WARNING 2025-12-08 18:36:25,173 api_handlers 16300 20200 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:36:25,173 api_handlers 16300 20200 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:36:25,173 api_handlers 16300 20200 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:36:25,173 api_handlers 16300 20200 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:36:25,206 handlers 16300 20200 Processing provider response from +263771234567: 'YES confirmed'
+WARNING 2025-12-08 18:36:25,209 api_handlers 16300 20200 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:36:25,209 api_handlers 16300 20200 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:36:25,209 api_handlers 16300 20200 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:36:25,209 api_handlers 16300 20200 Anthropic API rate limit exceeded
+WARNING 2025-12-08 18:36:25,209 api_handlers 16300 20200 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:36:25,211 api_handlers 16300 20200 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:36:25,211 api_handlers 16300 20200 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:36:25,211 api_handlers 16300 20200 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:36:25,211 handlers 16300 20200 Processing confirmation for booking BK1765211785.196365
+ERROR 2025-12-08 18:36:25,228 handlers 16300 20200 Error processing provider confirmation: 'WhatsAppService' object has no attribute 'send_template_message'
+INFO 2025-12-08 18:36:25,228 handlers 16300 20200 Processing provider response from +263771234567: 'No sorry full'
+WARNING 2025-12-08 18:36:25,228 api_handlers 16300 20200 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:36:25,228 api_handlers 16300 20200 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:36:25,228 api_handlers 16300 20200 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:36:25,228 api_handlers 16300 20200 Anthropic API rate limit exceeded
+WARNING 2025-12-08 18:36:25,228 api_handlers 16300 20200 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:36:25,228 api_handlers 16300 20200 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:36:25,228 api_handlers 16300 20200 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:36:25,228 api_handlers 16300 20200 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:36:25,231 handlers 16300 20200 Processing rejection for booking BK1765211785.196365
+WARNING 2025-12-08 18:36:25,237 handlers 16300 20200 No active token found for student +263712345678
+ERROR 2025-12-08 18:36:25,241 handlers 16300 20200 Error processing provider rejection: 'WhatsAppService' object has no attribute 'send_template_message'
+INFO 2025-12-08 18:36:25,241 handlers 16300 20200 Processing provider response from +263771234567: 'What is your budget?'
+WARNING 2025-12-08 18:36:25,244 api_handlers 16300 20200 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:36:25,244 api_handlers 16300 20200 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:36:25,244 api_handlers 16300 20200 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:36:25,244 api_handlers 16300 20200 Anthropic API rate limit exceeded
+WARNING 2025-12-08 18:36:25,244 api_handlers 16300 20200 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:36:25,244 api_handlers 16300 20200 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:36:25,244 api_handlers 16300 20200 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:36:25,244 api_handlers 16300 20200 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:36:25,244 handlers 16300 20200 Processing info request for booking BK1765211785.196365
+ERROR 2025-12-08 18:36:25,244 handlers 16300 20200 Error processing provider info request: UNIQUE constraint failed: core_booking.cell_number, core_booking.property_id, core_booking.status
+WARNING 2025-12-08 18:36:25,244 api_handlers 16300 20200 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:36:25,244 api_handlers 16300 20200 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:36:25,244 api_handlers 16300 20200 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:36:25,244 api_handlers 16300 20200 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:36:25,253 workflow 16300 20200 Handling provider message from +263771234567: hello
+INFO 2025-12-08 18:36:25,256 handlers 16300 20200 Processing provider response from +263771234567: 'hello'
+WARNING 2025-12-08 18:36:25,256 api_handlers 16300 20200 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:36:25,256 api_handlers 16300 20200 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:36:25,256 api_handlers 16300 20200 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:36:25,256 api_handlers 16300 20200 Anthropic API rate limit exceeded
+WARNING 2025-12-08 18:36:25,256 api_handlers 16300 20200 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:36:25,256 api_handlers 16300 20200 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:36:25,256 api_handlers 16300 20200 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:36:25,261 api_handlers 16300 20200 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:36:25,261 handlers 16300 20200 Processing greeting for booking BK1765211785.196365
+INFO 2025-12-08 18:36:25,261 workflow 16300 20200 Handling provider message from +263771234567: hello there
+INFO 2025-12-08 18:36:25,261 handlers 16300 20200 Processing provider response from +263771234567: 'hello there'
+WARNING 2025-12-08 18:36:25,261 api_handlers 16300 20200 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:36:25,261 api_handlers 16300 20200 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:36:25,261 api_handlers 16300 20200 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:36:25,261 api_handlers 16300 20200 Anthropic API rate limit exceeded
+WARNING 2025-12-08 18:36:25,261 api_handlers 16300 20200 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:36:25,261 api_handlers 16300 20200 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:36:25,261 api_handlers 16300 20200 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:36:25,261 api_handlers 16300 20200 Anthropic API rate limit exceeded
+INFO 2025-12-08 18:36:25,261 handlers 16300 20200 Processing greeting for booking BK1765211785.196365
+INFO 2025-12-08 18:38:20,731 integration 2088 32596 Initializing MCP Integration...
+INFO 2025-12-08 18:38:20,731 integration 2088 32596 Anthropic API key found: True
+INFO 2025-12-08 18:38:21,718 api_handlers 2088 32596 Anthropic client initialized successfully
+INFO 2025-12-08 18:38:21,718 integration 2088 32596 Anthropic handler initialized
+INFO 2025-12-08 18:38:21,718 integration 2088 32596 Gemini API key found: True
+INFO 2025-12-08 18:38:21,718 api_handlers 2088 32596 Gemini client initialized successfully
+INFO 2025-12-08 18:38:21,718 integration 2088 32596 Gemini handler initialized
+INFO 2025-12-08 18:38:21,718 integration 2088 32596 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2025-12-08 18:38:21,718 integration 2088 32596 MCP components initialized
+INFO 2025-12-08 18:38:21,718 integration 2088 32596 Recommendation service initialized
+INFO 2025-12-08 18:38:21,718 __init__ 2088 32596 MCP integration initialized successfully
+INFO 2025-12-08 18:38:21,718 __init__ 2088 32596 Recommendation service initialized successfully
+ERROR 2025-12-08 18:38:23,500 api_handlers 2088 32596 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:38:25,008 _client 2088 32596 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:38:25,046 api_handlers 2088 32596 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYmzumgL2FXgcGc8JQA'}
+ERROR 2025-12-08 18:38:25,273 api_handlers 2088 32596 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:38:25,730 _client 2088 32596 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:38:25,733 api_handlers 2088 32596 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYn4oS6H84FyJZZbss3'}
+ERROR 2025-12-08 18:38:26,073 api_handlers 2088 32596 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:38:26,433 _client 2088 32596 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:38:26,433 api_handlers 2088 32596 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYn7syRiMWSHDJRH45P'}
+ERROR 2025-12-08 18:38:26,767 api_handlers 2088 32596 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:38:27,123 _client 2088 32596 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:38:27,123 api_handlers 2088 32596 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYnB4iX4jv9PbpR4Cx2'}
+ERROR 2025-12-08 18:38:27,458 api_handlers 2088 32596 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:38:27,758 _client 2088 32596 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:38:27,758 api_handlers 2088 32596 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYnDmBce5pfFr5j8db4'}
+ERROR 2025-12-08 18:38:28,163 api_handlers 2088 32596 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:38:28,463 _client 2088 32596 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:38:28,463 api_handlers 2088 32596 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYnGmGRHsPT5mx65bZr'}
+ERROR 2025-12-08 18:38:28,793 api_handlers 2088 32596 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:38:29,093 _client 2088 32596 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:38:29,093 api_handlers 2088 32596 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYnKSk7j3X4YUWV3wFd'}
+ERROR 2025-12-08 18:38:29,493 api_handlers 2088 32596 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:38:29,903 _client 2088 32596 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:38:29,923 api_handlers 2088 32596 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYnNaWXKEEctxJQMqdr'}
+ERROR 2025-12-08 18:38:30,132 api_handlers 2088 32596 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:38:30,453 _client 2088 32596 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:38:30,453 api_handlers 2088 32596 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYnRDGCU3Nq3FnrdCgW'}
+ERROR 2025-12-08 18:38:30,940 api_handlers 2088 32596 Gemini API call failed: 400 API Key not found. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API Key not found. Please pass a valid API key."
+]
+INFO 2025-12-08 18:38:31,258 _client 2088 32596 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2025-12-08 18:38:31,258 api_handlers 2088 32596 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVuYnUfd8huDigRzrHgdy'}
+WARNING 2025-12-08 18:38:31,258 api_handlers 2088 32596 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:38:31,258 api_handlers 2088 32596 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:38:31,258 api_handlers 2088 32596 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:38:31,258 api_handlers 2088 32596 Anthropic API rate limit exceeded
+WARNING 2025-12-08 18:38:31,258 api_handlers 2088 32596 Rate limit exceeded for gemini
+WARNING 2025-12-08 18:38:31,258 api_handlers 2088 32596 Gemini API rate limit exceeded
+WARNING 2025-12-08 18:38:31,258 api_handlers 2088 32596 Rate limit exceeded for anthropic
+WARNING 2025-12-08 18:38:31,261 api_handlers 2088 32596 Anthropic API rate limit exceeded

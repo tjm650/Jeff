@@ -25,11 +25,10 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 
 # Add the project root to Python path
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, project_root)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 # Setup Django environment
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'jeffapi.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 django.setup()
 
 # Configure logging
@@ -96,49 +95,49 @@ class SystemFlowTester:
         # Create diverse test properties
         properties_data = [
             {
+                'property_no': 'CVD-1001',
                 'name': 'Campus View Deluxe',
                 'address': '123 University Street',
-                # 'heads_per_room': 1,
                 'total_rooms': 15,
                 'available_rooms': 8,
                 'amenities': ['wifi', 'parking', 'dstv', 'security', 'gym'],
-                'price_per_semester': 450.00,  # 3 months * 150
+                'price_per_semester': 450.00,
                 'price_per_month': 150.00,
                 'distance_from_campus': 0.5,
                 'campus_name': 'NUST Campus'
             },
             {
+                'property_no': 'SHB-2001',
                 'name': 'Student Haven Budget',
                 'address': '456 College Avenue',
-                # 'heads_per_room': 2,
                 'total_rooms': 20,
                 'available_rooms': 12,
                 'amenities': ['wifi', 'parking', 'water'],
-                'price_per_semester': 360.00,  # 3 months * 120
+                'price_per_semester': 360.00,
                 'price_per_month': 120.00,
                 'distance_from_campus': 1.0,
                 'campus_name': 'NUST Campus'
             },
             {
+                'property_no': 'PLS-3001',
                 'name': 'Premium Lodge Sharing',
                 'address': '789 Education Road',
-                # 'heads_per_room': 3,
                 'total_rooms': 10,
                 'available_rooms': 5,
                 'amenities': ['wifi', 'dstv', 'security', 'cleaning', 'generator'],
-                'price_per_semester': 540.00,  # 3 months * 180
+                'price_per_semester': 540.00,
                 'price_per_month': 180.00,
                 'distance_from_campus': 0.8,
                 'campus_name': 'NUST Campus'
             },
             {
+                'property_no': 'ERB-4001',
                 'name': 'Economy Rooms Basic',
                 'address': '321 Learning Lane',
-                # 'heads_per_room': 2,
                 'total_rooms': 25,
                 'available_rooms': 15,
                 'amenities': ['water', 'electricity'],
-                'price_per_semester': 300.00,  # 3 months * 100
+                'price_per_semester': 300.00,
                 'price_per_month': 100.00,
                 'distance_from_campus': 1.5,
                 'campus_name': 'NUST Campus'
@@ -147,12 +146,14 @@ class SystemFlowTester:
 
         properties = []
         for prop_data in properties_data:
-            property, created = Property.objects.get_or_create(
-                name=prop_data['name'],
-                provider=provider,
-                defaults=prop_data
-            )
-            if created:
+            try:
+                property = Property.objects.get(property_no=prop_data['property_no'])
+                print(f"   Found existing property: {property.name}")
+            except Property.DoesNotExist:
+                property = Property.objects.create(
+                    provider=provider,
+                    **prop_data
+                )
                 print(f"   Created property: {property.name}")
             properties.append(property)
 
