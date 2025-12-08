@@ -28,8 +28,6 @@ from .conversation.help_utils import help_utils_handler
 from .conversation.nlp_processor import nlp_processor_handler
 from .conversation.utils import conversation_utils
 from .conversation.step_handlers import step_handlers
-from .conversation.recovery_handler import recovery_handler
-from .conversation.fail_safe import fail_safe_handler
 
 logger = logging.getLogger(__name__)
 
@@ -95,14 +93,6 @@ class ConversationWorkflow:
             except Exception as e:
                 logger.error(f"Error getting conversation state for {cell_number}: {str(e)}")
                 return "_Sure, I've reset our conversation. You can start fresh_"
-
-            # Check recovery flow (before other processing)
-            if recovery_handler.check_recovery_needed(conversation):
-                recovery_response = recovery_handler.handle_recovery_response(conversation, message)
-                if recovery_response:
-                    return recovery_response
-                # If not a recovery response, show recovery message
-                return recovery_handler.format_recovery_message(conversation)
 
             # Check if user is a provider and route accordingly
             if self._is_provider(cell_number):
@@ -198,16 +188,7 @@ class ConversationWorkflow:
             # Handle media messages
             if media_url:
                 logger.debug(f"Processing media message from {cell_number}")
-                return fail_safe_handler.wrap_operation(
-                    self.help_utils.handle_media_message,
-                    'media_handling',
-                    cell_number, media_url, message
-                )
-
-            # Check for random text input (fail-safe)
-            random_text_response = fail_safe_handler.handle_random_text(message)
-            if random_text_response and conversation.current_step == 'inquiry':
-                return random_text_response
+                return self.help_utils.handle_media_message(cell_number, media_url, message)
 
             # Process text message based on current step
             current_step = conversation.current_step
@@ -235,86 +216,34 @@ class ConversationWorkflow:
                     logger.warning(f"Name message received in name_collection step but no valid property selection for {cell_number}")
                     return "No property selected. Please search for properties first and select one using 'option-(number)' before providing your name."
 
-            # Process step with fail-safe wrapper and store context
-            response = None
             if current_step == 'inquiry':
-                response = fail_safe_handler.wrap_operation(
-                    self.step_handlers._handle_inquiry_step,
-                    'inquiry',
-                    conversation, message
-                )
+                return self.step_handlers._handle_inquiry_step(conversation, message)
             elif current_step == 'token_check':
-                response = fail_safe_handler.wrap_operation(
-                    self.step_handlers._handle_token_check_step,
-                    'token_check',
-                    conversation, message
-                )
+                return self.step_handlers._handle_token_check_step(conversation, message)
             elif current_step == 'property_listings':
-                response = fail_safe_handler.wrap_operation(
-                    self.step_handlers._handle_property_listings_step,
-                    'property_listings',
-                    conversation, message
-                )
+                return self.step_handlers._handle_property_listings_step(conversation, message)
             elif current_step == 'name_collection':
-                response = fail_safe_handler.wrap_operation(
-                    self.step_handlers._handle_name_collection_step,
-                    'name_collection',
-                    conversation, message
-                )
+                return self.step_handlers._handle_name_collection_step(conversation, message)
             elif current_step == 'booking_request':
-                response = fail_safe_handler.wrap_operation(
-                    self.step_handlers._handle_booking_request_step,
-                    'booking_request',
-                    conversation, message
-                )
+                return self.step_handlers._handle_booking_request_step(conversation, message)
             elif current_step == 'provider_response':
-                response = fail_safe_handler.wrap_operation(
-                    self.step_handlers._handle_provider_response_step,
-                    'provider_response',
-                    conversation, message
-                )
+                return self.step_handlers._handle_provider_response_step(conversation, message)
             elif current_step == 'info_request':
-                response = fail_safe_handler.wrap_operation(
-                    self.step_handlers._handle_info_request_step,
-                    'info_request',
-                    conversation, message
-                )
+                return self.step_handlers._handle_info_request_step(conversation, message)
             elif current_step == 'booking_confirmation':
-                response = fail_safe_handler.wrap_operation(
-                    self.step_handlers._handle_booking_confirmation_step,
-                    'booking_confirmation',
-                    conversation, message
-                )
+                return self.step_handlers._handle_booking_confirmation_step(conversation, message)
             elif current_step == 'payment_confirmation':
-                response = fail_safe_handler.wrap_operation(
-                    self.payment_integration.handle_payment_confirmation_step,
-                    'payment_confirmation',
-                    conversation, message
-                )
+                return self.payment_integration.handle_payment_confirmation_step(conversation, message)
             elif current_step == 'cleanup':
-                response = fail_safe_handler.wrap_operation(
-                    self.step_handlers._handle_cleanup_step,
-                    'cleanup',
-                    conversation, message
-                )
+                return self.step_handlers._handle_cleanup_step(conversation, message)
             else:
                 # Unknown step, reset to inquiry
                 logger.warning(f"Unknown conversation step '{current_step}' for {cell_number}, resetting to inquiry")
-                response = self.utils.reset_to_inquiry(conversation)
-            
-            # Store search context after processing (for recovery flow)
-            try:
-                if conversation.context_data:
-                    conversation.context_data['last_action_timestamp'] = timezone.now().isoformat()
-                    conversation.save()
-            except Exception as e:
-                logger.warning(f"Error storing context: {str(e)}")
-            
-            return response
+                return self.utils.reset_to_inquiry(conversation)
 
         except Exception as e:
             logger.error(f"Error processing message for {cell_number}: {str(e)}", exc_info=True)
-            return fail_safe_handler.handle_null_response('generic')
+            return "Sorry, I encountered an error. Please try again or send 'help' for assistance."
 
     def _get_conversation_state(self, cell_number: str) -> ConversationState:
         """Get or create conversation state for user"""

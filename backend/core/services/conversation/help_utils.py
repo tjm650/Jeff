@@ -11,7 +11,6 @@ This module handles help and utility functions including:
 import os
 import logging
 from typing import Dict
-from .ux_formatter import ux_formatter
 
 logger = logging.getLogger(__name__)
 
@@ -21,26 +20,41 @@ class HelpUtilsHandler:
 
     def get_comprehensive_help_message(self) -> str:
         """Get comprehensive help message with all available options"""
-        frontend_url = os.getenv('NEXT_PUBLIC_FRONTEND_URL', 'https://jeff.example.com')
-        
-        message = f"Here's what I can help with {ux_formatter.EMOJI_MAP['help']}\n\n"
-        
-        quick_replies = [
-            f"{ux_formatter.EMOJI_MAP['token']} How tokens work",
-            "Refund policy",
-            f"{ux_formatter.EMOJI_MAP['search']} Searching tips",
-            f"{ux_formatter.EMOJI_MAP['safe']} Safety reminders",
-            "Contact support"
-        ]
-        
-        return ux_formatter.format_with_quick_replies(message, quick_replies)
+        frontend_url = os.getenv('NEXT_PUBLIC_FRONTEND_URL')
+        return f"""*JEFF HELP & SUPPORT*
+
+*How Jeff Works* 📑
+• Jeff helps NUST students find accommodation near campus
+• Jeff is reliable, fast, secure and easy to use, accessible on WhatsApp
+• Visit {frontend_url} for more info
+• Send your requirements and find matching properties
+• Token cost $1.00 (USD or ZWL equivalent)
+
+*How to Pay 💳*
+• Visit: {frontend_url}/cart
+
+*What Jeff Can Find 🏠*
+• Single, double rooms and BNBs
+• Properties with WiFi, parking, etc
+• Properties near campus
+• Male/female/mixed accommodations
+• Various budget ranges
+
+*How to Search 🔎*
+• _"I need a 2-head room with WiFi for $200"_
+• _"Single room near campus, max $150"_
+• _"Property with parking, wifi, etc"_
+
+
+_*Need more help?* Contact our support team._
+_Send 'Jeff' message for more info about the service, Terms & Privacy Policy of Jeff._
+"""
 
     def get_fallback_help_message(self) -> str:
         """Fallback help message in case comprehensive help fails"""
-        message = f"Hi, I'm Jeff {ux_formatter.EMOJI_MAP['help']}\n\n"
-        message += "I help students find accommodation near campus. If you see this message, I'm offline right now.\n\n"
-        message += "Please try again later or contact support for assistance."
-        return message
+        return """Hi, I'm Jeff👋.
+    I help students find accommodation near campus. If you see this message, I'm offline right now.
+    Please try again later or contact support for assistance."""
 
     def get_contextual_help(self, conversation) -> str:
         """Get contextual help based on conversation state and NLP data"""
@@ -66,24 +80,30 @@ class HelpUtilsHandler:
 
     def _get_inquiry_help(self, context_data: Dict) -> str:
         """Get help for inquiry step"""
-        message = f"*Need Help with Your Search?* {ux_formatter.EMOJI_MAP['search']}\n\n"
-        message += "Try these examples:\n"
-        message += "• 'I need a single room for $100'\n"
-        message += "• 'Looking for 2-head with WiFi and parking'\n"
-        message += "• 'Double room near campus, max $150'\n\n"
-        message += "Just tell me:\n"
-        message += "• How many people? (1, 2, 3, etc.)\n"
-        message += "• Your budget per month?\n"
-        message += "• Any amenities you need?\n"
-        message += "• Location preferences?"
-        
-        # Split if too long
-        chunks = ux_formatter.split_long_message(message)
-        return chunks[0] if chunks else message
+        return """*Need Help with Your Search?*
+
+Try these examples:
+• "I need a single room for $100"
+• "Looking for 2-head with WiFi and parking"
+• "Double room near campus, max $150"
+
+Just tell me:
+• How many people? (1, 2, 3, etc.)
+• Your budget per month?
+• Any amenities you need?
+• Location preferences?"""
 
     def _get_token_help(self, context_data: Dict) -> str:
         """Get help for token step"""
-        return ux_formatter.format_payment_instructions()
+        frontend_url = os.getenv('NEXT_PUBLIC_FRONTEND_URL')
+        return f"""*Need Help with Payment?*
+To search for accommodation, you need a token.
+
+*HOW TO PURCHASE A TOKEN*
+• Visit: {frontend_url}/cart
+_Questions? Send 'help' for more information._
+_Send 'Jeff' message for more info about the service, Terms & Privacy Policy of Jeff or visit {frontend_url}._
+"""
 
     def _get_property_selection_help(self, context_data: Dict) -> str:
         """Get help for property selection"""

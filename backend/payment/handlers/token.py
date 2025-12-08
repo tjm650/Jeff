@@ -68,54 +68,6 @@ class TokenHandler:
             return {
                 'error': 'Unable to retrieve token status'
             }
-    
-    def should_consume_for_preview(self) -> bool:
-        """
-        Check if token should be consumed for preview
-        
-        Returns:
-            False (previews are free, no token consumption)
-        """
-        return False
-    
-    def consume_for_full_view(self, token: Token) -> bool:
-        """
-        Consume token for full property view
-        
-        Args:
-            token: Token object to consume
-            
-        Returns:
-            True if token was consumed successfully, False otherwise
-        """
-        try:
-            if not self.validate_token_usage(token):
-                logger.warning(f"Token {token.token_number} cannot be used")
-                return False
-            
-            # Use the token (increment used_count)
-            if token.use_token():
-                logger.info(f"Token {token.token_number} consumed for full view, remaining uses: {token.remaining_uses()}")
-                return True
-            else:
-                logger.warning(f"Failed to consume token {token.token_number}")
-                return False
-                
-        except Exception as e:
-            logger.error(f"Error consuming token for full view: {str(e)}")
-            return False
-    
-    def use_token(self, token: Token) -> bool:
-        """
-        Alias for consume_for_full_view for backward compatibility
-        
-        Args:
-            token: Token object to consume
-            
-        Returns:
-            True if token was consumed successfully, False otherwise
-        """
-        return self.consume_for_full_view(token)
 
 
 # Global instance
