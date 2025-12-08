@@ -257,7 +257,27 @@ class Booking(models.Model):
 
 
 class ConversationState(models.Model):
-    """Conversation state model for WhatsApp conversation flow"""
+    """
+    Conversation state model for WhatsApp conversation flow
+    
+    context_data structure (JSON field):
+    {
+        'location': str,  # Last searched location (e.g., 'NUST', 'Riverside')
+        'budget_max': float,  # Last budget preference (e.g., 50.0)
+        'last_property_ids': [str],  # Recently viewed property UUIDs
+        'cached_filters': dict,  # Search filters (amenities, gender_preference, etc.)
+        'user_preferences': dict,  # User preferences (preferred_areas, max_distance, etc.)
+        'last_action': str,  # Last action taken (e.g., 'search_initiated', 'viewed_property')
+        'last_action_timestamp': str,  # ISO timestamp of last action
+        'requirements': dict,  # Current search requirements
+        'search_results': list,  # Current search results (property dictionaries)
+        'search_metadata': dict,  # Search metadata (timestamp, confidence_score, etc.)
+        'selected_property': dict,  # Currently selected property
+        'selected_property_index': int,  # Index of selected property in search results
+        'current_property_page': int,  # Current pagination page (0-indexed)
+        'total_matches': int  # Total number of matching properties
+    }
+    """
     STEPS = [
         ('inquiry', 'Inquiry'),
         ('token_check', 'Token Check'),
@@ -277,6 +297,7 @@ class ConversationState(models.Model):
     current_step = models.CharField(max_length=50, choices=STEPS, default='inquiry')
 
     # Context data (temporary storage for conversation)
+    # See class docstring for expected structure
     context_data = models.JSONField(default=dict)
 
     # Selected properties for current search

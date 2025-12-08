@@ -25,6 +25,16 @@ class RequirementExtractor:
             'study room': 'study_room', 'quiet': 'study_room'
         }
 
+        # Bulawayo-specific locations (prioritized)
+        self.bulawayo_locations = [
+            'nust', 'riverside', 'selborne park', 'southwold', 'cbd',
+            'hillside', 'suburbs', 'city centre', 'belmont', 'kumalo',
+            'matsheumhlope', 'burnside', 'famona', 'morningside'
+        ]
+        
+        # Campus names
+        self.campus_names = ['nust', 'gzu', 'msu', 'uz', 'university']
+        
         self.location_keywords = {
             'near': 'near', 'close': 'near', 'walking distance': 'near',
             'far': 'far', 'distant': 'far',
@@ -78,25 +88,56 @@ class RequirementExtractor:
     def _extract_location(self, message: str) -> Tuple[Optional[str], Optional[str]]:
         distance_preference = None
         location_context = None
+        message_lower = message.lower()
 
-        for keyword, preference in self.location_keywords.items():
-            if keyword in message.lower():
-                if preference in ['near', 'far']:
-                    distance_preference = preference
-                else:
-                    location_context = preference
+        # First, check for Bulawayo-specific locations (prioritized)
+        for location in self.bulawayo_locations:
+            if location in message_lower:
+                location_context = location.title()  # Capitalize properly
+                # Check if it's near/close to this location
+                if re.search(r'(near|close|walking distance)\s+' + location, message_lower):
+                    distance_preference = 'near'
                 break
 
-        location_patterns = [
-            r'near\s+([a-z\s]+)', r'close\s+to\s+([a-z\s]+)',
-            r'walking\s+distance\s+to\s+([a-z\s]+)', r'by\s+([a-z\s]+)'
-        ]
+        # Check for campus names
+        if not location_context:
+            for campus in self.campus_names:
+                if campus in message_lower:
+                    location_context = campus.upper() if campus != 'university' else 'campus'
+                    # Check for "near campus" patterns
+                    if re.search(r'(near|close|walking distance)\s+(campus|' + campus + ')', message_lower):
+                        distance_preference = 'near'
+                    break
 
-        for pattern in location_patterns:
-            match = re.search(pattern, message.lower())
-            if match:
-                location_context = match.group(1).strip()
-                break
+        # Fallback to generic location keywords
+        if not location_context:
+            for keyword, preference in self.location_keywords.items():
+                if keyword in message_lower:
+                    if preference in ['near', 'far']:
+                        distance_preference = preference
+                    else:
+                        location_context = preference
+                    break
+
+        # Extract location from patterns (if not already found)
+        if not location_context:
+            location_patterns = [
+                r'near\s+([a-z\s]+)', r'close\s+to\s+([a-z\s]+)',
+                r'walking\s+distance\s+to\s+([a-z\s]+)', r'by\s+([a-z\s]+)'
+            ]
+
+            for pattern in location_patterns:
+                match = re.search(pattern, message_lower)
+                if match:
+                    extracted = match.group(1).strip()
+                    # Check if extracted location is a known Bulawayo location
+                    for location in self.bulawayo_locations:
+                        if location in extracted:
+                            location_context = location.title()
+                            break
+                    if not location_context:
+                        location_context = extracted
+                    break
 
         return distance_preference, location_context
 

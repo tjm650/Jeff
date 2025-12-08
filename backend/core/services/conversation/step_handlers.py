@@ -17,6 +17,10 @@ from .payment_integration import payment_integration_handler
 from .help_utils import help_utils_handler
 from .nlp_processor import nlp_processor_handler
 from .utils import conversation_utils
+from .welcome_handler import welcome_handler
+from .location_flow import location_flow_handler
+from .ux_formatter import ux_formatter
+from .fail_safe import fail_safe_handler
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +42,32 @@ class StepHandlers:
             # Check for abort command
             if message.lower().strip() in ['abort', 'restart', 'start over', 'cancel']:
                 return self._reset_conversation(conversation)
+
+            # Check for welcome flow (first-time users)
+            if welcome_handler.should_show_welcome(conversation):
+                # Check if it's a quick reply
+                quick_reply_handler = welcome_handler.handle_quick_reply(message)
+                if quick_reply_handler:
+                    # Handle quick reply routing
+                    if quick_reply_handler == 'search':
+                        # User wants to search - proceed with location flow
+                        return location_flow_handler.format_location_question()
+                    elif quick_reply_handler == 'buy_token':
+                        # User wants to buy token - go to payment
+                        conversation.current_step = 'token_check'
+                        conversation.save()
+                        return self._show_payment_instructions(conversation)
+                    elif quick_reply_handler == 'nust_rooms':
+                        # User wants NUST rooms - set location and proceed
+                        location_flow_handler.store_location_in_context(conversation, 'NUST')
+                        return location_flow_handler.ask_budget_with_quick_replies()
+                    elif quick_reply_handler == 'help':
+                        return self.help_utils.get_comprehensive_help_message()
+                    # For 'general_rooms', continue with normal flow
+                
+                # Show welcome message if not a quick reply
+                if not quick_reply_handler:
+                    return welcome_handler.format_welcome_message()
 
             # Allow insights commands from inquiry as well
             if message.lower().strip().startswith('insights'):
@@ -66,11 +96,41 @@ class StepHandlers:
                     from providers.services import provider_workflow
                     return provider_workflow.handle_provider_inquiry(conversation, message)
 
+            # Check for location selection (if location flow is active)
+            stored_location = location_flow_handler.get_stored_location(conversation)
+            if not stored_location:
+                # Try to detect location from message
+                detected_location = location_flow_handler.detect_location_from_message(message)
+                if detected_location:
+                    location_flow_handler.store_location_in_context(conversation, detected_location)
+                    # Ask for budget
+                    return location_flow_handler.ask_budget_with_quick_replies()
+            
+            # Check for budget selection (if location is set but budget is not)
+            if stored_location and not location_flow_handler.get_stored_budget(conversation):
+                # Check if message is a budget quick reply
+                budget = location_flow_handler.parse_budget_quick_reply(message)
+                if budget:
+                    location_flow_handler.store_budget_in_context(conversation, budget)
+                    # Update requirements with location and budget
+                    message = f"{stored_location} {budget}"
+
             # If not a provider, follow normal accommodation enquiry workflow
             requirements = self.nlp_processor.extract_requirements(message)
             if requirements:
+                # Enhance requirements with stored location/budget if available
+                if stored_location and not requirements.get('location_context'):
+                    requirements['location_context'] = stored_location
+                stored_budget = location_flow_handler.get_stored_budget(conversation)
+                if stored_budget and not requirements.get('budget_max'):
+                    requirements['budget_max'] = stored_budget
+                
                 # Store requirements in conversation state
                 conversation.context_data['requirements'] = requirements
+                # Store search context for recovery
+                conversation.context_data['last_action'] = 'search_initiated'
+                conversation.context_data['last_action_timestamp'] = timezone.now().isoformat()
+                
                 # Check token validity before proceeding
                 from payment.handlers.token import token_handler
                 valid_token = token_handler.get_valid_token(conversation.cell_number)
@@ -106,10 +166,11 @@ class StepHandlers:
                     return response_parts[0] + search_result
                 return search_result
             else:
-                return "Please provide your accommodation requirements (location, budget, number of people, etc.)."
+                # Use UX formatter for error message
+                return ux_formatter.format_error_message('invalid_input')
         except Exception as e:
             logger.error(f"Error in inquiry step: {str(e)}")
-            return "Sorry, I couldn't process your inquiry. Please try again."
+            return fail_safe_handler.handle_null_response('generic')
 
     def _generate_jeff_about_message(self) -> str:
         """Generate Jeff about message from markdown file."""
@@ -340,18 +401,81 @@ class StepHandlers:
             return "Error checking tokens. Please try again."
 
     def _handle_property_listings_step(self, conversation: ConversationState, message: str) -> str:
-        """Step 3: Handle property selection"""
+        """Step 3: Handle property selection and VIEW commands"""
         try:
-            message = message.lower().strip()
+            message_lower = message.lower().strip()
+            original_message = message.strip()
 
-            # First check if user has a valid token
+            # Check for VIEW command (consume token, show full details)
+            view_match = re.match(r'view\s+(\d+)', message_lower)
+            if view_match:
+                view_index = int(view_match.group(1))
+                
+                # Check if user has a valid token
+                from payment.handlers.token import token_handler
+                valid_token = token_handler.get_valid_token(conversation.cell_number)
+                if not valid_token or not token_handler.validate_token_usage(valid_token):
+                    return ux_formatter.format_error_message('no_token')
+                
+                # Get search results
+                search_results = conversation.context_data.get('search_results', [])
+                if not search_results:
+                    return ux_formatter.format_error_message('no_properties')
+                
+                # Validate view index (1-3 for previews)
+                if view_index < 1 or view_index > min(3, len(search_results)):
+                    return ux_formatter.format_error_message('invalid_input')
+                
+                # Get property (convert to 0-indexed)
+                prop_dict = search_results[view_index - 1]
+                property_obj = prop_dict.get('property')
+                
+                # If property is a dict, try to get Property object
+                if not property_obj or not hasattr(property_obj, 'id'):
+                    prop_id = prop_dict.get('id')
+                    if prop_id:
+                        from core.models import Property
+                        property_obj = Property.objects.filter(id=prop_id).first()
+                
+                if not property_obj:
+                    return ux_formatter.format_error_message('property_error')
+                
+                # Consume token for full view
+                if not token_handler.use_token(valid_token):
+                    return ux_formatter.format_error_message('token_expired')
+                
+                # Store viewed property ID
+                if not conversation.context_data.get('last_property_ids'):
+                    conversation.context_data['last_property_ids'] = []
+                
+                prop_id_str = str(property_obj.id)
+                if prop_id_str not in conversation.context_data['last_property_ids']:
+                    conversation.context_data['last_property_ids'].append(prop_id_str)
+                
+                conversation.context_data['last_action'] = 'viewed_property'
+                conversation.context_data['last_action_timestamp'] = timezone.now().isoformat()
+                conversation.save()
+                
+                # Get match score and reasons if available
+                score = prop_dict.get('score')
+                reasons = prop_dict.get('match_reasons', [])
+                
+                # Format and return full details
+                full_details = self.property_search._format_full_details(property_obj, view_index, score, reasons)
+                
+                # Add contact landlord prompt
+                contact_prompt = ux_formatter.format_contact_landlord_prompt()
+                
+                return f"{full_details}\n\n{contact_prompt}"
+
+            # First check if user has a valid token (for option selection)
             from payment.handlers.token import token_handler
             valid_token = token_handler.get_valid_token(conversation.cell_number)
             if not valid_token or not token_handler.validate_token_usage(valid_token):
                 return self._show_payment_instructions(conversation)
             
             # Check if user wants to see more properties
-            if message == 'show-more':
+            if message_lower == 'show-more':
                 return self._handle_show_more(conversation)
                 
             # Check if user is trying to send name instead of selecting property
@@ -383,7 +507,7 @@ class StepHandlers:
                 return f"_Please select a valid property using 'option-(number)' format e.g. 'option-1' for the first property_.\n\n{self.property_search.show_property_listings(conversation)}"
         except Exception as e:
             logger.error(f"Error in property listings step: {str(e)}")
-            return "Error processing property listings. Please try again."
+            return fail_safe_handler.handle_null_response('generic')
 
     def _handle_name_collection_step(self, conversation: ConversationState, message: str) -> str:
         """Step 4: Collect user name for booking"""
@@ -463,15 +587,15 @@ class StepHandlers:
                     conversation.current_step = 'booking_request'
                     conversation.save()
 
-                    # Get interactive insights summary (no emojis)
-                    insights = self._get_insights()
-                    # Default confirmation message
-                    base_message = f"""Your booking request is being processed. I will notify you once the provider responds. Thank you!
-Booking number: {booking.booking_number}"""
-
-                    if not result['success']:
-                        base_message = f"""Your booking request has been created successfully. We are attempting to notify the provider. I will notify you once the provider responds. Thank you!
-Booking number: {booking.booking_number}"""
+                    # Use UX formatter for booking confirmation
+                    if result['success']:
+                        base_message = f"Got it! I've sent your request to the landlord.\n\n"
+                        base_message += f"I'll let you know as soon as they reply {ux_formatter.EMOJI_MAP['confirmation']}\n\n"
+                        base_message += f"Booking number: {booking.booking_number}"
+                    else:
+                        base_message = f"Your booking request has been created successfully.\n\n"
+                        base_message += f"We are attempting to notify the provider. I'll notify you once they respond.\n\n"
+                        base_message += f"Booking number: {booking.booking_number}"
 
                     insights_text = self._format_interactive_insights(insights)
                     return base_message + "\n\n" + insights_text
@@ -570,14 +694,17 @@ Booking number: {booking.booking_number}"""
             if any(word in message_lower for word in ['accept', 'accepted', 'Confirm', 'confirm', 'confirmed', 'yes', 'approved']):
                 status = "✅ ACCEPTED"
                 conversation.context_data['booking_status'] = 'provider_accepted'
-                booking.status = 'provider_accepted'
+                booking.status = 'confirmed'  # Update to confirmed status
                 booking.save()
-                # Send confirmation template to student
+                # Send confirmation template to student with viewing booking option
                 self._send_student_confirmation(booking, 'accepted')
+                # Update conversation to booking_confirmation step
+                conversation.current_step = 'booking_confirmation'
+                conversation.save()
             elif any(word in message_lower for word in ['Decline', 'decline', 'declined', 'reject', 'rejected', 'no', 'unavailable']):
                 status = "❌ DECLINED"
                 conversation.context_data['booking_status'] = 'provider_declined'
-                booking.status = 'provider_declined'
+                booking.status = 'rejected'
                 booking.save()
                 # Send rejection template to student
                 self._send_student_confirmation(booking, 'rejected')
@@ -627,8 +754,34 @@ Response Time: {conversation.context_data['provider_response_timestamp']}
             return "Error handling info request."
 
     def _handle_booking_confirmation_step(self, conversation: ConversationState, message: str) -> str:
-        """Step 8: Handle booking confirmation"""
+        """Step 8: Handle booking confirmation with viewing booking flow"""
         try:
+            message_lower = message.lower().strip()
+            
+            # Check for viewing booking requests
+            if any(word in message_lower for word in ['phone', 'number', 'contact', 'call']):
+                # User wants provider's phone number
+                selected_property = conversation.context_data.get('selected_property', {})
+                property_obj = selected_property.get('property')
+                if property_obj and hasattr(property_obj, 'provider'):
+                    provider_phone = property_obj.provider.phone_number
+                    return f"{ux_formatter.EMOJI_MAP['phone']} Landlord's phone number: {provider_phone}\n\nYou can contact them directly to arrange viewing."
+                else:
+                    # Try to get from booking
+                    from core.models import Booking
+                    booking = Booking.objects.filter(
+                        cell_number=conversation.cell_number,
+                        status='confirmed'
+                    ).order_by('-created_at').first()
+                    if booking:
+                        provider_phone = booking.property.provider.phone_number
+                        return f"{ux_formatter.EMOJI_MAP['phone']} Landlord's phone number: {provider_phone}\n\nYou can contact them directly to arrange viewing."
+                    return "Provider contact information not available. Please contact support."
+            
+            elif any(word in message_lower for word in ['viewing', 'view', 'book viewing', 'schedule']):
+                # User wants to schedule viewing
+                return self._handle_viewing_booking_request(conversation, message)
+            
             # Check if user is trying to send another name
             if self._is_name_format(message):
                 return "Your booking is already confirmed. If you need to search for another property, please send your accommodation requirements (e.g., 'I need a 2-bed room for $200')."
@@ -637,11 +790,40 @@ Response Time: {conversation.context_data['provider_response_timestamp']}
             if self._extract_property_selection(message, conversation):
                 return "Your booking is already confirmed. If you need to search for another property, please send your accommodation requirements first."
 
-            # Confirm booking
-            return "Booking confirmed. Thank you!"
+            # Default: Show viewing booking options
+            return self._format_viewing_booking_prompt(conversation)
         except Exception as e:
             logger.error(f"Error in booking confirmation step: {str(e)}")
-            return "Error confirming booking."
+            return fail_safe_handler.handle_null_response('booking_creation')
+    
+    def _format_viewing_booking_prompt(self, conversation: ConversationState) -> str:
+        """Format viewing booking prompt with quick replies"""
+        message = f"{ux_formatter.EMOJI_MAP['confirmation']} The landlord confirmed availability!\n\n"
+        message += "Would you like their phone number or to schedule a viewing?"
+        
+        quick_replies = [
+            f"{ux_formatter.EMOJI_MAP['phone']} Phone number",
+            f"{ux_formatter.EMOJI_MAP['viewing']} Book viewing",
+            f"{ux_formatter.EMOJI_MAP['cancel']} Cancel"
+        ]
+        
+        return ux_formatter.format_with_quick_replies(message, quick_replies)
+    
+    def _handle_viewing_booking_request(self, conversation: ConversationState, message: str) -> str:
+        """Handle viewing booking request"""
+        try:
+            # Ask which day works for the user
+            message_text = f"{ux_formatter.EMOJI_MAP['viewing']} Which day works for you?\n\n"
+            message_text += "Please send the date (e.g., 'Monday', 'Tomorrow', 'Next week', or a specific date)."
+            
+            # Store that we're in viewing booking flow
+            conversation.context_data['viewing_booking_requested'] = True
+            conversation.save()
+            
+            return message_text
+        except Exception as e:
+            logger.error(f"Error handling viewing booking request: {str(e)}")
+            return "Error processing viewing request. Please try again."
 
     def _handle_show_more(self, conversation: ConversationState) -> str:
         """Handle showing more property listings"""
@@ -752,21 +934,15 @@ Response Time: {conversation.context_data['provider_response_timestamp']}
             # Properties found, show payment instructions header
             properties_count = len(conversation.context_data.get('search_results', [])) if conversation.context_data else 0
             
-            header = f"""*PROPERTY LISTINGS* 🏡
-*Properties Found:* {properties_count}
-• To view Property listing details and book accommodation, you need a token.\n
-"""
-
-            frontend_url = os.getenv('NEXT_PUBLIC_FRONTEND_URL')
-            instructions = (f"""*HOW TO PURCHASE A TOKEN*
-• Visit: {frontend_url}/cart
-
-• _*Questions*? Send 'help' anytime._
-• _Send 'Jeff' message for more info about the service, Terms & Privacy Policy of Jeff or visit {frontend_url}._
-• _After purchasing a token, send your accommodation requirements again to continue searching for properties._"""
-)
-
-            return header + instructions
+            # Use UX formatter for payment instructions
+            payment_message = ux_formatter.format_payment_instructions()
+            
+            # Add property count info if available
+            if properties_count > 0:
+                header = f"*Properties Found:* {properties_count}\n\n"
+                return header + payment_message
+            
+            return payment_message
 
         except Exception as e:
             logger.error(f"Error building payment instructions with listings: {str(e)}")

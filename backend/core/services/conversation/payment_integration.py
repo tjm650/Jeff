@@ -14,6 +14,8 @@ import string
 from typing import Dict
 from django.utils import timezone
 from datetime import timedelta
+from .ux_formatter import ux_formatter
+from .fail_safe import fail_safe_handler
 
 logger = logging.getLogger(__name__)
 
@@ -39,13 +41,14 @@ class PaymentIntegrationHandler:
             match = re.search(pattern, message, re.IGNORECASE)
 
             if not match:
-                return """*Invalid Format*"""
+                return ux_formatter.format_error_message('invalid_input')
 
-            payment_number = match.group(1).strip()
+            payment_number = match.group(2).strip()  # Fix: group 2 is the payment number
+            currency = match.group(1).upper()  # USD or ZWL
 
             # Validate payment number format (basic validation)
             if len(payment_number) < 10:
-                return "*Invalid Number*\n\nPlease provide a valid Paynow/mobile payment number (10+ digits)."
+                return ux_formatter.format_error_message('invalid_input')
 
             # Check for recent pending payment
             recent_pending = Payment.objects.filter(
@@ -54,13 +57,8 @@ class PaymentIntegrationHandler:
             ).order_by('-created_at').first()
 
             if recent_pending:
-                return f"""*Pending Payment Found*
-
-You have a pending payment:
-Transaction: {recent_pending.transaction_id}
-Amount: ${recent_pending.amount}
-
-Please complete your existing payment first, or wait 5 minutes before starting a new one."""
+                # Use fail-safe for payment delay
+                return fail_safe_handler.handle_payment_delay(recent_pending)
 
             # Create payment record
             payment = Payment.objects.create(
@@ -93,32 +91,26 @@ Please complete your existing payment first, or wait 5 minutes before starting a
                 conversation.current_step = 'payment_confirmation'
                 conversation.save()
 
-                return f"""*Payment Initiated*
-
-Transaction: {payment.transaction_id}
-Amount: ${payment.amount}
-Payment Number (Paynow): {payment_number}
-
-{payment_number[:6]}... will receive a Paynow prompt on your phone.
-
-*Approve the payment*, You'll receive confirmation once payment is complete
-
- *Questions?* Send 'help' anytime."""
+                # Use UX formatter for payment initiation message
+                message = f"*Payment Initiated*\n\n"
+                message += f"Transaction: {payment.transaction_id}\n"
+                message += f"Amount: ${payment.amount}\n"
+                message += f"Payment Number: {payment_number}\n\n"
+                message += f"{payment_number[:6]}... will receive a Paynow prompt on your phone.\n\n"
+                message += "Approve the payment. You'll receive confirmation once payment is complete."
+                
+                return message
 
             else:
                 # Mark payment as failed
                 payment.status = 'failed '
                 payment.save()
 
-                return f"""*Payment Failed*
-
-Error: {result['error']}
-
-Please try again or contact support if the issue persists."""
+                return ux_formatter.format_error_message('payment_failed')
 
         except Exception as e:
             logger.error(f"Error handling payment request: {str(e)}")
-            return "Error processing payment request. Please try again."
+            return fail_safe_handler.handle_null_response('payment_verification')
 
     def handle_payment_confirmation_step(self, conversation, message: str) -> str:
         """Handle payment confirmation step"""
@@ -143,18 +135,14 @@ Please try again or contact support if the issue persists."""
                 # Payment successful, create token
                 return self._create_token_after_payment(conversation, payment)
             elif payment.status == 'failed ':
-                return """*Payment Failed*
-• Contact support if issue persists"""
+                return ux_formatter.format_error_message('payment_failed')
             else:
-                # Still pending
-                return """_Payment Pending_
-
-Your payment is still being processed.
- *Questions?* Send 'help' anytime."""
+                # Still pending - use fail-safe for delay
+                return fail_safe_handler.handle_payment_delay(payment)
 
         except Exception as e:
             logger.error(f"Error in payment confirmation step: {str(e)}")
-            return "Error checking payment status. Please try again."
+            return fail_safe_handler.handle_null_response('payment_verification')
 
     def _create_token_after_payment(self, conversation, payment) -> str:
         """Create token after successful payment"""

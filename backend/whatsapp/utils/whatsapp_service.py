@@ -1,6 +1,6 @@
 import os
 import logging
-from typing import Optional
+from typing import Optional, List
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioException
 
@@ -84,6 +84,42 @@ class WhatsAppService:
         except Exception:
             logger.exception('Unexpected error sending WhatsApp message')
             return False
+
+    def send_formatted_message(self, to_number: str, message: str, quick_replies: Optional[List[str]] = None) -> bool:
+        """
+        Send formatted message with UX formatting applied
+        
+        Args:
+            to_number: Recipient phone number
+            message: Message text
+            quick_replies: Optional list of quick reply suggestions (formatted as text)
+            
+        Returns:
+            True if message sent successfully, False otherwise
+        """
+        try:
+            # Import UX formatter locally to avoid circular imports
+            from core.services.conversation.ux_formatter import ux_formatter
+            
+            # Add quick replies if provided
+            if quick_replies:
+                message = ux_formatter.format_with_quick_replies(message, quick_replies)
+            
+            # Split long messages
+            message_chunks = ux_formatter.split_long_message(message)
+            
+            # Send each chunk
+            success = True
+            for chunk in message_chunks:
+                if not self.send_text_message(to_number, chunk):
+                    success = False
+            
+            return success
+            
+        except Exception as e:
+            logger.error(f"Error sending formatted message: {str(e)}")
+            # Fallback to regular text message
+            return self.send_text_message(to_number, message)
 
 # Create the module-level instance
 whatsapp_service = WhatsAppService()

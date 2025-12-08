@@ -12,6 +12,7 @@ This module handles property search operations including:
 import logging, os
 from typing import Dict, List
 from django.utils import timezone
+from .ux_formatter import ux_formatter
 
 logger = logging.getLogger(__name__)
 
@@ -186,12 +187,19 @@ class PropertySearchHandler:
 
             logger.info(f"Property search completed for {conversation.cell_number}: {len(properties_list)} matches")
 
-            # Format and return property listing
+            # Format and return property listing (preview mode - no token consumption)
             try:
-                return self._format_enhanced_property_listing(properties_list, validated_requirements, conversation)
+                # Show previews first (3 max) without consuming token
+                from .fail_safe import fail_safe_handler
+                return fail_safe_handler.wrap_operation(
+                    self._format_preview_mode,
+                    'property_search',
+                    properties_list, validated_requirements, conversation
+                )
             except Exception as e:
                 logger.error(f"Error formatting property listing for {conversation.cell_number}: {str(e)}", exc_info=True)
-                return "Error formatting results. Please try again."
+                from .fail_safe import fail_safe_handler
+                return fail_safe_handler.handle_null_response('property_search')
 
         except Exception as e:
             logger.error(f"Error in property search for {conversation.cell_number}: {str(e)}", exc_info=True)
@@ -396,6 +404,81 @@ class PropertySearchHandler:
             logger.error(f"Error getting match reasons: {str(e)}", exc_info=True)
             return []
 
+    def _format_preview_mode(self, properties: List[Dict], requirements: Dict, conversation=None) -> str:
+        """
+        Format property previews (3 max) without consuming token
+        
+        Args:
+            properties: List of property dictionaries
+            requirements: Search requirements
+            conversation: Conversation state (optional)
+            
+        Returns:
+            Formatted preview message
+        """
+        try:
+            if not properties:
+                cell_number = conversation.cell_number if conversation else None
+                return self._get_no_properties_message(requirements, cell_number)
+            
+            # Limit to 3 previews
+            preview_properties = properties[:3]
+            
+            message = f"Here are matching rooms I found {ux_formatter.EMOJI_MAP['search']}\n\n"
+            
+            # Convert property dicts to Property objects for UX formatter
+            from core.models import Property
+            for i, prop_dict in enumerate(preview_properties, 1):
+                try:
+                    # Get property object from dict
+                    property_obj = prop_dict.get('property')
+                    if not property_obj:
+                        # Try to get property by ID if available
+                        prop_id = prop_dict.get('id')
+                        if prop_id:
+                            property_obj = Property.objects.filter(id=prop_id).first()
+                    
+                    if property_obj:
+                        preview_text = ux_formatter.format_property_preview(property_obj, i)
+                        message += f"{preview_text}\n\n"
+                    else:
+                        # Fallback formatting if property object not available
+                        name = prop_dict.get('name', 'Unknown')
+                        price = prop_dict.get('price_per_month', 0) or 0
+                        distance = prop_dict.get('distance_from_campus', 0) or 0
+                        message += f"{ux_formatter.EMOJI_MAP['location']} {name}\n"
+                        message += f"{ux_formatter.EMOJI_MAP['money']} ${price} / month\n"
+                        message += f"Reply VIEW {i} to unlock details.\n\n"
+                        
+                except Exception as e:
+                    logger.error(f"Error formatting preview {i}: {str(e)}")
+                    continue
+            
+            return message.strip()
+            
+        except Exception as e:
+            logger.error(f"Error in preview mode formatting: {str(e)}")
+            return "Error showing previews. Please try again."
+    
+    def _format_full_details(self, property_obj, index: int, score: float = None, reasons: List[str] = None) -> str:
+        """
+        Format full property details after token consumption
+        
+        Args:
+            property_obj: Property model instance
+            index: Property index
+            score: Match score (optional)
+            reasons: Match reasons (optional)
+            
+        Returns:
+            Formatted full details message
+        """
+        try:
+            return ux_formatter.format_full_property_details(property_obj, score, reasons)
+        except Exception as e:
+            logger.error(f"Error formatting full details: {str(e)}")
+            return f"Property {index}: {property_obj.name if property_obj else 'Unknown'}"
+    
     def _format_enhanced_property_listing(self, properties: List[Dict], requirements: Dict, conversation=None) -> str:
         """Format enhanced property listings with NLP-derived insights"""
         try:
