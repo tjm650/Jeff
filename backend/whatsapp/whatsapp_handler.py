@@ -1,9 +1,12 @@
+import hashlib
+import hmac
 import json
 import logging
 import re
-import time
 import threading
-from django.http import JsonResponse
+import time
+
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.conf import settings as dj_settings
@@ -13,64 +16,133 @@ from core.models import Transaction, Token
 logger = logging.getLogger(__name__)
 
 
-def _verify_twilio_signature(request) -> bool:
-    """
-    Verify Twilio X-Twilio-Signature header for incoming webhooks.
-
-    Uses the official Twilio validator and the TWILIO_AUTH_TOKEN stored in
-    settings.JEFF_SETTINGS. If the auth token is not configured, we log a
-    warning and accept the request (so local/dev environments continue to work).
-    """
-    from twilio.request_validator import RequestValidator  # type: ignore
-
-    auth_token = dj_settings.JEFF_SETTINGS.get("TWILIO_AUTH_TOKEN") or ""
-    if not auth_token:
-        logger.warning("TWILIO_AUTH_TOKEN not configured; skipping Twilio signature verification")
+def _verify_meta_signature(request) -> bool:
+    """Verify Meta webhook signatures for inbound updates."""
+    app_secret = dj_settings.JEFF_SETTINGS.get("META_APP_SECRET") or dj_settings.JEFF_SETTINGS.get("WEBHOOK_SECRET") or ""
+    if not app_secret:
+        logger.warning("META_APP_SECRET not configured; skipping Meta signature verification")
         return True
 
-    signature = request.META.get("HTTP_X_TWILIO_SIGNATURE", "")
+    signature = request.META.get("HTTP_X_HUB_SIGNATURE_256", "")
     if not signature:
-        logger.warning("Missing X-Twilio-Signature header on WhatsApp webhook")
+        logger.warning("Missing X-Hub-Signature-256 header on WhatsApp webhook")
         return False
 
-    validator = RequestValidator(auth_token)
+    expected_signature = "sha256=" + hmac.new(
+        app_secret.encode('utf-8'),
+        request.body,
+        hashlib.sha256,
+    ).hexdigest()
 
-    # Build full URL as seen by Twilio (includes query string)
-    url = request.build_absolute_uri()
+    return hmac.compare_digest(signature, expected_signature)
 
-    # Twilio validator expects a plain dict of POST params
-    post_data = {k: v for k, v in request.POST.items()}
 
-    if not validator.validate(url, post_data, signature):
-        logger.warning("Invalid Twilio webhook signature; rejecting request")
-        return False
+def _extract_meta_message_data(request):
+    """Extract inbound WhatsApp message data from a Meta webhook payload."""
+    body = request.body.decode('utf-8') if getattr(request, 'body', b'') else ''
+    if not body:
+        return None
 
-    return True
+    try:
+        payload = json.loads(body)
+    except json.JSONDecodeError:
+        logger.warning('Received invalid Meta webhook JSON payload')
+        return None
+
+    for entry in payload.get('entry', []):
+        for change in entry.get('changes', []):
+            value = change.get('value', {})
+            messages = value.get('messages', [])
+            if not messages:
+                continue
+
+            message = messages[0]
+            from_number = (message.get('from') or '').strip()
+            text_body = ''
+            if message.get('text'):
+                text_body = (message.get('text', {}).get('body') or '').strip()
+            elif message.get('interactive'):
+                text_body = (message.get('interactive', {}).get('button_reply', {}).get('title') or '').strip()
+
+            return {
+                'from_number': from_number.replace('whatsapp:', ''),
+                'to_number': (value.get('metadata') or {}).get('display_phone_number', '').replace('whatsapp:', ''),
+                'message_body': text_body,
+                'media_url': '',
+            }
+
+    return None
 
 
 @csrf_exempt
-@require_http_methods(["POST"])
 def whatsapp_webhook(request):
-    """Handle incoming WhatsApp messages (Twilio webhook).
+    """Handle incoming WhatsApp messages from Meta Cloud API.
 
     Supports:
+      - Meta verification challenge for GET requests
+      - inbound text messages for POST requests
       - "USD PAY <number>" and "ZWG PAY <number>"
-      - Payment requests in USD/ZWL format
+      - payment requests in USD/ZWL format
       - "status" to check latest payment status
     """
+    if request.method == 'GET':
+        mode = request.GET.get('hub.mode', '')
+        verify_token = request.GET.get('hub.verify_token', '')
+        challenge = request.GET.get('hub.challenge', '')
+        expected_token = dj_settings.JEFF_SETTINGS.get('META_VERIFY_TOKEN') or dj_settings.JEFF_SETTINGS.get('WEBHOOK_SECRET') or ''
+
+        if mode == 'subscribe' and verify_token and challenge and verify_token == expected_token:
+            return HttpResponse(challenge, content_type='text/plain')
+        return HttpResponse('Forbidden', status=403)
+
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
+
     try:
-        # Verify Twilio signature before processing
-        if not _verify_twilio_signature(request):
+        if not _verify_meta_signature(request):
             return JsonResponse({'status': 'error', 'message': 'Invalid signature'}, status=403)
 
-        # Basic validation
-        if not (request.POST or request.body):
+        message_data = _extract_meta_message_data(request)
+        if not message_data:
             return JsonResponse({'status': 'error', 'message': 'Empty request'}, status=400)
 
-        from_number = request.POST.get('From', '').replace('whatsapp:', '')
-        to_number = request.POST.get('To', '').replace('whatsapp:', '')
-        message_body = (request.POST.get('Body', '') or '').strip()
-        media_url = request.POST.get('MediaUrl0', '')
+        from_number = message_data['from_number']
+        to_number = message_data['to_number']
+        message_body = message_data['message_body']
+        media_url = message_data['media_url']
+
+        if not from_number:
+            return JsonResponse({'status': 'error', 'message': 'Missing sender number'}, status=400)
+
+        message_data = {
+            'from_number': from_number,
+            'to_number': to_number,
+            'message_body': message_body,
+            'media_url': media_url,
+        }
+
+        if media_url:
+            return handle_media_message(message_data)
+
+        body = message_body.strip()
+
+        if body.lower() == 'status':
+            return handle_status_request(message_data)
+
+        if re.search(r'(USD|ZWL)\s+PAY\s+[0-9]+', body, re.IGNORECASE):
+            return handle_payment_request(message_data)
+
+        match = re.match(r'^(usd|zwg)\s+pay\s+([0-9\+]+)$', body, re.IGNORECASE)
+        if match:
+            currency = match.group(1).upper()
+            payment_number = match.group(2)
+            return handle_currency_payment_request(message_data, currency, payment_number)
+
+        return handle_accommodation_request(message_data)
+
+    except Exception:
+        logger.exception('Error processing WhatsApp webhook')
+        return JsonResponse({'status': 'error', 'message': 'Internal server error'}, status=500)
 
         # if not from_number:
         #     return JsonResponse({'status': 'error', 'message': 'Missing sender number'}, status=400)

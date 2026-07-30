@@ -38,7 +38,22 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key-for-developmen
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*.onrender.com').split(',')
+
+def _normalize_host(value: str) -> str:
+    value = (value or '').strip()
+    if not value:
+        return ''
+    if '://' in value:
+        value = value.split('://', 1)[1]
+    value = value.split('/', 1)[0]
+    return value
+
+
+ALLOWED_HOSTS = [
+    host for host in (
+        _normalize_host(item) for item in os.getenv('ALLOWED_HOSTS', '*.onrender.com').split(',')
+    ) if host
+]
 
 # CORS configuration
 CORS_ALLOWED_ORIGINS = [
@@ -413,6 +428,12 @@ JEFF_SETTINGS = {
     'TWILIO_ACCOUNT_SID': os.getenv('TWILIO_ACCOUNT_SID'),
     'TWILIO_AUTH_TOKEN': os.getenv('TWILIO_AUTH_TOKEN'),
     'TWILIO_WHATSAPP_NUMBER': os.getenv('TWILIO_WHATSAPP_NUMBER'),
+    'META_ACCESS_TOKEN': os.getenv('META_ACCESS_TOKEN'),
+    'META_PHONE_NUMBER_ID': os.getenv('META_PHONE_NUMBER_ID'),
+    'META_APP_SECRET': os.getenv('META_APP_SECRET'),
+    'META_VERIFY_TOKEN': os.getenv('META_VERIFY_TOKEN'),
+    'META_API_VERSION': os.getenv('META_API_VERSION', 'v20.0'),
+    'META_WHATSAPP_NUMBER': os.getenv('META_WHATSAPP_NUMBER'),
 
     # Payment settings
     'PAYNOW_INTEGRATION_ID': os.getenv('PAYNOW_INTEGRATION_ID'),
