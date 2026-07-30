@@ -55,6 +55,9 @@ ALLOWED_HOSTS = [
     ) if host
 ]
 
+if 'testserver' not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append('testserver')
+
 # CORS configuration
 CORS_ALLOWED_ORIGINS = [
     'https://jeff-backend-n5kb.onrender.com',
@@ -370,6 +373,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+APPEND_SLASH = False
 
 # Security settings for production
 if not DEBUG:

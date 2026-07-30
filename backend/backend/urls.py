@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.http import JsonResponse
+from core.views import whatsapp_webhook
 
 def health_check(request):
     return JsonResponse({
@@ -38,6 +39,8 @@ urlpatterns = [
     path('api/payment/', include('payment.urls')),
     path('api/matching/', include('matching.urls')),
     path('api/providers/', include('providers.urls')),
+    path('webhook/whatsapp/', whatsapp_webhook, name='webhook_whatsapp_root'),
+    path('webhook/whatsapp', whatsapp_webhook, name='webhook_whatsapp_root_no_slash'),
     path('webhook/', include('core.urls')),
     # path('privacy/', include('core.urls')),  # Include core URLs for privacy documentation downloads
 

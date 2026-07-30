@@ -8,7 +8,6 @@ from .views import (
 app_name = 'core'
 
 urlpatterns = [
-    path('whatsapp', whatsapp_webhook, name='whatsapp_webhook_no_slash'),
     path('whatsapp/', whatsapp_webhook, name='whatsapp_webhook'),
     path('health/', health_check, name='health_check'),
     path('status/', system_status, name='status'),

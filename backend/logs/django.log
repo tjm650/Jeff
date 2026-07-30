@@ -3635,3 +3635,94 @@ INFO 2026-07-30 10:45:54,301 api_handlers 18292 6624 Anthropic client initialize
 INFO 2026-07-30 10:45:54,301 ai_enhancer 18292 6624 AI Enhancer initialized with available handlers
 INFO 2026-07-30 10:45:54,301 nlp_processor 18292 6624 OpenAI API Key received: True
 INFO 2026-07-30 10:45:54,301 nlp_processor 18292 6624 Gemini API Key received: True
+ERROR 2026-07-30 10:50:39,674 exception 20916 5000 Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\tinot\AppData\Roaming\Python\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\tinot\AppData\Roaming\Python\Python312\site-packages\django\utils\deprecation.py", line 128, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\tinot\AppData\Roaming\Python\Python312\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\tinot\AppData\Roaming\Python\Python312\site-packages\django\http\request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+INFO 2026-07-30 10:50:57,791 integration 20916 5000 Initializing MCP Integration...
+INFO 2026-07-30 10:50:57,791 integration 20916 5000 Anthropic API key found: True
+INFO 2026-07-30 10:50:59,768 api_handlers 20916 5000 Anthropic client initialized successfully
+INFO 2026-07-30 10:50:59,768 integration 20916 5000 Anthropic handler initialized
+INFO 2026-07-30 10:50:59,768 integration 20916 5000 Gemini API key found: True
+INFO 2026-07-30 10:50:59,768 api_handlers 20916 5000 Gemini client initialized successfully
+INFO 2026-07-30 10:50:59,768 integration 20916 5000 Gemini handler initialized
+INFO 2026-07-30 10:50:59,768 integration 20916 5000 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2026-07-30 10:50:59,775 integration 20916 5000 MCP components initialized
+INFO 2026-07-30 10:50:59,775 integration 20916 5000 Recommendation service initialized
+INFO 2026-07-30 10:50:59,775 __init__ 20916 5000 MCP integration initialized successfully
+INFO 2026-07-30 10:50:59,775 __init__ 20916 5000 Recommendation service initialized successfully
+WARNING 2026-07-30 10:50:59,775 api_handlers 20916 5000 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2026-07-30 10:50:59,787 api_handlers 20916 5000 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2026-07-30 10:50:59,787 api_handlers 20916 5000 Gemini client initialized successfully
+INFO 2026-07-30 10:51:01,074 api_handlers 20916 5000 Anthropic client initialized successfully
+INFO 2026-07-30 10:51:01,074 ai_enhancer 20916 5000 AI Enhancer initialized with available handlers
+INFO 2026-07-30 10:51:01,074 nlp_processor 20916 5000 OpenAI API Key received: True
+INFO 2026-07-30 10:51:01,074 nlp_processor 20916 5000 Gemini API Key received: True
+WARNING 2026-07-30 10:51:03,180 log 20916 5000 Bad Request: /webhook/whatsapp/
+INFO 2026-07-30 10:53:20,479 integration 12448 20092 Initializing MCP Integration...
+INFO 2026-07-30 10:53:20,479 integration 12448 20092 Anthropic API key found: True
+INFO 2026-07-30 10:53:22,262 api_handlers 12448 20092 Anthropic client initialized successfully
+INFO 2026-07-30 10:53:22,262 integration 12448 20092 Anthropic handler initialized
+INFO 2026-07-30 10:53:22,262 integration 12448 20092 Gemini API key found: True
+INFO 2026-07-30 10:53:22,262 api_handlers 12448 20092 Gemini client initialized successfully
+INFO 2026-07-30 10:53:22,262 integration 12448 20092 Gemini handler initialized
+INFO 2026-07-30 10:53:22,271 integration 12448 20092 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2026-07-30 10:53:22,271 integration 12448 20092 MCP components initialized
+INFO 2026-07-30 10:53:22,271 integration 12448 20092 Recommendation service initialized
+INFO 2026-07-30 10:53:22,271 __init__ 12448 20092 MCP integration initialized successfully
+INFO 2026-07-30 10:53:22,271 __init__ 12448 20092 Recommendation service initialized successfully
+WARNING 2026-07-30 10:53:22,271 api_handlers 12448 20092 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2026-07-30 10:53:22,274 api_handlers 12448 20092 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2026-07-30 10:53:22,274 api_handlers 12448 20092 Gemini client initialized successfully
+INFO 2026-07-30 10:53:24,079 api_handlers 12448 20092 Anthropic client initialized successfully
+INFO 2026-07-30 10:53:24,092 ai_enhancer 12448 20092 AI Enhancer initialized with available handlers
+INFO 2026-07-30 10:53:24,112 nlp_processor 12448 20092 OpenAI API Key received: True
+INFO 2026-07-30 10:53:24,112 nlp_processor 12448 20092 Gemini API Key received: True
+INFO 2026-07-30 10:54:43,156 integration 16128 15036 Initializing MCP Integration...
+INFO 2026-07-30 10:54:43,156 integration 16128 15036 Anthropic API key found: True
+INFO 2026-07-30 10:54:44,179 api_handlers 16128 15036 Anthropic client initialized successfully
+INFO 2026-07-30 10:54:44,186 integration 16128 15036 Anthropic handler initialized
+INFO 2026-07-30 10:54:44,186 integration 16128 15036 Gemini API key found: True
+INFO 2026-07-30 10:54:44,186 api_handlers 16128 15036 Gemini client initialized successfully
+INFO 2026-07-30 10:54:44,186 integration 16128 15036 Gemini handler initialized
+INFO 2026-07-30 10:54:44,186 integration 16128 15036 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2026-07-30 10:54:44,186 integration 16128 15036 MCP components initialized
+INFO 2026-07-30 10:54:44,186 integration 16128 15036 Recommendation service initialized
+INFO 2026-07-30 10:54:44,189 __init__ 16128 15036 MCP integration initialized successfully
+INFO 2026-07-30 10:54:44,189 __init__ 16128 15036 Recommendation service initialized successfully
+WARNING 2026-07-30 10:54:44,189 api_handlers 16128 15036 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2026-07-30 10:54:44,190 api_handlers 16128 15036 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2026-07-30 10:54:44,190 api_handlers 16128 15036 Gemini client initialized successfully
+INFO 2026-07-30 10:54:45,056 api_handlers 16128 15036 Anthropic client initialized successfully
+INFO 2026-07-30 10:54:45,056 ai_enhancer 16128 15036 AI Enhancer initialized with available handlers
+INFO 2026-07-30 10:54:45,056 nlp_processor 16128 15036 OpenAI API Key received: True
+INFO 2026-07-30 10:54:45,056 nlp_processor 16128 15036 Gemini API Key received: True
+INFO 2026-07-30 10:55:10,550 integration 12676 15524 Initializing MCP Integration...
+INFO 2026-07-30 10:55:10,551 integration 12676 15524 Anthropic API key found: True
+INFO 2026-07-30 10:55:11,442 api_handlers 12676 15524 Anthropic client initialized successfully
+INFO 2026-07-30 10:55:11,442 integration 12676 15524 Anthropic handler initialized
+INFO 2026-07-30 10:55:11,442 integration 12676 15524 Gemini API key found: True
+INFO 2026-07-30 10:55:11,442 api_handlers 12676 15524 Gemini client initialized successfully
+INFO 2026-07-30 10:55:11,442 integration 12676 15524 Gemini handler initialized
+INFO 2026-07-30 10:55:11,442 integration 12676 15524 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2026-07-30 10:55:11,455 integration 12676 15524 MCP components initialized
+INFO 2026-07-30 10:55:11,455 integration 12676 15524 Recommendation service initialized
+INFO 2026-07-30 10:55:11,455 __init__ 12676 15524 MCP integration initialized successfully
+INFO 2026-07-30 10:55:11,455 __init__ 12676 15524 Recommendation service initialized successfully
+WARNING 2026-07-30 10:55:11,460 api_handlers 12676 15524 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2026-07-30 10:55:11,460 api_handlers 12676 15524 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2026-07-30 10:55:11,460 api_handlers 12676 15524 Gemini client initialized successfully
+INFO 2026-07-30 10:55:12,290 api_handlers 12676 15524 Anthropic client initialized successfully
+INFO 2026-07-30 10:55:12,290 ai_enhancer 12676 15524 AI Enhancer initialized with available handlers
+INFO 2026-07-30 10:55:12,290 nlp_processor 12676 15524 OpenAI API Key received: True
+INFO 2026-07-30 10:55:12,290 nlp_processor 12676 15524 Gemini API Key received: True
