@@ -3726,3 +3726,22 @@ INFO 2026-07-30 10:55:12,290 api_handlers 12676 15524 Anthropic client initializ
 INFO 2026-07-30 10:55:12,290 ai_enhancer 12676 15524 AI Enhancer initialized with available handlers
 INFO 2026-07-30 10:55:12,290 nlp_processor 12676 15524 OpenAI API Key received: True
 INFO 2026-07-30 10:55:12,290 nlp_processor 12676 15524 Gemini API Key received: True
+INFO 2026-07-30 14:43:30,078 integration 14232 13208 Initializing MCP Integration...
+INFO 2026-07-30 14:43:30,080 integration 14232 13208 Anthropic API key found: True
+INFO 2026-07-30 14:43:32,096 api_handlers 14232 13208 Anthropic client initialized successfully
+INFO 2026-07-30 14:43:32,099 integration 14232 13208 Anthropic handler initialized
+INFO 2026-07-30 14:43:32,099 integration 14232 13208 Gemini API key found: True
+INFO 2026-07-30 14:43:32,099 api_handlers 14232 13208 Gemini client initialized successfully
+INFO 2026-07-30 14:43:32,100 integration 14232 13208 Gemini handler initialized
+INFO 2026-07-30 14:43:32,100 integration 14232 13208 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2026-07-30 14:43:32,100 integration 14232 13208 MCP components initialized
+INFO 2026-07-30 14:43:32,100 integration 14232 13208 Recommendation service initialized
+INFO 2026-07-30 14:43:32,100 __init__ 14232 13208 MCP integration initialized successfully
+INFO 2026-07-30 14:43:32,100 __init__ 14232 13208 Recommendation service initialized successfully
+WARNING 2026-07-30 14:43:32,100 api_handlers 14232 13208 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2026-07-30 14:43:32,104 api_handlers 14232 13208 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2026-07-30 14:43:32,105 api_handlers 14232 13208 Gemini client initialized successfully
+INFO 2026-07-30 14:43:33,498 api_handlers 14232 13208 Anthropic client initialized successfully
+INFO 2026-07-30 14:43:33,501 ai_enhancer 14232 13208 AI Enhancer initialized with available handlers
+INFO 2026-07-30 14:43:33,505 nlp_processor 14232 13208 OpenAI API Key received: True
+INFO 2026-07-30 14:43:33,515 nlp_processor 14232 13208 Gemini API Key received: True
