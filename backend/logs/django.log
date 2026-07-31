@@ -3822,3 +3822,201 @@ INFO 2026-07-31 10:24:26,249 api_handlers 1832 3240 Anthropic client initialized
 INFO 2026-07-31 10:24:26,259 ai_enhancer 1832 3240 AI Enhancer initialized with available handlers
 INFO 2026-07-31 10:24:26,276 nlp_processor 1832 3240 OpenAI API Key received: True
 INFO 2026-07-31 10:24:26,292 nlp_processor 1832 3240 Gemini API Key received: True
+INFO 2026-07-31 15:04:31,169 integration 18132 17140 Initializing MCP Integration...
+INFO 2026-07-31 15:04:31,169 integration 18132 17140 Anthropic API key found: True
+INFO 2026-07-31 15:04:33,389 api_handlers 18132 17140 Anthropic client initialized successfully
+INFO 2026-07-31 15:04:33,389 integration 18132 17140 Anthropic handler initialized
+INFO 2026-07-31 15:04:33,389 integration 18132 17140 Gemini API key found: True
+INFO 2026-07-31 15:04:33,401 api_handlers 18132 17140 Gemini client initialized successfully
+INFO 2026-07-31 15:04:33,402 integration 18132 17140 Gemini handler initialized
+INFO 2026-07-31 15:04:33,403 integration 18132 17140 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2026-07-31 15:04:33,406 integration 18132 17140 MCP components initialized
+INFO 2026-07-31 15:04:33,411 integration 18132 17140 Recommendation service initialized
+INFO 2026-07-31 15:04:33,413 __init__ 18132 17140 MCP integration initialized successfully
+INFO 2026-07-31 15:04:33,419 __init__ 18132 17140 Recommendation service initialized successfully
+WARNING 2026-07-31 15:04:33,432 api_handlers 18132 17140 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2026-07-31 15:04:33,445 api_handlers 18132 17140 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2026-07-31 15:04:33,459 api_handlers 18132 17140 Gemini client initialized successfully
+INFO 2026-07-31 15:04:34,549 api_handlers 18132 17140 Anthropic client initialized successfully
+INFO 2026-07-31 15:04:34,551 ai_enhancer 18132 17140 AI Enhancer initialized with available handlers
+INFO 2026-07-31 15:04:34,551 nlp_processor 18132 17140 OpenAI API Key received: True
+INFO 2026-07-31 15:04:34,553 nlp_processor 18132 17140 Gemini API Key received: True
+WARNING 2026-07-31 15:04:34,821 log 18132 17140 Not Found: /webhook/whatsapp
+INFO 2026-07-31 15:16:21,059 integration 4156 7852 Initializing MCP Integration...
+
+INFO 2026-07-31 15:16:21,059 integration 8172 16664 Anthropic API key found: True
+INFO 2026-07-31 15:16:21,059 integration 4156 7852 Anthropic API key found: True
+WARNING 2026-07-31 15:16:21,059 api_handlers 8172 16664 Anthropic client not available
+WARNING 2026-07-31 15:16:21,059 api_handlers 4156 7852 Anthropic client not available
+INFO 2026-07-31 15:16:21,059 integration 8172 16664 Anthropic handler initialized
+INFO 2026-07-31 15:16:21,059 integration 4156 7852 Anthropic handler initialized
+INFO 2026-07-31 15:16:21,059 integration 8172 16664 Gemini API key found: True
+INFO 2026-07-31 15:16:21,059 integration 4156 7852 Gemini API key found: True
+INFO 2026-07-31 15:16:21,073 api_handlers 8172 16664 Gemini client initialized successfully
+INFO 2026-07-31 15:16:21,073 api_handlers 4156 7852 Gemini client initialized successfully
+INFO 2026-07-31 15:16:21,073 integration 8172 16664 Gemini handler initialized
+INFO 2026-07-31 15:16:21,073 integration 4156 7852 Gemini handler initialized
+INFO 2026-07-31 15:16:21,073 integration 8172 16664 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2026-07-31 15:16:21,073 integration 4156 7852 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2026-07-31 15:16:21,073 integration 8172 16664 MCP components initialized
+INFO 2026-07-31 15:16:21,073 integration 4156 7852 MCP components initialized
+INFO 2026-07-31 15:16:21,073 integration 8172 16664 Recommendation service initialized
+INFO 2026-07-31 15:16:21,074 integration 4156 7852 Recommendation service initialized
+INFO 2026-07-31 15:16:21,074 __init__ 4156 7852 MCP integration initialized successfully
+INFO 2026-07-31 15:16:21,074 __init__ 8172 16664 MCP integration initialized successfully
+INFO 2026-07-31 15:16:21,075 __init__ 4156 7852 Recommendation service initialized successfully
+INFO 2026-07-31 15:16:21,075 __init__ 8172 16664 Recommendation service initialized successfully
+INFO 2026-07-31 15:16:21,091 conversation_workflow 4156 7852 Processing message from 263786443025: 'hi'
+INFO 2026-07-31 15:16:21,091 conversation_workflow 8172 16664 Processing message from 263786443025: 'hi'
+INFO 2026-07-31 15:16:21,153 utils 4156 7852 Created new conversation state for 263786443025
+INFO 2026-07-31 15:16:21,160 utils 8172 16664 Created new conversation state for 263786443025
+INFO 2026-07-31 15:16:21,164 classification 8172 16664 Classifying message with AI: 'hi'
+INFO 2026-07-31 15:16:21,166 conversation_workflow 8172 16664 Message classified as: G for 263786443025
+INFO 2026-07-31 15:16:21,169 conversation_workflow 8172 16664 Greeting message detected for 263786443025
+INFO 2026-07-31 15:16:21,169 classification 4156 7852 Classifying message with AI: 'hi'
+INFO 2026-07-31 15:16:21,172 conversation_workflow 4156 7852 Message classified as: G for 263786443025
+INFO 2026-07-31 15:16:21,172 conversation_workflow 4156 7852 Greeting message detected for 263786443025
+ERROR 2026-07-31 15:16:30,527 api_handlers 4156 7852 Gemini API call failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API key not valid. Please pass a valid API key."
+]
+ERROR 2026-07-31 15:16:30,549 api_handlers 8172 16664 Gemini API call failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API key not valid. Please pass a valid API key."
+]
+ERROR 2026-07-31 15:16:31,442 api_handlers 4156 7852 Gemini API call failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API key not valid. Please pass a valid API key."
+]
+ERROR 2026-07-31 15:16:31,442 api_handlers 8172 16664 Gemini API call failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API key not valid. Please pass a valid API key."
+]
+ERROR 2026-07-31 15:16:34,061 api_handlers 4156 7852 Gemini API call failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API key not valid. Please pass a valid API key."
+]
+ERROR 2026-07-31 15:16:34,095 api_handlers 8172 16664 Gemini API call failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API key not valid. Please pass a valid API key."
+]
+ERROR 2026-07-31 15:16:43,373 api_handlers 4156 7852 Gemini API call failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API key not valid. Please pass a valid API key."
+]
+ERROR 2026-07-31 15:16:43,373 api_handlers 8172 16664 Gemini API call failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API key not valid. Please pass a valid API key."
+]
+WARNING 2026-07-31 15:16:43,387 greeting_handler 4156 7852 Both APIs failed for greeting, using static response
+WARNING 2026-07-31 15:16:43,387 greeting_handler 8172 16664 Both APIs failed for greeting, using static response
+INFO 2026-07-31 15:16:43,406 message_classifier 4156 7852 Greeting flow completed for 263786443025
+INFO 2026-07-31 15:16:43,412 message_classifier 8172 16664 Greeting flow completed for 263786443025
+ERROR 2026-07-31 15:16:58,672 whatsapp_service 4156 7852 Meta Cloud API error sending WhatsApp message
+Traceback (most recent call last):
+  File "C:\Users\tinot\OneDrive\Documents\GitHub\Jeff\backend\whatsapp\utils\whatsapp_service.py", line 80, in _send_payload
+    response.raise_for_status()
+  File "C:\Users\tinot\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\requests\models.py", line 1021, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url: https://graph.facebook.com/v26.0/1237257249471336/messages
+ERROR 2026-07-31 15:16:58,868 whatsapp_service 8172 16664 Meta Cloud API error sending WhatsApp message
+Traceback (most recent call last):
+  File "C:\Users\tinot\OneDrive\Documents\GitHub\Jeff\backend\whatsapp\utils\whatsapp_service.py", line 80, in _send_payload
+    response.raise_for_status()
+  File "C:\Users\tinot\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\requests\models.py", line 1021, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url: https://graph.facebook.com/v26.0/1237257249471336/messages
+INFO 2026-07-31 15:19:21,703 integration 17324 18956 Initializing MCP Integration...
+INFO 2026-07-31 15:19:21,704 integration 17324 18956 Anthropic API key found: True
+WARNING 2026-07-31 15:19:21,704 api_handlers 17324 18956 Anthropic client not available
+INFO 2026-07-31 15:19:21,706 integration 17324 18956 Anthropic handler initialized
+INFO 2026-07-31 15:19:21,708 integration 17324 18956 Gemini API key found: True
+INFO 2026-07-31 15:19:21,708 api_handlers 17324 18956 Gemini client initialized successfully
+INFO 2026-07-31 15:19:21,708 integration 17324 18956 Gemini handler initialized
+INFO 2026-07-31 15:19:21,708 integration 17324 18956 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2026-07-31 15:19:21,708 integration 17324 18956 MCP components initialized
+INFO 2026-07-31 15:19:21,708 integration 17324 18956 Recommendation service initialized
+INFO 2026-07-31 15:19:21,708 __init__ 17324 18956 MCP integration initialized successfully
+INFO 2026-07-31 15:19:21,719 __init__ 17324 18956 Recommendation service initialized successfully
+INFO 2026-07-31 15:19:21,725 conversation_workflow 17324 18956 Processing message from 263786443025: 'hi'
+INFO 2026-07-31 15:19:21,791 classification 17324 18956 Classifying message with AI: 'hi'
+INFO 2026-07-31 15:19:21,806 conversation_workflow 17324 18956 Message classified as: G for 263786443025
+INFO 2026-07-31 15:19:21,815 conversation_workflow 17324 18956 Greeting message detected for 263786443025
+ERROR 2026-07-31 15:19:24,091 api_handlers 17324 18956 Gemini API call failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API key not valid. Please pass a valid API key."
+]
+ERROR 2026-07-31 15:19:25,009 api_handlers 17324 18956 Gemini API call failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API key not valid. Please pass a valid API key."
+]
+ERROR 2026-07-31 15:19:25,294 api_handlers 17324 18956 Gemini API call failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API key not valid. Please pass a valid API key."
+]
+ERROR 2026-07-31 15:19:26,165 api_handlers 17324 18956 Gemini API call failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API key not valid. Please pass a valid API key."
+]
+WARNING 2026-07-31 15:19:26,167 greeting_handler 17324 18956 Both APIs failed for greeting, using static response
+INFO 2026-07-31 15:19:26,188 message_classifier 17324 18956 Greeting flow completed for 263786443025
