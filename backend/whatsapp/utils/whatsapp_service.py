@@ -20,7 +20,7 @@ class WhatsAppService:
             os.getenv('META_PHONE_NUMBER_ID')
             or os.getenv('WHATSAPP_PHONE_NUMBER_ID')
         )
-        self.api_version = os.getenv('META_API_VERSION', 'v20.0')
+        self.api_version = os.getenv('META_API_VERSION', 'v26.0')
         self.from_number = os.getenv('META_WHATSAPP_NUMBER') or os.getenv('TWILIO_WHATSAPP_NUMBER')
 
         self.base_url = (

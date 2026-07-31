@@ -3745,3 +3745,80 @@ INFO 2026-07-30 14:43:33,498 api_handlers 14232 13208 Anthropic client initializ
 INFO 2026-07-30 14:43:33,501 ai_enhancer 14232 13208 AI Enhancer initialized with available handlers
 INFO 2026-07-30 14:43:33,505 nlp_processor 14232 13208 OpenAI API Key received: True
 INFO 2026-07-30 14:43:33,515 nlp_processor 14232 13208 Gemini API Key received: True
+INFO 2026-07-30 15:51:55,023 integration 16380 14216 Initializing MCP Integration...
+INFO 2026-07-30 15:51:55,024 integration 16380 14216 Anthropic API key found: True
+INFO 2026-07-30 15:51:56,301 api_handlers 16380 14216 Anthropic client initialized successfully
+INFO 2026-07-30 15:51:56,302 integration 16380 14216 Anthropic handler initialized
+INFO 2026-07-30 15:51:56,303 integration 16380 14216 Gemini API key found: True
+INFO 2026-07-30 15:51:56,303 api_handlers 16380 14216 Gemini client initialized successfully
+INFO 2026-07-30 15:51:56,303 integration 16380 14216 Gemini handler initialized
+INFO 2026-07-30 15:51:56,304 integration 16380 14216 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2026-07-30 15:51:56,305 integration 16380 14216 MCP components initialized
+INFO 2026-07-30 15:51:56,305 integration 16380 14216 Recommendation service initialized
+INFO 2026-07-30 15:51:56,306 __init__ 16380 14216 MCP integration initialized successfully
+INFO 2026-07-30 15:51:56,306 __init__ 16380 14216 Recommendation service initialized successfully
+INFO 2026-07-30 15:51:56,312 conversation_workflow 16380 14216 Processing message from +263771234567: 'hi'
+INFO 2026-07-30 15:51:56,376 utils 16380 14216 Created new conversation state for +263771234567
+INFO 2026-07-30 15:51:56,382 conversation_workflow 16380 14216 Routing provider +263771234567 to provider workflow
+INFO 2026-07-30 15:51:56,387 handlers 16380 14216 Processing provider response from +263771234567: 'hi'
+ERROR 2026-07-30 15:52:28,879 api_handlers 16380 14216 Gemini API call failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API key not valid. Please pass a valid API key."
+]
+INFO 2026-07-30 15:52:36,928 _client 16380 14216 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2026-07-30 15:52:36,935 api_handlers 16380 14216 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CdYMQxAe6qo7HMNDAuVf9'}
+ERROR 2026-07-30 15:52:39,568 api_handlers 16380 14216 Gemini API call failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+, locale: "en-US"
+message: "API key not valid. Please pass a valid API key."
+]
+INFO 2026-07-30 15:52:41,344 _client 16380 14216 HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+ERROR 2026-07-30 15:52:41,344 api_handlers 16380 14216 Anthropic API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CdYMRHMJGXASWAMRT8DPA'}
+INFO 2026-07-30 15:52:41,361 handlers 16380 14216 Processing greeting for booking BK1765211785.196365
+INFO 2026-07-31 10:20:18,369 integration 3156 9848 Initializing MCP Integration...
+INFO 2026-07-31 10:20:18,464 integration 3156 9848 Anthropic API key found: True
+INFO 2026-07-31 10:20:22,528 api_handlers 3156 9848 Anthropic client initialized successfully
+INFO 2026-07-31 10:20:22,532 integration 3156 9848 Anthropic handler initialized
+INFO 2026-07-31 10:20:22,533 integration 3156 9848 Gemini API key found: True
+INFO 2026-07-31 10:20:22,564 api_handlers 3156 9848 Gemini client initialized successfully
+INFO 2026-07-31 10:20:22,590 integration 3156 9848 Gemini handler initialized
+INFO 2026-07-31 10:20:22,608 integration 3156 9848 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2026-07-31 10:20:22,633 integration 3156 9848 MCP components initialized
+INFO 2026-07-31 10:20:22,700 integration 3156 9848 Recommendation service initialized
+INFO 2026-07-31 10:20:22,713 __init__ 3156 9848 MCP integration initialized successfully
+INFO 2026-07-31 10:20:22,715 __init__ 3156 9848 Recommendation service initialized successfully
+WARNING 2026-07-31 10:20:22,722 api_handlers 3156 9848 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2026-07-31 10:20:22,791 api_handlers 3156 9848 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2026-07-31 10:20:22,808 api_handlers 3156 9848 Gemini client initialized successfully
+INFO 2026-07-31 10:20:24,701 api_handlers 3156 9848 Anthropic client initialized successfully
+INFO 2026-07-31 10:20:24,701 ai_enhancer 3156 9848 AI Enhancer initialized with available handlers
+INFO 2026-07-31 10:20:24,703 nlp_processor 3156 9848 OpenAI API Key received: True
+INFO 2026-07-31 10:20:24,725 nlp_processor 3156 9848 Gemini API Key received: True
+INFO 2026-07-31 10:24:19,632 integration 1832 3240 Initializing MCP Integration...
+INFO 2026-07-31 10:24:20,709 integration 1832 3240 Anthropic API key found: True
+INFO 2026-07-31 10:24:24,102 api_handlers 1832 3240 Anthropic client initialized successfully
+INFO 2026-07-31 10:24:24,115 integration 1832 3240 Anthropic handler initialized
+INFO 2026-07-31 10:24:24,116 integration 1832 3240 Gemini API key found: True
+INFO 2026-07-31 10:24:24,118 api_handlers 1832 3240 Gemini client initialized successfully
+INFO 2026-07-31 10:24:24,119 integration 1832 3240 Gemini handler initialized
+INFO 2026-07-31 10:24:24,133 integration 1832 3240 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2026-07-31 10:24:24,135 integration 1832 3240 MCP components initialized
+INFO 2026-07-31 10:24:24,148 integration 1832 3240 Recommendation service initialized
+INFO 2026-07-31 10:24:24,148 __init__ 1832 3240 MCP integration initialized successfully
+INFO 2026-07-31 10:24:24,159 __init__ 1832 3240 Recommendation service initialized successfully
+WARNING 2026-07-31 10:24:24,162 api_handlers 1832 3240 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2026-07-31 10:24:24,166 api_handlers 1832 3240 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2026-07-31 10:24:24,166 api_handlers 1832 3240 Gemini client initialized successfully
+INFO 2026-07-31 10:24:26,249 api_handlers 1832 3240 Anthropic client initialized successfully
+INFO 2026-07-31 10:24:26,259 ai_enhancer 1832 3240 AI Enhancer initialized with available handlers
+INFO 2026-07-31 10:24:26,276 nlp_processor 1832 3240 OpenAI API Key received: True
+INFO 2026-07-31 10:24:26,292 nlp_processor 1832 3240 Gemini API Key received: True
