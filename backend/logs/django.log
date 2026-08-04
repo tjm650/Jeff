@@ -4214,3 +4214,83 @@ INFO 2026-08-04 12:39:11,273 log_whatsapp_webhook_status 20432 16684    [OK] Tes
 INFO 2026-08-04 12:39:11,273 log_whatsapp_webhook_status 20432 16684 
 ==========================================================================================
 
+INFO 2026-08-04 12:45:04,483 apps 12684 21284 
+================================================================================
+INFO 2026-08-04 12:45:04,483 apps 12684 21284 [INIT] Jeff Platform Core Module Initialized
+INFO 2026-08-04 12:45:04,487 apps 12684 21284 ================================================================================
+INFO 2026-08-04 12:45:04,490 apps 12684 21284 [OK] Core models and services loaded
+INFO 2026-08-04 12:45:04,490 apps 12684 21284 [OK] Authentication middleware activated
+INFO 2026-08-04 12:45:04,491 apps 12684 21284 [OK] API key authentication enabled
+INFO 2026-08-04 12:45:04,491 apps 12684 21284 ================================================================================
+
+INFO 2026-08-04 12:45:04,493 apps 12684 21284 ================================================================================
+INFO 2026-08-04 12:45:04,493 apps 12684 21284 [START] WhatsApp Integration Module Initialized
+INFO 2026-08-04 12:45:04,493 apps 12684 21284 ================================================================================
+INFO 2026-08-04 12:45:04,493 apps 12684 21284 WhatsApp Webhook Configuration Status:
+INFO 2026-08-04 12:45:04,493 apps 12684 21284    [OK] META_VERIFY_TOKEN: [OK] Configured
+INFO 2026-08-04 12:45:04,496 apps 12684 21284    [OK] META_APP_SECRET: [OK] Configured
+INFO 2026-08-04 12:45:04,496 apps 12684 21284    [OK] WEBHOOK_SECRET: [WARN] NOT configured
+INFO 2026-08-04 12:45:04,496 apps 12684 21284 
+WhatsApp Webhook Endpoints:
+INFO 2026-08-04 12:45:04,496 apps 12684 21284    - GET:  https://jeff-backend-n5kb.onrender.com/webhook/whatsapp/
+INFO 2026-08-04 12:45:04,497 apps 12684 21284    - POST: https://jeff-backend-n5kb.onrender.com/webhook/whatsapp/
+INFO 2026-08-04 12:45:04,497 apps 12684 21284 
+Security Configuration:
+INFO 2026-08-04 12:45:04,499 apps 12684 21284    [OK] DEBUG mode: OFF
+INFO 2026-08-04 12:45:04,501 apps 12684 21284    [OK] CSRF exemption: [WARN] Check middleware
+INFO 2026-08-04 12:45:04,502 apps 12684 21284 
+[READY] WhatsApp module ready to receive webhook events
+INFO 2026-08-04 12:45:04,511 apps 12684 21284 ================================================================================
+
+INFO 2026-08-04 12:45:04,511 log_whatsapp_webhook_status 12684 21284 
+==========================================================================================
+INFO 2026-08-04 12:45:04,511 log_whatsapp_webhook_status 12684 21284 [DEPLOY] JEFF PLATFORM - WHATSAPP WEBHOOK DEPLOYMENT STATUS
+INFO 2026-08-04 12:45:04,511 log_whatsapp_webhook_status 12684 21284 ==========================================================================================
+INFO 2026-08-04 12:45:04,511 log_whatsapp_webhook_status 12684 21284 
+[ENVIRONMENT] DEPLOYMENT ENVIRONMENT:
+INFO 2026-08-04 12:45:04,511 log_whatsapp_webhook_status 12684 21284    Environment: Local Development
+INFO 2026-08-04 12:45:04,511 log_whatsapp_webhook_status 12684 21284    DEBUG Mode: OFF [OK]
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284    Python: 3.12.3
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284    Django: 5.1
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284 
+[HOSTS] ALLOWED HOSTS:
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284    - localhost
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284    - 127.0.0.1
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284    - 0.0.0.0
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284    - jeff-backend-n5kb.onrender.com
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284    - jeff-one.vercel.app
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284    - ... and 1 more
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284 
+[CONFIG] WHATSAPP WEBHOOK CONFIGURATION:
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284    [OK] META_VERIFY_TOKEN: Configured (length: 14)
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284    [OK] META_APP_SECRET: Configured (length: 32)
+WARNING 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284    [WARN] WEBHOOK_SECRET: NOT CONFIGURED
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284 
+[ENDPOINTS] WEBHOOK ENDPOINTS:
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284    GET (Verification):  https://jeff-backend-n5kb.onrender.com/webhook/whatsapp/
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284    POST (Messages):     https://jeff-backend-n5kb.onrender.com/webhook/whatsapp/
+INFO 2026-08-04 12:45:04,520 log_whatsapp_webhook_status 12684 21284 
+[SECURITY] SECURITY CONFIGURATION:
+INFO 2026-08-04 12:45:04,535 log_whatsapp_webhook_status 12684 21284    CSRF Exempt: [OK] Enabled for webhook endpoints
+INFO 2026-08-04 12:45:04,535 log_whatsapp_webhook_status 12684 21284    Signature Verification: [OK] Enabled
+INFO 2026-08-04 12:45:04,536 log_whatsapp_webhook_status 12684 21284    HTTPS Required: [OK] Yes (production)
+INFO 2026-08-04 12:45:04,539 log_whatsapp_webhook_status 12684 21284 
+[APPS] INSTALLED APPS STATUS:
+INFO 2026-08-04 12:45:04,539 log_whatsapp_webhook_status 12684 21284    [OK] WhatsApp App
+INFO 2026-08-04 12:45:04,539 log_whatsapp_webhook_status 12684 21284    [OK] Core App
+INFO 2026-08-04 12:45:04,544 log_whatsapp_webhook_status 12684 21284    [OK] Payment App
+INFO 2026-08-04 12:45:04,544 log_whatsapp_webhook_status 12684 21284 
+[MIDDLEWARE] MIDDLEWARE CONFIGURATION:
+INFO 2026-08-04 12:45:04,544 log_whatsapp_webhook_status 12684 21284    [OK] CSRF Middleware
+INFO 2026-08-04 12:45:04,544 log_whatsapp_webhook_status 12684 21284    [OK] CORS Middleware
+INFO 2026-08-04 12:45:04,544 log_whatsapp_webhook_status 12684 21284 
+==========================================================================================
+INFO 2026-08-04 12:45:04,544 log_whatsapp_webhook_status 12684 21284 [OK] WHATSAPP WEBHOOK FULLY CONFIGURED - READY TO RECEIVE MESSAGES
+INFO 2026-08-04 12:45:04,544 log_whatsapp_webhook_status 12684 21284 
+[NEXT] Next Steps:
+INFO 2026-08-04 12:45:04,544 log_whatsapp_webhook_status 12684 21284    [OK] Webhook is ready to receive messages from Meta Cloud API
+INFO 2026-08-04 12:45:04,544 log_whatsapp_webhook_status 12684 21284    [OK] Monitor logs for incoming messages at: /logs/
+INFO 2026-08-04 12:45:04,544 log_whatsapp_webhook_status 12684 21284    [OK] Test webhook: Use Meta App Dashboard -> Webhooks section
+INFO 2026-08-04 12:45:04,544 log_whatsapp_webhook_status 12684 21284 
+==========================================================================================
+

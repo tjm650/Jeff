@@ -88,7 +88,15 @@ def log_deployment_status():
     # 4. Webhook Endpoints
     logger.info("\n[ENDPOINTS] WEBHOOK ENDPOINTS:")
     if allowed_hosts:
-        primary_host = allowed_hosts[0]
+        # Prefer production host over localhost
+        primary_host = None
+        for host in allowed_hosts:
+            if 'onrender.com' in host or 'vercel.app' in host:
+                primary_host = host
+                break
+        if not primary_host:
+            primary_host = next((h for h in allowed_hosts if h not in ('localhost', '127.0.0.1', '0.0.0.0')), allowed_hosts[0])
+        
         logger.info(f"   GET (Verification):  https://{primary_host}/webhook/whatsapp/")
         logger.info(f"   POST (Messages):     https://{primary_host}/webhook/whatsapp/")
     else:

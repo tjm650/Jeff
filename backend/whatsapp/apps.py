@@ -29,7 +29,15 @@ class WhatsappConfig(AppConfig):
         # Log webhook URL info
         allowed_hosts = getattr(dj_settings, 'ALLOWED_HOSTS', [])
         if allowed_hosts:
-            primary_host = allowed_hosts[0] if allowed_hosts else 'localhost'
+            # Prefer production host over localhost
+            primary_host = None
+            for host in allowed_hosts:
+                if 'onrender.com' in host or 'vercel.app' in host:
+                    primary_host = host
+                    break
+            if not primary_host:
+                primary_host = next((h for h in allowed_hosts if h not in ('localhost', '127.0.0.1', '0.0.0.0')), allowed_hosts[0])
+            
             logger.info(f"\nWhatsApp Webhook Endpoints:")
             logger.info(f"   - GET:  https://{primary_host}/webhook/whatsapp/")
             logger.info(f"   - POST: https://{primary_host}/webhook/whatsapp/")
