@@ -40,7 +40,7 @@ urlpatterns = [
     path('api/matching/', include('matching.urls')),
     path('api/providers/', include('providers.urls')),
     path('webhook/whatsapp/', whatsapp_webhook, name='webhook_whatsapp_root'),
-    # path('webhook/whatsapp', whatsapp_webhook, name='webhook_whatsapp_root_no_slash'),
+    path('webhook/whatsapp', whatsapp_webhook, name='webhook_whatsapp_root_no_slash'),
     path('webhook/', include('core.urls')),
     # path('privacy/', include('core.urls')),  # Include core URLs for privacy documentation downloads
 
