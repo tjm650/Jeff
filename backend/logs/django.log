@@ -4040,3 +4040,177 @@ INFO 2026-08-03 15:41:31,318 ai_enhancer 16556 18848 AI Enhancer initialized wit
 INFO 2026-08-03 15:41:31,318 nlp_processor 16556 18848 OpenAI API Key received: True
 INFO 2026-08-03 15:41:31,319 nlp_processor 16556 18848 Gemini API Key received: True
 WARNING 2026-08-03 15:41:34,587 log 16556 18848 Not Found: /webhook/whatsapp
+INFO 2026-08-04 12:19:21,863 integration 15560 20660 Initializing MCP Integration...
+INFO 2026-08-04 12:19:21,868 integration 15560 20660 Anthropic API key found: True
+INFO 2026-08-04 12:19:23,643 api_handlers 15560 20660 Anthropic client initialized successfully
+INFO 2026-08-04 12:19:23,643 integration 15560 20660 Anthropic handler initialized
+INFO 2026-08-04 12:19:23,643 integration 15560 20660 Gemini API key found: True
+INFO 2026-08-04 12:19:23,643 api_handlers 15560 20660 Gemini client initialized successfully
+INFO 2026-08-04 12:19:23,643 integration 15560 20660 Gemini handler initialized
+INFO 2026-08-04 12:19:23,643 integration 15560 20660 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2026-08-04 12:19:23,652 integration 15560 20660 MCP components initialized
+INFO 2026-08-04 12:19:23,653 integration 15560 20660 Recommendation service initialized
+INFO 2026-08-04 12:19:23,656 __init__ 15560 20660 MCP integration initialized successfully
+INFO 2026-08-04 12:19:23,664 __init__ 15560 20660 Recommendation service initialized successfully
+WARNING 2026-08-04 12:19:23,665 api_handlers 15560 20660 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2026-08-04 12:19:23,666 api_handlers 15560 20660 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2026-08-04 12:19:23,666 api_handlers 15560 20660 Gemini client initialized successfully
+INFO 2026-08-04 12:19:24,626 api_handlers 15560 20660 Anthropic client initialized successfully
+INFO 2026-08-04 12:19:24,626 ai_enhancer 15560 20660 AI Enhancer initialized with available handlers
+INFO 2026-08-04 12:19:24,626 nlp_processor 15560 20660 OpenAI API Key received: True
+INFO 2026-08-04 12:19:24,626 nlp_processor 15560 20660 Gemini API Key received: True
+ERROR 2026-08-04 12:19:25,615 token 15560 20660 Token validation error: Database queries to 'default' are not allowed in SimpleTestCase subclasses. Either subclass TestCase or TransactionTestCase to ensure proper test isolation or add 'default' to whatsapp.tests.MetaWebhookTests.databases to silence this failure.
+ERROR 2026-08-04 12:19:25,625 whatsapp_handler 15560 20660 Error handling status request
+Traceback (most recent call last):
+  File "C:\Users\tinot\OneDrive\Documents\GitHub\Jeff\backend\whatsapp\whatsapp_handler.py", line 242, in handle_status_request
+    latest_tx = Transaction.objects.filter(cell_number=from_number).order_by('-created_at').first()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\tinot\AppData\Roaming\Python\Python312\site-packages\django\db\models\query.py", line 1097, in first
+    for obj in queryset[:1]:
+  File "C:\Users\tinot\AppData\Roaming\Python\Python312\site-packages\django\db\models\query.py", line 400, in __iter__
+    self._fetch_all()
+  File "C:\Users\tinot\AppData\Roaming\Python\Python312\site-packages\django\db\models\query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\tinot\AppData\Roaming\Python\Python312\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\tinot\AppData\Roaming\Python\Python312\site-packages\django\db\models\sql\compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\tinot\AppData\Roaming\Python\Python312\site-packages\django\test\testcases.py", line 198, in __call__
+    raise DatabaseOperationForbidden(self.message)
+django.test.testcases.DatabaseOperationForbidden: Database queries to 'default' are not allowed in SimpleTestCase subclasses. Either subclass TestCase or TransactionTestCase to ensure proper test isolation or add 'default' to whatsapp.tests.MetaWebhookTests.databases to silence this failure.
+INFO 2026-08-04 12:19:27,633 whatsapp_handler 15560 20660 WhatsApp webhook successfully connected and verified
+WARNING 2026-08-04 12:19:27,955 log 15560 20660 Not Found: /webhook/whatsapp
+INFO 2026-08-04 12:24:32,069 integration 12856 16772 Initializing MCP Integration...
+INFO 2026-08-04 12:24:32,071 integration 12856 16772 Anthropic API key found: True
+INFO 2026-08-04 12:24:33,303 api_handlers 12856 16772 Anthropic client initialized successfully
+INFO 2026-08-04 12:24:33,306 integration 12856 16772 Anthropic handler initialized
+INFO 2026-08-04 12:24:33,306 integration 12856 16772 Gemini API key found: True
+INFO 2026-08-04 12:24:33,306 api_handlers 12856 16772 Gemini client initialized successfully
+INFO 2026-08-04 12:24:33,306 integration 12856 16772 Gemini handler initialized
+INFO 2026-08-04 12:24:33,306 integration 12856 16772 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2026-08-04 12:24:33,306 integration 12856 16772 MCP components initialized
+INFO 2026-08-04 12:24:33,306 integration 12856 16772 Recommendation service initialized
+INFO 2026-08-04 12:24:33,313 __init__ 12856 16772 MCP integration initialized successfully
+INFO 2026-08-04 12:24:33,315 __init__ 12856 16772 Recommendation service initialized successfully
+WARNING 2026-08-04 12:24:33,319 api_handlers 12856 16772 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2026-08-04 12:24:33,319 api_handlers 12856 16772 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2026-08-04 12:24:33,321 api_handlers 12856 16772 Gemini client initialized successfully
+INFO 2026-08-04 12:24:35,457 api_handlers 12856 16772 Anthropic client initialized successfully
+INFO 2026-08-04 12:24:35,458 ai_enhancer 12856 16772 AI Enhancer initialized with available handlers
+INFO 2026-08-04 12:24:35,459 nlp_processor 12856 16772 OpenAI API Key received: True
+INFO 2026-08-04 12:24:35,460 nlp_processor 12856 16772 Gemini API Key received: True
+INFO 2026-08-04 12:24:35,886 whatsapp_handler 12856 16772 WhatsApp webhook successfully connected and verified
+WARNING 2026-08-04 12:24:35,931 log 12856 16772 Not Found: /webhook/whatsapp
+INFO 2026-08-04 12:34:47,279 apps 16096 10616 
+================================================================================
+INFO 2026-08-04 12:34:47,365 apps 16096 10616 ================================================================================
+INFO 2026-08-04 12:34:47,392 apps 16096 10616 ================================================================================
+
+INFO 2026-08-04 12:34:47,400 apps 16096 10616 ================================================================================
+INFO 2026-08-04 12:34:47,409 apps 16096 10616 ================================================================================
+INFO 2026-08-04 12:34:47,426 apps 16096 10616    • GET:  https://localhost/webhook/whatsapp/
+INFO 2026-08-04 12:34:47,429 apps 16096 10616    • POST: https://localhost/webhook/whatsapp/
+INFO 2026-08-04 12:34:47,451 apps 16096 10616 ================================================================================
+
+INFO 2026-08-04 12:34:47,456 log_whatsapp_webhook_status 16096 10616 
+==========================================================================================
+INFO 2026-08-04 12:34:47,461 log_whatsapp_webhook_status 16096 10616 ==========================================================================================
+INFO 2026-08-04 12:34:47,471 log_whatsapp_webhook_status 16096 10616    Environment: Local Development
+INFO 2026-08-04 12:34:47,477 log_whatsapp_webhook_status 16096 10616    Python: 3.12.3
+INFO 2026-08-04 12:34:47,482 log_whatsapp_webhook_status 16096 10616    Django: 5.1
+INFO 2026-08-04 12:34:47,487 log_whatsapp_webhook_status 16096 10616    • localhost
+INFO 2026-08-04 12:34:47,487 log_whatsapp_webhook_status 16096 10616    • 127.0.0.1
+INFO 2026-08-04 12:34:47,487 log_whatsapp_webhook_status 16096 10616    • 0.0.0.0
+INFO 2026-08-04 12:34:47,488 log_whatsapp_webhook_status 16096 10616    • jeff-backend-n5kb.onrender.com
+INFO 2026-08-04 12:34:47,488 log_whatsapp_webhook_status 16096 10616    • jeff-one.vercel.app
+INFO 2026-08-04 12:34:47,488 log_whatsapp_webhook_status 16096 10616    • ... and 1 more
+INFO 2026-08-04 12:34:47,506 log_whatsapp_webhook_status 16096 10616    GET (Verification):  https://localhost/webhook/whatsapp/
+INFO 2026-08-04 12:34:47,507 log_whatsapp_webhook_status 16096 10616    POST (Messages):     https://localhost/webhook/whatsapp/
+INFO 2026-08-04 12:34:47,569 log_whatsapp_webhook_status 16096 10616 
+==========================================================================================
+INFO 2026-08-04 12:34:47,588 log_whatsapp_webhook_status 16096 10616 
+==========================================================================================
+
+INFO 2026-08-04 12:39:11,237 apps 20432 16684 
+================================================================================
+INFO 2026-08-04 12:39:11,237 apps 20432 16684 [INIT] Jeff Platform Core Module Initialized
+INFO 2026-08-04 12:39:11,239 apps 20432 16684 ================================================================================
+INFO 2026-08-04 12:39:11,239 apps 20432 16684 [OK] Core models and services loaded
+INFO 2026-08-04 12:39:11,239 apps 20432 16684 [OK] Authentication middleware activated
+INFO 2026-08-04 12:39:11,240 apps 20432 16684 [OK] API key authentication enabled
+INFO 2026-08-04 12:39:11,241 apps 20432 16684 ================================================================================
+
+INFO 2026-08-04 12:39:11,241 apps 20432 16684 ================================================================================
+INFO 2026-08-04 12:39:11,241 apps 20432 16684 [START] WhatsApp Integration Module Initialized
+INFO 2026-08-04 12:39:11,241 apps 20432 16684 ================================================================================
+INFO 2026-08-04 12:39:11,241 apps 20432 16684 WhatsApp Webhook Configuration Status:
+INFO 2026-08-04 12:39:11,241 apps 20432 16684    [OK] META_VERIFY_TOKEN: [OK] Configured
+INFO 2026-08-04 12:39:11,241 apps 20432 16684    [OK] META_APP_SECRET: [OK] Configured
+INFO 2026-08-04 12:39:11,241 apps 20432 16684    [OK] WEBHOOK_SECRET: [WARN] NOT configured
+INFO 2026-08-04 12:39:11,250 apps 20432 16684 
+WhatsApp Webhook Endpoints:
+INFO 2026-08-04 12:39:11,250 apps 20432 16684    - GET:  https://localhost/webhook/whatsapp/
+INFO 2026-08-04 12:39:11,250 apps 20432 16684    - POST: https://localhost/webhook/whatsapp/
+INFO 2026-08-04 12:39:11,250 apps 20432 16684 
+Security Configuration:
+INFO 2026-08-04 12:39:11,250 apps 20432 16684    [OK] DEBUG mode: OFF
+INFO 2026-08-04 12:39:11,253 apps 20432 16684    [OK] CSRF exemption: [WARN] Check middleware
+INFO 2026-08-04 12:39:11,253 apps 20432 16684 
+[READY] WhatsApp module ready to receive webhook events
+INFO 2026-08-04 12:39:11,253 apps 20432 16684 ================================================================================
+
+INFO 2026-08-04 12:39:11,254 log_whatsapp_webhook_status 20432 16684 
+==========================================================================================
+INFO 2026-08-04 12:39:11,255 log_whatsapp_webhook_status 20432 16684 [DEPLOY] JEFF PLATFORM - WHATSAPP WEBHOOK DEPLOYMENT STATUS
+INFO 2026-08-04 12:39:11,255 log_whatsapp_webhook_status 20432 16684 ==========================================================================================
+INFO 2026-08-04 12:39:11,255 log_whatsapp_webhook_status 20432 16684 
+[ENVIRONMENT] DEPLOYMENT ENVIRONMENT:
+INFO 2026-08-04 12:39:11,257 log_whatsapp_webhook_status 20432 16684    Environment: Local Development
+INFO 2026-08-04 12:39:11,257 log_whatsapp_webhook_status 20432 16684    DEBUG Mode: OFF [OK]
+INFO 2026-08-04 12:39:11,257 log_whatsapp_webhook_status 20432 16684    Python: 3.12.3
+INFO 2026-08-04 12:39:11,257 log_whatsapp_webhook_status 20432 16684    Django: 5.1
+INFO 2026-08-04 12:39:11,257 log_whatsapp_webhook_status 20432 16684 
+[HOSTS] ALLOWED HOSTS:
+INFO 2026-08-04 12:39:11,257 log_whatsapp_webhook_status 20432 16684    - localhost
+INFO 2026-08-04 12:39:11,257 log_whatsapp_webhook_status 20432 16684    - 127.0.0.1
+INFO 2026-08-04 12:39:11,257 log_whatsapp_webhook_status 20432 16684    - 0.0.0.0
+INFO 2026-08-04 12:39:11,257 log_whatsapp_webhook_status 20432 16684    - jeff-backend-n5kb.onrender.com
+INFO 2026-08-04 12:39:11,263 log_whatsapp_webhook_status 20432 16684    - jeff-one.vercel.app
+INFO 2026-08-04 12:39:11,263 log_whatsapp_webhook_status 20432 16684    - ... and 1 more
+INFO 2026-08-04 12:39:11,263 log_whatsapp_webhook_status 20432 16684 
+[CONFIG] WHATSAPP WEBHOOK CONFIGURATION:
+INFO 2026-08-04 12:39:11,264 log_whatsapp_webhook_status 20432 16684    [OK] META_VERIFY_TOKEN: Configured (length: 14)
+INFO 2026-08-04 12:39:11,264 log_whatsapp_webhook_status 20432 16684    [OK] META_APP_SECRET: Configured (length: 32)
+WARNING 2026-08-04 12:39:11,264 log_whatsapp_webhook_status 20432 16684    [WARN] WEBHOOK_SECRET: NOT CONFIGURED
+INFO 2026-08-04 12:39:11,264 log_whatsapp_webhook_status 20432 16684 
+[ENDPOINTS] WEBHOOK ENDPOINTS:
+INFO 2026-08-04 12:39:11,266 log_whatsapp_webhook_status 20432 16684    GET (Verification):  https://localhost/webhook/whatsapp/
+INFO 2026-08-04 12:39:11,266 log_whatsapp_webhook_status 20432 16684    POST (Messages):     https://localhost/webhook/whatsapp/
+INFO 2026-08-04 12:39:11,266 log_whatsapp_webhook_status 20432 16684 
+[SECURITY] SECURITY CONFIGURATION:
+INFO 2026-08-04 12:39:11,267 log_whatsapp_webhook_status 20432 16684    CSRF Exempt: [OK] Enabled for webhook endpoints
+INFO 2026-08-04 12:39:11,267 log_whatsapp_webhook_status 20432 16684    Signature Verification: [OK] Enabled
+INFO 2026-08-04 12:39:11,267 log_whatsapp_webhook_status 20432 16684    HTTPS Required: [OK] Yes (production)
+INFO 2026-08-04 12:39:11,267 log_whatsapp_webhook_status 20432 16684 
+[APPS] INSTALLED APPS STATUS:
+INFO 2026-08-04 12:39:11,267 log_whatsapp_webhook_status 20432 16684    [OK] WhatsApp App
+INFO 2026-08-04 12:39:11,269 log_whatsapp_webhook_status 20432 16684    [OK] Core App
+INFO 2026-08-04 12:39:11,269 log_whatsapp_webhook_status 20432 16684    [OK] Payment App
+INFO 2026-08-04 12:39:11,270 log_whatsapp_webhook_status 20432 16684 
+[MIDDLEWARE] MIDDLEWARE CONFIGURATION:
+INFO 2026-08-04 12:39:11,270 log_whatsapp_webhook_status 20432 16684    [OK] CSRF Middleware
+INFO 2026-08-04 12:39:11,270 log_whatsapp_webhook_status 20432 16684    [OK] CORS Middleware
+INFO 2026-08-04 12:39:11,270 log_whatsapp_webhook_status 20432 16684 
+==========================================================================================
+INFO 2026-08-04 12:39:11,270 log_whatsapp_webhook_status 20432 16684 [OK] WHATSAPP WEBHOOK FULLY CONFIGURED - READY TO RECEIVE MESSAGES
+INFO 2026-08-04 12:39:11,270 log_whatsapp_webhook_status 20432 16684 
+[NEXT] Next Steps:
+INFO 2026-08-04 12:39:11,272 log_whatsapp_webhook_status 20432 16684    [OK] Webhook is ready to receive messages from Meta Cloud API
+INFO 2026-08-04 12:39:11,272 log_whatsapp_webhook_status 20432 16684    [OK] Monitor logs for incoming messages at: /logs/
+INFO 2026-08-04 12:39:11,273 log_whatsapp_webhook_status 20432 16684    [OK] Test webhook: Use Meta App Dashboard -> Webhooks section
+INFO 2026-08-04 12:39:11,273 log_whatsapp_webhook_status 20432 16684 
+==========================================================================================
+
