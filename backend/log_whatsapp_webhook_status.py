@@ -89,7 +89,7 @@ def log_deployment_status():
     logger.info("\n[ENDPOINTS] WEBHOOK ENDPOINTS:")
     if allowed_hosts:
         # Prefer production host over localhost
-        primary_host = None
+        primary_host = "https://jeff-backend-n5kb.onrender.com"
         for host in allowed_hosts:
             if 'onrender.com' in host or 'vercel.app' in host:
                 primary_host = host
