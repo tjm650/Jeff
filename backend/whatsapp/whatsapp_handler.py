@@ -86,12 +86,14 @@ def whatsapp_webhook(request):
       - "status" to check latest payment status
     """
     if request.method == 'GET':
+        logger.info('📡 Incoming WhatsApp webhook verification request')
         mode = request.GET.get('hub.mode', '')
         verify_token = request.GET.get('hub.verify_token', '')
         challenge = request.GET.get('hub.challenge', '')
         expected_token = dj_settings.JEFF_SETTINGS.get('META_VERIFY_TOKEN') or dj_settings.JEFF_SETTINGS.get('WEBHOOK_SECRET') or ''
 
         if mode == 'subscribe' and verify_token and challenge and verify_token == expected_token:
+            logger.info('WhatsApp webhook successfully connected and verified')
             return HttpResponse(challenge, content_type='text/plain')
         return HttpResponse('Forbidden', status=403)
 

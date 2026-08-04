@@ -4020,3 +4020,23 @@ message: "API key not valid. Please pass a valid API key."
 ]
 WARNING 2026-07-31 15:19:26,167 greeting_handler 17324 18956 Both APIs failed for greeting, using static response
 INFO 2026-07-31 15:19:26,188 message_classifier 17324 18956 Greeting flow completed for 263786443025
+INFO 2026-08-03 15:41:31,274 integration 16556 18848 Initializing MCP Integration...
+INFO 2026-08-03 15:41:31,276 integration 16556 18848 Anthropic API key found: True
+WARNING 2026-08-03 15:41:31,283 api_handlers 16556 18848 Anthropic client not available
+INFO 2026-08-03 15:41:31,285 integration 16556 18848 Anthropic handler initialized
+INFO 2026-08-03 15:41:31,285 integration 16556 18848 Gemini API key found: True
+INFO 2026-08-03 15:41:31,286 api_handlers 16556 18848 Gemini client initialized successfully
+INFO 2026-08-03 15:41:31,287 integration 16556 18848 Gemini handler initialized
+INFO 2026-08-03 15:41:31,288 integration 16556 18848 API handlers initialized - Anthropic: True, Gemini: True
+INFO 2026-08-03 15:41:31,288 integration 16556 18848 MCP components initialized
+INFO 2026-08-03 15:41:31,289 integration 16556 18848 Recommendation service initialized
+INFO 2026-08-03 15:41:31,289 __init__ 16556 18848 MCP integration initialized successfully
+INFO 2026-08-03 15:41:31,291 __init__ 16556 18848 Recommendation service initialized successfully
+WARNING 2026-08-03 15:41:31,309 api_handlers 16556 18848 OpenAI client initialization failed due to 'proxies' argument. Attempting without proxies.
+ERROR 2026-08-03 15:41:31,310 api_handlers 16556 18848 Failed to initialize OpenAI client after retry: Client.__init__() got an unexpected keyword argument 'proxies'
+INFO 2026-08-03 15:41:31,313 api_handlers 16556 18848 Gemini client initialized successfully
+WARNING 2026-08-03 15:41:31,315 api_handlers 16556 18848 Anthropic client not available
+INFO 2026-08-03 15:41:31,318 ai_enhancer 16556 18848 AI Enhancer initialized with available handlers
+INFO 2026-08-03 15:41:31,318 nlp_processor 16556 18848 OpenAI API Key received: True
+INFO 2026-08-03 15:41:31,319 nlp_processor 16556 18848 Gemini API Key received: True
+WARNING 2026-08-03 15:41:34,587 log 16556 18848 Not Found: /webhook/whatsapp

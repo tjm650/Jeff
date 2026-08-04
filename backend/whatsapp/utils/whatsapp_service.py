@@ -78,7 +78,8 @@ class WhatsAppService:
                 timeout=20,
             )
             response.raise_for_status()
-            logger.info('Meta WhatsApp message sent successfully to %s', normalized_to)
+            logger.info('WhatsApp message successfully sent to recipient: %s', normalized_to)
+            print(f' WhatsApp message successfully sent to {normalized_to}')
             return True
         except requests.RequestException:
             logger.exception('Meta Cloud API error sending WhatsApp message')
