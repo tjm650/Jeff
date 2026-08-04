@@ -95,7 +95,7 @@ def log_deployment_status():
                 primary_host = host
                 break
         if not primary_host:
-            primary_host = next((h for h in allowed_hosts if h not in ('localhost', '127.0.0.1', '0.0.0.0')), allowed_hosts[0])
+            primary_host = next((h for h in allowed_hosts if h not in ('0.0.0.0')), allowed_hosts[0])
         
         logger.info(f"   GET (Verification):  https://{primary_host}/webhook/whatsapp/")
         logger.info(f"   POST (Messages):     https://{primary_host}/webhook/whatsapp/")

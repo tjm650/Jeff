@@ -41,36 +41,54 @@ def _extract_meta_message_data(request):
     """Extract inbound WhatsApp message data from a Meta webhook payload."""
     body = request.body.decode('utf-8') if getattr(request, 'body', b'') else ''
     if not body:
+        logger.warning("[EXTRACT] Empty request body")
         return None
 
     try:
         payload = json.loads(body)
-    except json.JSONDecodeError:
-        logger.warning('Received invalid Meta webhook JSON payload')
+    except json.JSONDecodeError as e:
+        logger.warning(f'[EXTRACT] Invalid Meta webhook JSON payload: {str(e)}')
         return None
 
+    logger.info(f"[EXTRACT] Payload object type: {payload.get('object', 'unknown')}")
+
     for entry in payload.get('entry', []):
+        logger.info(f"[EXTRACT] Processing entry: {entry.get('id', 'unknown')}")
+        
         for change in entry.get('changes', []):
             value = change.get('value', {})
             messages = value.get('messages', [])
+            
             if not messages:
+                logger.info(f"[EXTRACT] No messages in change field: {change.get('field', 'unknown')}")
                 continue
 
+            logger.info(f"[EXTRACT] Found {len(messages)} message(s)")
+            
             message = messages[0]
             from_number = (message.get('from') or '').strip()
             text_body = ''
+            
             if message.get('text'):
                 text_body = (message.get('text', {}).get('body') or '').strip()
+                logger.info(f"[EXTRACT] Text message extracted: '{text_body}'")
             elif message.get('interactive'):
                 text_body = (message.get('interactive', {}).get('button_reply', {}).get('title') or '').strip()
+                logger.info(f"[EXTRACT] Interactive message extracted: '{text_body}'")
+            else:
+                logger.info(f"[EXTRACT] Message type: {message.get('type', 'unknown')}")
 
-            return {
+            result = {
                 'from_number': from_number.replace('whatsapp:', ''),
                 'to_number': (value.get('metadata') or {}).get('display_phone_number', '').replace('whatsapp:', ''),
                 'message_body': text_body,
                 'media_url': '',
             }
+            
+            logger.info(f"[EXTRACT] Result: from={result['from_number']}, body='{result['message_body']}'")
+            return result
 
+    logger.warning("[EXTRACT] No message data found in payload")
     return None
 
 
@@ -110,11 +128,17 @@ def whatsapp_webhook(request):
         return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
 
     try:
+        logger.info("[POST] WhatsApp webhook POST request received")
+        
         if not _verify_meta_signature(request):
+            logger.error("[ERROR] Signature verification failed")
             return JsonResponse({'status': 'error', 'message': 'Invalid signature'}, status=403)
+
+        logger.info("[OK] Signature verified successfully")
 
         message_data = _extract_meta_message_data(request)
         if not message_data:
+            logger.warning("[WARN] No message data extracted from payload")
             return JsonResponse({'status': 'error', 'message': 'Empty request'}, status=400)
 
         from_number = message_data['from_number']
@@ -122,7 +146,11 @@ def whatsapp_webhook(request):
         message_body = message_data['message_body']
         media_url = message_data['media_url']
 
+        logger.info(f"[RECEIVED] Message from {from_number} to {to_number}")
+        logger.info(f"[CONTENT] Message body: '{message_body}'")
+
         if not from_number:
+            logger.error("[ERROR] Missing sender number")
             return JsonResponse({'status': 'error', 'message': 'Missing sender number'}, status=400)
 
         message_data = {
@@ -133,26 +161,31 @@ def whatsapp_webhook(request):
         }
 
         if media_url:
+            logger.info("[HANDLER] Processing media message")
             return handle_media_message(message_data)
 
         body = message_body.strip()
 
         if body.lower() == 'status':
+            logger.info("[HANDLER] Processing status request")
             return handle_status_request(message_data)
 
         if re.search(r'(USD|ZWL)\s+PAY\s+[0-9]+', body, re.IGNORECASE):
+            logger.info("[HANDLER] Processing payment request (legacy format)")
             return handle_payment_request(message_data)
 
         match = re.match(r'^(usd|zwg)\s+pay\s+([0-9\+]+)$', body, re.IGNORECASE)
         if match:
             currency = match.group(1).upper()
             payment_number = match.group(2)
+            logger.info(f"[HANDLER] Processing payment request ({currency}: {payment_number})")
             return handle_currency_payment_request(message_data, currency, payment_number)
 
+        logger.info("[HANDLER] Processing as accommodation request")
         return handle_accommodation_request(message_data)
 
-    except Exception:
-        logger.exception('Error processing WhatsApp webhook')
+    except Exception as e:
+        logger.error(f"[ERROR] Exception in webhook: {str(e)}", exc_info=True)
         return JsonResponse({'status': 'error', 'message': 'Internal server error'}, status=500)
 
         # if not from_number:
@@ -326,15 +359,37 @@ def handle_accommodation_request(message_data):
         from_number = message_data['from_number']
         message_body = message_data['message_body']
 
+        logger.info(f"[ACCOMMODATION] Processing request from {from_number}")
+        logger.info(f"[ACCOMMODATION] Message: '{message_body}'")
+
+        # Handle empty message body
+        if not message_body or not message_body.strip():
+            logger.warning(f"[WARN] Empty message body from {from_number}")
+            whatsapp_service.send_text_message(from_number, "Please send a valid message.")
+            return JsonResponse({'status': 'success', 'action': 'accommodation_request', 'response_length': 0})
+
         workflow = ConversationWorkflow()
+        logger.info(f"[ACCOMMODATION] Initializing ConversationWorkflow")
+        
         response_message = workflow.process_message(from_number, message_body)
+        logger.info(f"[ACCOMMODATION] Workflow response: '{response_message}'")
+        
         whatsapp_service.send_text_message(from_number, response_message)
+        logger.info(f"[ACCOMMODATION] Message sent to {from_number}")
 
         return JsonResponse({'status': 'success', 'action': 'accommodation_request', 'response_length': len(response_message)})
 
-    except Exception:
-        logger.exception('Error handling accommodation request')
-        return JsonResponse({'status': 'error', 'message': 'failed to process accommodation request'}, status=500)
+    except ImportError as e:
+        logger.error(f"[ERROR] Import error in accommodation handler: {str(e)}", exc_info=True)
+        return JsonResponse({'status': 'error', 'message': f'Service import failed: {str(e)}'}, status=500)
+    
+    except AttributeError as e:
+        logger.error(f"[ERROR] Attribute error in accommodation handler: {str(e)}", exc_info=True)
+        return JsonResponse({'status': 'error', 'message': f'Service method not found: {str(e)}'}, status=500)
+    
+    except Exception as e:
+        logger.error(f"[ERROR] Unexpected error in accommodation handler: {str(e)}", exc_info=True)
+        return JsonResponse({'status': 'error', 'message': f'Failed to process request: {str(e)}'}, status=500)
 
 
 def handle_media_message(message_data):
