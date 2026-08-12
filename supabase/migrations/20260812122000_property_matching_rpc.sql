@@ -1,0 +1,27 @@
+-- Property matching equivalent of the legacy DjangoPropertyMatcher.
+-- Keeps scoring close to the legacy weights while moving filtering/scoring into Postgres.
+create or replace function public.search_properties(p_heads integer default null,p_budget_max numeric default null,p_rental_period text default 'month',p_amenities text[] default '{}',p_gender_preference text default null,p_distance_preference text default null,p_location_context text default null,p_limit integer default 5)
+returns table(id uuid,provider_id uuid,name text,description text,address text,city text,price_per_month numeric,price_per_week numeric,price_per_day numeric,available_rooms integer,available_1h_rooms integer,available_2h_rooms integer,available_3h_rooms integer,available_4h_rooms integer,amenities jsonb,distance_from_campus numeric,campus_name text,gender_preference text,rating numeric,total_reviews integer,match_score numeric,match_reasons text[])
+language sql stable security invoker set search_path=public as $$
+with candidates as (
+ select p.*,
+   (case when p_heads is null then 5 else case when p_heads=1 and p.available_1h_rooms>0 then 10 when p_heads=2 and p.available_2h_rooms>0 then 10 when p_heads=3 and p.available_3h_rooms>0 then 10 when p_heads=4 and p.available_4h_rooms>0 then 10 else 0 end end) heads_score,
+   (case when cardinality(p_amenities)=0 then 2.5 else 5.0*(select count(*) from unnest(p_amenities) a where exists(select 1 from jsonb_array_elements_text(coalesce(p.amenities,'[]'::jsonb)) x where lower(x)=lower(a)))/greatest(cardinality(p_amenities),1) end) amenity_score,
+   (case when p_budget_max is null then 4 else case when (case when p_rental_period='day' then coalesce(p.price_per_day,p.price_per_month/30) when p_rental_period='week' then coalesce(p.price_per_week,p.price_per_month/4) else p.price_per_month end)<=p_budget_max then 8 when (case when p_rental_period='day' then coalesce(p.price_per_day,p.price_per_month/30) when p_rental_period='week' then coalesce(p.price_per_week,p.price_per_month/4) else p.price_per_month end)<=p_budget_max*1.2 then 2.4 else 0 end end) budget_score,
+   (case when p_distance_preference is null then 3.5 when p_distance_preference='near' and p.distance_from_campus<=1 then 7 when p_distance_preference='near' and p.distance_from_campus<=2 then 4.9 when p_distance_preference='near' and p.distance_from_campus<=5 then 2.8 when p_distance_preference='far' and p.distance_from_campus>=3 then 7 when p_distance_preference='far' then 2.1 else 0 end) distance_score,
+   (case when coalesce(p.available_rooms,0)>0 then case when coalesce(p.total_rooms,0)>0 and p.available_rooms::numeric/nullif(p.total_rooms,0)>=0.5 then 5 else 3.5 end else 0 end) availability_score,
+   least(coalesce(p.rating,0),5)::numeric*0.6 rating_score,
+   (case when p_gender_preference is null or p_gender_preference='any' then 1 else case when p.gender_preference in(p_gender_preference,'any') then 2 else 0 end end) gender_score
+ from public.properties p
+ where p.is_available=true
+ and (p_heads is null or (p_heads=1 and p.available_1h_rooms>0) or (p_heads=2 and p.available_2h_rooms>0) or (p_heads=3 and p.available_3h_rooms>0) or (p_heads=4 and p.available_4h_rooms>0))
+ and (p_budget_max is null or (case when p_rental_period='day' then coalesce(p.price_per_day,p.price_per_month/30) when p_rental_period='week' then coalesce(p.price_per_week,p.price_per_month/4) else p.price_per_month end)<=p_budget_max*1.2)
+ and (cardinality(p_amenities)=0 or (select count(*) from unnest(p_amenities) a where exists(select 1 from jsonb_array_elements_text(coalesce(p.amenities,'[]'::jsonb)) x where lower(x)=lower(a)))>0)
+ and (p_gender_preference is null or p_gender_preference='any' or p.gender_preference in(p_gender_preference,'any'))
+ and (p_distance_preference is null or (p_distance_preference='near' and p.distance_from_campus<=5) or (p_distance_preference='far' and p.distance_from_campus>=3))
+ and (p_location_context is null or p_location_context='' or p.campus_name ilike '%'||p_location_context||'%')
+), scored as(select c.*,round((heads_score+amenity_score+budget_score+distance_score+availability_score+rating_score+gender_score)::numeric,2) score from candidates c), ranked as(select s.*,row_number() over(order by score desc,s.rating desc,s.distance_from_campus asc nulls last) rn from scored s where score>0)
+select r.id,r.provider_id,r.name,r.description,r.address,r.city,r.price_per_month,r.price_per_week,r.price_per_day,r.available_rooms,r.available_1h_rooms,r.available_2h_rooms,r.available_3h_rooms,r.available_4h_rooms,r.amenities,r.distance_from_campus,r.campus_name,r.gender_preference,r.rating,r.total_reviews,r.score,array_remove(array[case when r.heads_score>=10 then 'Room size match' end,case when r.amenity_score>=5 then 'Amenity match' end,case when r.budget_score>=8 then 'Within budget' when r.budget_score>0 then 'Near budget' end,case when r.distance_score>=7 then 'Close to campus' end,case when r.availability_score>=5 then 'High availability' end,case when r.rating_score>=2.4 then 'Highly rated' end,case when r.gender_score>=2 then 'Gender preference match' end],null)
+from ranked r where r.rn<=greatest(1,least(coalesce(p_limit,5),50)) order by r.score desc,r.rating desc,r.distance_from_campus asc nulls last;
+$$;
+grant execute on function public.search_properties(integer,numeric,text,text[],text,text,text,integer) to anon,authenticated;
