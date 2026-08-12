@@ -42,7 +42,6 @@ class InsightsHandlerTests(TestCase):
             provider_phone=self.provider.phone_number,
             property_no=self.prop.property_no,
             insights=insights,
-            message_type='IS'
         )
         self.assertTrue(res['success'])
 
@@ -60,25 +59,12 @@ class InsightsHandlerTests(TestCase):
         self.assertEqual(p.price_per_day, Decimal('5.00'))
 
     def test_cannot_update_property_not_owned_by_provider(self):
-        # create another provider and ensure they cannot update this property
         other = AccommodationProvider.objects.create(phone_number='+200000', name='Other', email='other@example.com')
         insights = {'available_rooms': 1}
         res = InsightsHandler.submit_insights(
             provider_phone=other.phone_number,
             property_no=self.prop.property_no,
             insights=insights,
-            message_type='IS'
         )
         self.assertFalse(res['success'])
         self.assertIn('not found for this provider', res['message'])
-
-    def test_requires_is_message_type(self):
-        insights = {'available_rooms': 1}
-        res = InsightsHandler.submit_insights(
-            provider_phone=self.provider.phone_number,
-            property_no=self.prop.property_no,
-            insights=insights,
-            message_type='NOT_IS'
-        )
-        self.assertFalse(res['success'])
-        self.assertIn('Invalid message type', res['message'])
