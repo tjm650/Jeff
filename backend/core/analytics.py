@@ -92,7 +92,7 @@ class JeffAnalytics:
                 total=Sum('message_count')
             )['total'] or 0
             
-            # Active conversations (conversations with messages in last 24h)
+            # Active conversations (conversations with messages in last 24h) 
             active_conversations = Conversation.objects.filter(
                 last_message_at__gte=end_date - timedelta(hours=24)
             ).count()
