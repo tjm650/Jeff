@@ -84,10 +84,9 @@ def system_status(request):
     
     # Get system statistics
     try:
-        from .models import Property, Token, Transaction, Conversation
+        from .models import Property, Conversation
         stats = {
             'total_properties': Property.objects.filter(is_active=True).count(),
-            
             'active_conversations': Conversation.objects.filter(
                 last_message_at__gte=timezone.now() - timedelta(hours=24)
             ).count()

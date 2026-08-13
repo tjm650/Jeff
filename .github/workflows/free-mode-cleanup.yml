@@ -1,0 +1,120 @@
+name: Free Mode Cleanup
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Remove payment architecture and enable free access
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          import re
+          import shutil
+          root = Path('.')
+
+          def remove_method(text, name):
+              return re.sub(rf"\n    def {name}\(.*?(?=\n    def |\Z)", '\n', text, flags=re.S)
+
+          for p in [root/'backend/payment', root/'backend/core/services/conversation/payment_integration.py', root/'supabase/functions/payment-webhook', root/'frontend/app/controller/initiate', root/'frontend/app/pages/cart']:
+              if p.exists(): shutil.rmtree(p) if p.is_dir() else p.unlink()
+
+          p = root/'backend/core/services/conversation_workflow.py'
+          if p.exists():
+              s=p.read_text(); s=re.sub(r"^from \.conversation\.payment_integration.*\n",'',s,flags=re.M); s=re.sub(r"^\s*self\.payment_integration.*\n",'',s,flags=re.M); s=re.sub(r"^\s*'token_check'.*\n",'',s,flags=re.M)
+              s=re.sub(r"            elif message_classification == 'P':.*?(?=            elif message_classification == 'G':)","            elif message_classification == 'P':\n                message_classification = 'A'\n\n",s,flags=re.S)
+              for n in ['_handle_payment_request','_handle_payment_confirmation_step','_show_payment_instructions','_handle_token_check_step','handle_payment_webhook','_show_properties_and_payment_instructions']: s=remove_method(s,n)
+              s=re.sub(r"\n            elif current_step == 'token_check':\n                return self\.step_handlers\._handle_token_check_step\(conversation, message\)",'',s); s=re.sub(r"\n            elif current_step == 'payment_confirmation':\n                return self\.payment_integration\.handle_payment_confirmation_step\(conversation, message\)",'',s); p.write_text(s)
+
+          p=root/'backend/core/services/conversation/step_handlers.py'
+          if p.exists():
+              s=p.read_text(); s=re.sub(r"^from \.payment_integration.*\n",'',s,flags=re.M); s=re.sub(r"^\s*self\.payment_integration.*\n",'',s,flags=re.M)
+              s=re.sub(r"\n\s*from payment\.handlers\.token import token_handler\n\s*valid_token = .*?\n\s*if (?:not )?valid_token.*?\n(?:\s+.*\n){0,8}?\s*if not token_handler\.validate_token_usage\(valid_token\):\n(?:\s+.*\n){0,4}",'\n',s,flags=re.S)
+              s=re.sub(r"\n\s*from payment\.handlers\.token import token_handler\n\s*valid_token = .*?\n\s*if not valid_token.*?\n\s*return .*?\n",'\n',s,flags=re.S)
+              for n in ['_handle_token_check_step','_show_payment_instructions','_show_properties_and_payment_instructions']: s=remove_method(s,n)
+              p.write_text(s)
+
+          p=root/'backend/core/services/conversation/nlp_processor.py'
+          if p.exists():
+              s=p.read_text().replace("conversation.current_step = 'token_check'","conversation.current_step = 'property_listings'").replace("step_handlers._handle_token_check_step(conversation, message)","step_handlers._handle_property_listings_step(conversation, message)"); p.write_text(s)
+
+          p=root/'backend/core/services/conversation/property_search.py'
+          if p.exists():
+              s=p.read_text(); s=re.sub(r"\n\s*from payment\.handlers\.token import token_handler.*?\n",'\n',s); s=re.sub(r"\n            # Check if user has a valid token\n.*?(?=\n            # Import recommendation service)","\n            has_valid_token = True\n\n",s,count=1,flags=re.S); p.write_text(s)
+
+          p=root/'backend/core/services/conversation/help_utils.py'
+          if p.exists():
+              s=p.read_text(); s=re.sub(r"\s*elif current_step == 'token_check':\n\s*return self\._get_token_help\(context_data\)\n",'\n',s); s=remove_method(s,'_get_token_help'); s=remove_method(s,'handle_media_message'); p.write_text(s)
+          p=root/'backend/core/services/conversation/__init__.py'
+          if p.exists(): p.write_text(re.sub(r".*payment_integration.*\n",'',p.read_text()))
+
+          p=root/'backend/core/views.py'
+          if p.exists():
+              s=p.read_text(); s=re.sub(r"^from payment\.payment_handler.*\n",'',s,flags=re.M); s=remove_method(s,'verify_payment'); s=s.replace('from .models import Property, Token, Transaction, Conversation','from .models import Property, Conversation'); s=re.sub(r"\s*'active_tokens': Token\.objects\.filter\(is_active=True\)\.count\(\),",'',s); s=re.sub(r"\s*'total_transactions': Transaction\.objects\.count\(\),",'',s); s=remove_method(s,'revenue_analytics'); p.write_text(s)
+
+          p=root/'backend/core/models.py'
+          if p.exists():
+              s=p.read_text(); s=re.sub(r"\nclass Token\(models\.Model\):.*?(?=\nclass Transaction\(models\.Model\):)",'\n',s,flags=re.S); s=re.sub(r"\nclass Transaction\(models\.Model\):.*?(?=\nclass Booking\(models\.Model\):)",'\n',s,flags=re.S)
+              def conv(m):
+                  block=m.group(0); steps="    STEPS = [\n        ('inquiry', 'Inquiry'),\n        ('property_listings', 'Property Listings'),\n        ('name_collection', 'Name Collection'),\n        ('booking_request', 'Booking Request'),\n        ('provider_response', 'Provider Response'),\n        ('info_request', 'Additional Info'),\n        ('booking_confirmation', 'Booking Confirmation'),\n        ('cleanup', 'Completed'),\n    ]"; return re.sub(r"    STEPS = \[.*?\n    \]",steps,block,count=1,flags=re.S)
+              s=re.sub(r"class ConversationState\(models\.Model\):.*?(?=\nclass Review\(models\.Model\):)",conv,s,flags=re.S); p.write_text(s)
+
+          p=root/'backend/core/analytics.py'
+          if p.exists(): p.write_text('''from django.db.models import Avg\nfrom django.utils import timezone\nfrom datetime import timedelta\nfrom .models import Property, Conversation, Booking\nclass JeffAnalytics:\n    def get_dashboard_metrics(self):\n        now=timezone.now(); return {'total_properties':Property.objects.filter(is_active=True).count(),'total_conversations':Conversation.objects.count(),'total_bookings':Booking.objects.count(),'recent_conversations':Conversation.objects.filter(last_message_at__gte=now-timedelta(hours=24)).count(),'recent_bookings':Booking.objects.filter(created_at__gte=now-timedelta(days=30)).count(),'average_property_rating':Property.objects.filter(is_active=True).aggregate(avg=Avg('rating'))['avg'] or 0}\n    def get_conversation_analytics(self,days=7): return {'conversations':Conversation.objects.filter(last_message_at__gte=timezone.now()-timedelta(days=days)).count()}\n    def get_property_analytics(self): return {'active_properties':Property.objects.filter(is_active=True).count()}\n    def get_booking_analytics(self,days=30): return {'bookings':Booking.objects.filter(created_at__gte=timezone.now()-timedelta(days=days)).count()}\nanalytics=JeffAnalytics()\n''')
+
+          p=root/'backend/core/middleware.py'
+          if p.exists(): p.write_text(p.read_text().replace('https://js.paynow.co.zw','').replace('https://api.paynow.co.zw',''))
+          p=root/'backend/whatsapp/utils/whatsapp_service.py'
+          if p.exists(): p.write_text(remove_method(p.read_text(),'send_payment_confirmation'))
+          p=root/'backend/matching/nlp_processor.py'
+          if p.exists(): p.write_text(re.sub(r'^.*(?:Payment|PayNow|token).*$', '', p.read_text(), flags=re.I|re.M))
+
+          p=root/'backend/core/tests/test_workflow.py'
+          if p.exists():
+              s=p.read_text(); s=re.sub(r"from core\.models import \(.*?\n\)","from core.models import Property, AccommodationProvider, ConversationState, Booking",s,flags=re.S); s=re.sub(r"from payment\..*\n",'',s); s=re.sub(r"\ndef test_token_and_payment_flow\(.*?(?=\ndef |\Z)",'\n',s,flags=re.S); p.write_text(s)
+          p=root/'backend/whatsapp/tests.py'
+          if p.exists(): p.write_text(re.sub(r"\ndef test_.*?payment.*?(?=\ndef |\Z)",'\n',re.sub(r".*patch\('payment\..*\n",'',p.read_text()),flags=re.S|re.I))
+
+          for p in root.rglob('__pycache__'):
+              if p.is_dir(): shutil.rmtree(p,ignore_errors=True)
+          if (root/'backend/logs/django.log').exists(): (root/'backend/logs/django.log').unlink()
+          for p in list(root.rglob('*')):
+              if p.is_file() and '.git' not in p.parts and p.name.lower() in {'paynow_service.py','payment_processor.py','payment_handler.py','payment_integration.py'}:
+                  try:p.unlink()
+                  except OSError:pass
+          (root/'backend/core/migrations/0002_remove_payment_models.py').write_text('''from django.db import migrations\nclass Migration(migrations.Migration):\n    dependencies=[('core','0001_initial')]\n    operations=[migrations.DeleteModel(name='Token'),migrations.DeleteModel(name='Transaction')]\n''')
+          for path in [root/'backend/backend/settings.py',root/'backend/backend/urls.py']:
+              if path.exists():
+                  s=path.read_text(); s=re.sub(r".*['\"]payment['\"].*\n",'',s); s=re.sub(r".*payment\.urls.*\n",'',s); s=re.sub(r'(?im)^.*(?:PAYNOW|PAYMENT|TOKEN_PRICE|TOKEN_USES).*$\n?','',s); path.write_text(s)
+          PY
+
+      - name: Verify free mode and syntax
+        shell: bash
+        run: |
+          set -e
+          if git grep -nEi 'paynow|payment_integration|payment-webhook|payment_handler|token_handler|TOKEN_PRICE|TOKEN_USES|/payment/|payment_confirmation|token_check' -- ':!.github/workflows/free-mode-cleanup.yml' ':!*.md' ':!privacy/*' ':!*.lock' ':!supabase/migrations/*' ':!backend/core/migrations/*' ':!*.pyc' ':!backend/db.sqlite3'; then
+            echo 'Payment-related active source references remain.'
+            exit 1
+          fi
+          python -m compileall -q backend
+
+      - name: Commit free-mode cleanup
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'refactor: remove payment functionality and enable free use' || exit 0
+          git push
