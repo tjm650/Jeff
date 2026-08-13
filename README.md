@@ -137,3 +137,5 @@ This project is proprietary software. All rights reserved.
 ## Contact
 
 For questions or support, please contact the development team.
+
+<!-- Free-mode verification trigger -->
