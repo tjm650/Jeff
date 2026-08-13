@@ -1,0 +1,82 @@
+name: Repair free-mode models
+on:
+  push:
+    branches: [remove-payment-free-mode]
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Repair source after payment removal
+        run: |
+          set -e
+          git fetch origin main --depth=1
+          git show origin/main:backend/backend/settings.py > backend/backend/settings.py
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          # Restore settings from main, then remove payment-specific entries safely.
+          p = Path('backend/backend/settings.py')
+          s = p.read_text()
+          s = s.replace("    'payment',\n", '')
+          s = re.sub(r"\n\s*# Payment settings.*?(?=\n\s*# File upload settings)", "", s, flags=re.S)
+          s = re.sub(r"\n\s*'TOKEN_PRICE':.*?,", "", s)
+          s = re.sub(r"\n\s*'TOKEN_USES':.*?,", "", s)
+          s = re.sub(r"\n\s*'payment': \{.*?\n\s*\},", "", s, flags=re.S)
+          p.write_text(s)
+
+          # Remove token/transaction models while retaining Booking and the rest of core.
+          p = Path('backend/core/models.py')
+          s = p.read_text()
+          s = re.sub(r"\nclass Token\(models\.Model\):.*?(?=\nclass Booking\(models\.Model\):)", "\n", s, flags=re.S)
+          s = re.sub(r"\nclass Transaction\(models\.Model\):.*?(?=\nclass Booking\(models\.Model\):)", "\n", s, flags=re.S)
+          s = re.sub(r"\n\s*STEPS = \[.*?\]\n\n\s*id = models\.UUIDField\(primary_key=True, default=uuid\.uuid4, editable=False\)", "\n    STEPS = [\n        ('inquiry', 'Inquiry'),\n        ('property_listings', 'Property Listings'),\n        ('name_collection', 'Name Collection'),\n        ('booking_request', 'Booking Request'),\n        ('provider_response', 'Provider Response'),\n        ('info_request', 'Info Request'),\n        ('booking_confirmation', 'Booking Confirmation'),\n        ('cleanup', 'Cleanup'),\n    ]\n\n    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)", s, count=1, flags=re.S)
+          p.write_text(s)
+
+          # Remove admin registrations/imports for deleted models.
+          p = Path('backend/core/admin.py')
+          if p.exists():
+              s = p.read_text()
+              s = re.sub(r"^.*\b(Token|Transaction)\b.*\n", '', s, flags=re.M)
+              s = re.sub(r"@admin\.register\((?:Token|Transaction)\).*?(?=\n@admin\.register|\Z)", '', s, flags=re.S)
+              p.write_text(s)
+
+          # Remove direct deleted-model imports/usages from runtime source.
+          for p in Path('backend').rglob('*.py'):
+              if '__pycache__' in p.parts or p.name == 'models.py':
+                  continue
+              s = p.read_text(errors='ignore')
+              s = re.sub(r'^\s*from core\.models import (.*)\n', lambda m: (m.group(0) if not re.search(r'\b(Token|Transaction)\b', m.group(1)) else ''), s, flags=re.M)
+              p.write_text(s)
+
+          # Remove payment-specific CSP entries and stale logs.
+          p = Path('backend/core/middleware.py')
+          if p.exists():
+              s = p.read_text()
+              s = '\n'.join(line for line in s.splitlines() if 'paynow.co.zw' not in line) + '\n'
+              p.write_text(s)
+          log = Path('backend/logs/django.log')
+          if log.exists():
+              log.unlink()
+
+          # Remove stale payment wording from the matching prompt.
+          p = Path('backend/matching/nlp_processor.py')
+          if p.exists():
+              s = p.read_text().replace('*Payment:* $1.00 (or ZWL equivalent) via PayNow to view property details.', '*Access:* Jeff is currently free to use for property search and booking.')
+              p.write_text(s)
+
+          # Remove stale payment export from conversation package init.
+          p = Path('backend/core/services/conversation/__init__.py')
+          if p.exists():
+              s = '\n'.join(line for line in p.read_text().splitlines() if 'payment_integration_handler' not in line) + '\n'
+              p.write_text(s)
+          PY
+          python -m compileall -q backend
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Remove payment models and remaining runtime references' || true
+          git push
