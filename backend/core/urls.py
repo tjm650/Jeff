@@ -1,15 +1,16 @@
 from django.urls import path
 from .views import (
-    whatsapp_webhook, verify_payment, health_check, system_status,
+    verify_payment, health_check, system_status,
     analytics_dashboard, conversation_analytics, property_analytics, revenue_analytics,
     download_documentation
 )
 from .whatsapp_diagnostics_view import whatsapp_diagnostics
+from whatsapp.diagnostic_webhook import diagnostic_whatsapp_webhook
 
 app_name = 'core'
 
 urlpatterns = [
-    path('whatsapp/', whatsapp_webhook, name='whatsapp_webhook'),
+    path('whatsapp/', diagnostic_whatsapp_webhook, name='whatsapp_webhook'),
     path('whatsapp/diagnostics/', whatsapp_diagnostics, name='whatsapp_diagnostics'),
     path('health/', health_check, name='health_check'),
     path('status/', system_status, name='status'),
