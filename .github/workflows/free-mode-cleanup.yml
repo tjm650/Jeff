@@ -16,7 +16,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Remove payment architecture and convert workflow to free access
+      - name: Remove payment architecture and enable free access
         shell: bash
         run: |
           python <<'PY'
@@ -26,117 +26,188 @@ jobs:
 
           root = Path('.')
 
-          # Delete the dedicated payment backend and Supabase payment function.
-          for p in [root/'backend/payment', root/'supabase/functions/payment-webhook']:
+          def remove_method(text, name):
+              return re.sub(rf"\n    def {name}\(.*?(?=\n    def |\Z)", '\n', text, flags=re.S)
+
+          # Dedicated payment code.
+          for p in [root/'backend/payment', root/'supabase/functions/payment-webhook',
+                    root/'frontend/app/controller/initiate', root/'frontend/app/pages/cart']:
               if p.exists():
                   shutil.rmtree(p)
 
-          # Remove payment/cart frontend files wherever their paths are unambiguously payment-only.
-          frontend_paths = [
-              root/'frontend/app/controller/initiate',
-              root/'frontend/app/pages/cart',
-          ]
-          for p in frontend_paths:
-              if p.exists():
-                  shutil.rmtree(p)
-
-          # Remove payment-related dependency/config lines from common text files.
-          for path in [root/'README.md', root/'backend/README.md', root/'frontend/README.md']:
-              if path.exists():
-                  s = path.read_text()
-                  s = re.sub(r'(?im)^.*(?:payment|paynow|token-based access|token purchase|mobile money).*$\n?', '', s)
-                  path.write_text(s)
-
-          # Conversation workflow: remove payment routing and make every accommodation enquiry free.
+          # Conversation workflow.
           p = root/'backend/core/services/conversation_workflow.py'
           if p.exists():
               s = p.read_text()
               s = s.replace('from .conversation.payment_integration import payment_integration_handler\n', '')
-              s = s.replace("        self.payment_integration = payment_integration_handler\n", '')
+              s = s.replace('        self.payment_integration = payment_integration_handler\n', '')
               s = s.replace("        'token_check',       # Step 2: Token Check\n", '')
-              s = s.replace("            elif message_classification == 'P':\n                # Payment message - handle payment request directly\n                logger.info(f\"Payment message detected for {cell_number}\")\n                return self.payment_integration.handle_payment_request(conversation, message)\n\n", "            elif message_classification == 'P':\n                # Legacy payment-like messages are treated as normal free accommodation enquiries.\n                logger.info(f\"Legacy payment-like message treated as free accommodation enquiry for {cell_number}\")\n                message_classification = 'A'\n\n")
-              s = re.sub(r"            elif current_step == 'token_check':\n                return self\.step_handlers\._handle_token_check_step\(conversation, message\)\n", '', s)
-              s = re.sub(r"            elif current_step == 'payment_confirmation':\n                return self\.payment_integration\.handle_payment_confirmation_step\(conversation, message\)\n", '', s)
-              # Remove payment-only wrapper methods.
-              for name in ['_handle_payment_request','_handle_payment_confirmation_step','_show_payment_instructions']:
-                  s = re.sub(rf"\n    def {name}\(.*?(?=\n    def |\Z)", '\n', s, flags=re.S)
-              s = s.replace('    def _show_properties_and_payment_instructions(self, conversation: ConversationState, requirements: Dict) -> str:\n        """Show properties found count and payment instructions together"""\n        # This method is now handled in step_handlers\n        return self.step_handlers._show_properties_and_payment_instructions(conversation, requirements)\n\n\n', '')
+              s = re.sub(r"            elif message_classification == 'P':.*?(?=            elif message_classification == 'G':)",
+                         "            elif message_classification == 'P':\n                # Legacy payment-like messages are treated as accommodation enquiries.\n                message_classification = 'A'\n\n", s, flags=re.S)
+              s = re.sub(r"            elif current_step == 'token_check':.*?\n", '', s)
+              s = re.sub(r"            elif current_step == 'payment_confirmation':.*?\n", '', s)
+              for name in ['_handle_payment_request','_handle_payment_confirmation_step','_show_payment_instructions', '_handle_token_check_step']:
+                  s = remove_method(s, name)
+              s = re.sub(r"\n    def _show_properties_and_payment_instructions\(.*?(?=\n    def |\Z)", '\n', s, flags=re.S)
+              # Remove the legacy PayNow webhook method.
+              s = remove_method(s, 'handle_payment_webhook')
               p.write_text(s)
 
-          # Step handlers: remove token/payment gating so searches proceed immediately.
+          # Step handlers: direct free search and booking.
           p = root/'backend/core/services/conversation/step_handlers.py'
           if p.exists():
               s = p.read_text()
               s = s.replace('from .payment_integration import payment_integration_handler\n', '')
               s = s.replace('        self.payment_integration = payment_integration_handler\n', '')
-
-              # Remove token checks in inquiry step.
-              s = re.sub(r"                # Check token validity before proceeding\n                from payment\.handlers\.token import token_handler\n                valid_token = token_handler\.get_valid_token\(conversation\.cell_number\)\n                if not valid_token or not token_handler\.validate_token_usage\(valid_token\):\n                    return self\._show_payment_instructions\(conversation\)\n                    \n", '', s)
-              s = re.sub(r"                # Determine next step based on token validity\n                if not valid_token or not token_handler\.validate_token_usage\(valid_token\):\n                    conversation\.current_step = 'token_check'\n                    conversation\.save\(\)\n                    return self\._show_payment_instructions\(conversation\)\n                \n", '', s)
-
-              # Remove token gate from property listings step.
-              s = re.sub(r"\n            # First check if user has a valid token\n            from payment\.handlers\.token import token_handler\n            valid_token = token_handler\.get_valid_token\(conversation\.cell_number\)\n            if not valid_token or not token_handler\.validate_token_usage\(valid_token\):\n                return self\._show_payment_instructions\(conversation\)\n", '', s)
-
-              # Remove dedicated token-check method and payment-only methods.
+              s = re.sub(r"                # Check token validity before proceeding.*?\n                \s*return self\._show_payment_instructions\(conversation\)\n\s*", '', s, flags=re.S)
+              s = re.sub(r"                # Determine next step based on token validity.*?\n\s*return self\._show_payment_instructions\(conversation\)\n\s*", '', s, flags=re.S)
+              s = re.sub(r"\n            # First check if user has a valid token.*?return self\._show_payment_instructions\(conversation\)\n", '\n', s, flags=re.S)
               for name in ['_handle_token_check_step','_show_payment_instructions','_show_properties_and_payment_instructions']:
-                  s = re.sub(rf"\n    def {name}\(.*?(?=\n    def |\Z)", '\n', s, flags=re.S)
+                  s = remove_method(s, name)
+              # Remove any remaining inline token-gate imports/blocks.
+              s = re.sub(r"\n\s*from payment\.handlers\.token import token_handler.*?(?=\n\s*#|\n\s*[A-Za-z_].*?:|\Z)", '\n', s, flags=re.S)
               p.write_text(s)
 
-          # Remove payment-only models from core models.
+          # NLP: new searches go straight to property listings.
+          p = root/'backend/core/services/conversation/nlp_processor.py'
+          if p.exists():
+              s = p.read_text()
+              s = s.replace("            # Reset to token check for new search\n            conversation.current_step = 'token_check'\n", "            # Free mode: new searches proceed directly to property listings.\n            conversation.current_step = 'property_listings'\n")
+              s = s.replace("            # Proceed with token check for new requirements\n", "            # Proceed directly to property search for new requirements\n")
+              s = s.replace("            return step_handlers._handle_token_check_step(conversation, message)", "            return step_handlers._handle_property_listings_step(conversation, message)")
+              p.write_text(s)
+
+          # Property search: all users have access.
+          p = root/'backend/core/services/conversation/property_search.py'
+          if p.exists():
+              s = p.read_text()
+              s = re.sub(r"            # Check if user has a valid token.*?            # Import recommendation service", "            # Free mode: every user receives the same recommendation flow.\n            has_valid_token = True\n\n            # Import recommendation service", s, flags=re.S)
+              s = s.replace('Notifies both token-paid and non-token users with recommendations.', 'Notifies users with recommendations.')
+              s = re.sub(r"            # Generate recommendation summary based on token status\n", '', s)
+              s = re.sub(r"                # Generate recommendation summary using MCP for both token and non-token users\n", '', s)
+              s = re.sub(r"            # Add appropriate notification based on token status\n", '', s)
+              s = s.replace('                # Token user - show recommendation without payment instructions\n', '')
+              s = s.replace('                # Non-token user - show recommendation without payment instructions\n', '')
+              p.write_text(s)
+
+          # Help: remove token/payment help and make media handling generic.
+          p = root/'backend/core/services/conversation/help_utils.py'
+          if p.exists():
+              s = p.read_text()
+              s = s.replace("            elif current_step == 'token_check':\n                return self._get_token_help(context_data)\n", '')
+              s = remove_method(s, '_get_token_help')
+              s = re.sub(r"    def handle_media_message\(.*?(?=\n\n# Global instance|\Z)",
+                         "    def handle_media_message(self, cell_number: str, media_url: str, caption: str) -> str:\n        \"\"\"Handle an optional media message.\"\"\"\n        return \"Thanks. I can help you continue your accommodation search. Please send your requirements or a property selection.\"\n\n", s, flags=re.S)
+              p.write_text(s)
+
+          # Conversation package exports.
+          p = root/'backend/core/services/conversation/__init__.py'
+          if p.exists():
+              s = p.read_text()
+              s = re.sub(r".*payment_integration.*\n", '', s)
+              p.write_text(s)
+
+          # Django views: remove payment endpoints and payment-only stats.
+          p = root/'backend/core/views.py'
+          if p.exists():
+              s = p.read_text()
+              s = re.sub(r"from payment\.payment_handler import payment_handler\n", '', s)
+              s = re.sub(r"\n@require_http_methods\(\[\"POST\"\]\)\ndef verify_payment\(.*?(?=\n@require_http_methods|\Z)", '\n', s, flags=re.S)
+              s = s.replace('        from .models import Property, Token, Transaction, Conversation\n', '        from .models import Property, Conversation\n')
+              s = re.sub(r"            'active_tokens': Token\.objects\.filter\(is_active=True\)\.count\(\),\n            'total_transactions': Transaction\.objects\.count\(\),\n", '', s)
+              s = re.sub(r"\n@require_http_methods\(\[\"GET\"\]\)\ndef revenue_analytics\(.*?(?=\n@require_http_methods|\n\ndef download_documentation|\Z)", '\n', s, flags=re.S)
+              p.write_text(s)
+
+          # Django models: remove payment models and payment conversation states.
           p = root/'backend/core/models.py'
           if p.exists():
               s = p.read_text()
               s = re.sub(r'\nclass Token\(models\.Model\):.*?(?=\nclass Booking\(models\.Model\):)', '\n', s, flags=re.S)
               s = re.sub(r'\nclass Transaction\(models\.Model\):.*?(?=\nclass Booking\(models\.Model\):)', '\n', s, flags=re.S)
-              # Conversation states are now search/booking states only.
               s = re.sub(r"    STEPS = \[.*?\n    \]", "    STEPS = [\n        ('inquiry', 'Inquiry'),\n        ('property_listings', 'Property Listings'),\n        ('name_collection', 'Name Collection'),\n        ('booking_request', 'Booking Request'),\n        ('provider_response', 'Provider Response'),\n        ('info_request', 'Additional Info'),\n        ('booking_confirmation', 'Booking Confirmation'),\n        ('cleanup', 'Completed'),\n    ]", s, count=1, flags=re.S)
               p.write_text(s)
 
-          # Remove payment references from Django settings and root deployment config.
-          for path in [root/'backend/backend/settings.py', root/'render.yaml', root/'Makefile']:
-              if path.exists():
-                  s = path.read_text()
-                  s = re.sub(r'(?im)^.*(?:PAYNOW|PAYMENT|TOKEN_PRICE|TOKEN_USES).*$\n?', '', s)
-                  s = s.replace("    'payment',\n", '')
-                  path.write_text(s)
+          # Analytics: remove token/transaction/revenue metrics entirely.
+          p = root/'backend/core/analytics.py'
+          if p.exists():
+              p.write_text('''from django.db.models import Count, Avg\nfrom django.utils import timezone\nfrom datetime import timedelta\n\nfrom .models import Property, Conversation, Booking, Review\n\n\nclass JeffAnalytics:\n    """Analytics for accommodation search and booking activity."""\n\n    def get_dashboard_metrics(self):\n        now = timezone.now()\n        last_24h = now - timedelta(hours=24)\n        last_30d = now - timedelta(days=30)\n        return {\n            'total_properties': Property.objects.filter(is_active=True).count(),\n            'total_conversations': Conversation.objects.count(),\n            'total_bookings': Booking.objects.count(),\n            'recent_conversations': Conversation.objects.filter(last_message_at__gte=last_24h).count(),\n            'recent_bookings': Booking.objects.filter(created_at__gte=last_30d).count(),\n            'average_property_rating': Property.objects.filter(is_active=True).aggregate(avg=Avg('rating'))['avg'] or 0,\n        }\n\n    def get_conversation_analytics(self, days=7):\n        start = timezone.now() - timedelta(days=days)\n        return {'conversations': Conversation.objects.filter(last_message_at__gte=start).count()}\n\n    def get_property_analytics(self):\n        return {'active_properties': Property.objects.filter(is_active=True).count()}\n\n    def get_booking_analytics(self, days=30):\n        start = timezone.now() - timedelta(days=days)\n        return {'bookings': Booking.objects.filter(created_at__gte=start).count()}\n\n\nanalytics = JeffAnalytics()\n''')
 
-          # Remove payment app from Django installed apps / URL includes if present.
+          # Middleware: remove Paynow CSP origins.
+          p = root/'backend/core/middleware.py'
+          if p.exists():
+              s = p.read_text()
+              s = re.sub(r"\s*https://js\.paynow\.co\.zw;?", '', s)
+              s = re.sub(r"\s*https://api\.paynow\.co\.zw;?", '', s)
+              p.write_text(s)
+
+          # WhatsApp service: remove payment confirmation helper.
+          p = root/'backend/whatsapp/utils/whatsapp_service.py'
+          if p.exists():
+              s = remove_method(p.read_text(), 'send_payment_confirmation')
+              p.write_text(s)
+
+          # Matching help text: remove payment instructions.
+          p = root/'backend/matching/nlp_processor.py'
+          if p.exists():
+              s = p.read_text()
+              s = re.sub(r"\n.*(?:Payment|PayNow|token).*", '', s, flags=re.I)
+              p.write_text(s)
+
+          # Remove payment-specific tests while retaining general workflow/booking tests.
+          p = root/'backend/core/tests/test_workflow.py'
+          if p.exists():
+              s = p.read_text()
+              s = re.sub(r"from core\.models import \(.*?\n\)", "from core.models import Property, AccommodationProvider, ConversationState, Booking", s, flags=re.S)
+              s = re.sub(r"from payment\..*\n", '', s)
+              s = re.sub(r"\ndef test_token_and_payment_flow\(.*?(?=\ndef |\Z)", '\n', s, flags=re.S)
+              p.write_text(s)
+
+          p = root/'backend/whatsapp/tests.py'
+          if p.exists():
+              s = re.sub(r"\ndef test_.*?payment.*?(?=\ndef |\Z)", '\n', s, flags=re.S|re.I)
+              s = re.sub(r"\s*patch\('payment\..*?\) as payment_mock,?", '', s)
+              s = re.sub(r"\s*patch\('payment\..*?\),?", '', s)
+              p.write_text(s)
+
+          # Remove generated bytecode and local logs from source control.
+          for p in root.rglob('__pycache__'):
+              if p.is_dir(): shutil.rmtree(p, ignore_errors=True)
+          if (root/'backend/logs/django.log').exists():
+              (root/'backend/logs/django.log').unlink()
+
+          # Add a migration that removes payment models from existing Django databases.
+          mig = root/'backend/core/migrations/0002_remove_payment_models.py'
+          mig.write_text('''from django.db import migrations\n\n\nclass Migration(migrations.Migration):\n    dependencies = [('core', '0001_initial')]\n\n    operations = [\n        migrations.DeleteModel(name='Token'),\n        migrations.DeleteModel(name='Transaction'),\n    ]\n''')
+
+          # Remove payment app references from settings/URLs.
           for path in [root/'backend/backend/settings.py', root/'backend/backend/urls.py']:
               if path.exists():
                   s = path.read_text()
                   s = re.sub(r".*['\"]payment['\"].*\n", '', s)
                   s = re.sub(r".*payment\.urls.*\n", '', s)
+                  s = re.sub(r'(?im)^.*(?:PAYNOW|PAYMENT|TOKEN_PRICE|TOKEN_USES).*$\n?', '', s)
                   path.write_text(s)
 
-          # Remove payment-related test files and migrations.
-          for path in root.rglob('*'):
-              if not path.is_file() or '.git' in path.parts:
+          # Remove payment-only frontend/source files that remain by name.
+          for p in list(root.rglob('*')):
+              if not p.is_file() or '.git' in p.parts:
                   continue
-              low = str(path).lower()
-              if ('payment' in path.name.lower() or 'paynow' in path.name.lower()) and path.suffix in {'.py','.ts','.tsx','.js','.jsx'}:
-                  # Dedicated payment files should already be gone; remove any remaining payment-only files.
-                  if 'core/services/conversation/payment_integration.py' not in str(path):
-                      try: path.unlink()
-                      except OSError: pass
-
-          # Keep the main README explicitly aligned with free use.
-          readme = root/'README.md'
-          if readme.exists():
-              s = readme.read_text()
-              if 'Free use' not in s:
-                  s += '\n\n## Current access model\n\nJeff is currently free for users. Students can search for accommodation, select properties, submit booking requests, communicate with providers, and receive booking confirmations without payment or tokens. Monetization will be added later after the core search and booking experience is fully stable.\n'
-              readme.write_text(s)
+              if p.name.lower() in {'payment.ts','payment.tsx','payment.js','payment.jsx','paynow_service.py','payment_processor.py','payment_handler.py'}:
+                  try: p.unlink()
+                  except OSError: pass
           PY
 
-      - name: Verify no active payment code remains
+      - name: Verify free mode
         shell: bash
         run: |
           set -e
-          if git grep -nEi 'paynow|PAYNOW|payment_integration|payment-webhook|payment-handler|payment_handler|token_handler|TOKEN_PRICE|TOKEN_USES|/payment/|payment_confirmation|token_check' -- \
-              ':!*.md' ':!privacy/*' ':!*.lock' ':!supabase/migrations/*'; then
-            echo 'Payment-related source references remain.'
+          # Exclude this temporary migration workflow, historical migrations, docs, logs and binary artifacts.
+          if git grep -nEi 'paynow|payment_integration|payment-webhook|payment_handler|token_handler|TOKEN_PRICE|TOKEN_USES|/payment/|payment_confirmation|token_check' -- \
+              ':!.github/workflows/free-mode-cleanup.yml' ':!*.md' ':!privacy/*' ':!*.lock' ':!supabase/migrations/*' ':!backend/core/migrations/*' ':!*.pyc' ':!backend/db.sqlite3'; then
+            echo 'Payment-related active source references remain.'
             exit 1
           fi
+          python -m compileall -q backend
 
       - name: Commit free-mode cleanup
         shell: bash
@@ -144,17 +215,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          if git diff --cached --quiet; then
-            echo 'No changes to commit.'
-            exit 0
-          fi
-          git commit -m 'refactor: remove payment functionality and enable free use'
+          git commit -m 'refactor: remove payment functionality and enable free use' || exit 0
           git push
-
-      - name: Remove this temporary migration workflow
-        if: success()
-        shell: bash
-        run: |
-          # Leave the workflow cleanup to the next commit; the workflow is intentionally
-          # excluded from the source-payment verification above.
-          true
