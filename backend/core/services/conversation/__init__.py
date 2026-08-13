@@ -13,7 +13,6 @@ This module contains specialized components for different aspects of conversatio
 from .message_classifier import message_classifier
 from .property_search import property_search_handler
 from .property_search_shadow import install_property_search_shadow
-from .payment_integration import payment_integration_handler
 from .help_utils import help_utils_handler
 from .nlp_processor import nlp_processor_handler
 from .utils import conversation_utils

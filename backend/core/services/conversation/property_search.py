@@ -241,7 +241,6 @@ class PropertySearchHandler:
             has_valid_token = False
             if cell_number:
                 try:
-                    from payment.handlers.token import token_handler
                     valid_token = token_handler.get_valid_token(cell_number)
                     has_valid_token = valid_token and token_handler.validate_token_usage(valid_token)
                     logger.info(f"Token status for {cell_number}: has_valid_token={has_valid_token}")

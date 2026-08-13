@@ -12,7 +12,6 @@ from datetime import timedelta
 
 from .models import Property, Booking, ConversationState, Conversation
 from .analytics import analytics
-from payment.payment_handler import payment_handler
 from whatsapp.whatsapp_handler import whatsapp_webhook as meta_whatsapp_webhook
 
 logger = logging.getLogger(__name__)
