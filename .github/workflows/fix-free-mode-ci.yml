@@ -11,12 +11,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Fix legacy broken test syntax
         run: |
+          set -e
           python - <<'PY'
           from pathlib import Path
-          p = Path('backend/core/tests/test_mcp_integration.py')
+          p=Path('backend/core/tests/test_mcp_integration.py')
           if p.exists():
-              s = p.read_text()
-              s = s.replace('_"I need a 2-head room with WiFi for $200"_,', '"I need a 2-head room with WiFi for $200",')
+              s=p.read_text().replace('_"I need a 2-head room with WiFi for $200"_,','"I need a 2-head room with WiFi for $200",')
               p.write_text(s)
           PY
           python -m compileall -q backend
@@ -24,4 +24,6 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add backend/core/tests/test_mcp_integration.py
           git commit -m 'Fix broken test syntax in free-mode branch' || true
-          git push
+          git fetch origin remove-payment-free-mode
+          git rebase origin/remove-payment-free-mode
+          git push --force-with-lease origin HEAD:remove-payment-free-mode
