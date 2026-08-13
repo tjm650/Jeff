@@ -14,10 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class ConversationWorkflow:
-    """Free accommodation search and booking workflow.
-
-    Payment is intentionally not part of Jeff's current product flow.
-    """
+    """Free accommodation search and booking workflow."""
 
     STEPS = [
         'inquiry',
@@ -58,7 +55,6 @@ class ConversationWorkflow:
                 return self.help_utils.handle_media_message(cell_number, media_url, message)
 
             classification = self.message_classifier.classify_message_with_gemini(message)
-
             if classification == 'H':
                 return self.help_utils.get_comprehensive_help_message()
             if classification == 'G':
@@ -70,12 +66,6 @@ class ConversationWorkflow:
                 conversation.context_data = {}
                 conversation.save()
                 return "_Sure, I've reset our conversation. You can start fresh_"
-
-            # Legacy payment states are treated as a normal free inquiry so old
-            # conversation records cannot lock a user behind payment.
-            if conversation.current_step in ('token_check', 'payment_confirmation'):
-                conversation.current_step = 'inquiry'
-                conversation.save()
 
             current_step = conversation.current_step
             if current_step == 'inquiry':
@@ -98,8 +88,8 @@ class ConversationWorkflow:
             conversation.current_step = 'inquiry'
             conversation.save()
             return self.step_handlers._handle_inquiry_step(conversation, message)
-        except Exception as e:
-            logger.error("Error processing message for %s: %s", cell_number, e, exc_info=True)
+        except Exception as exc:
+            logger.error("Error processing message for %s: %s", cell_number, exc, exc_info=True)
             return "Sorry, I encountered an error. Please try again or send 'help' for assistance."
 
     def handle_provider_message(self, cell_number: str, message: str) -> str:
@@ -107,8 +97,8 @@ class ConversationWorkflow:
             from providers.services.workflow import provider_workflow
             result = provider_workflow.handle_provider_response(cell_number, message)
             return result.get('message', 'Error processing provider message.')
-        except Exception as e:
-            logger.error("Error handling provider message: %s", e)
+        except Exception as exc:
+            logger.error("Error handling provider message: %s", exc)
             return "Error processing provider message. Please try again."
 
     def _get_conversation_state(self, cell_number: str) -> ConversationState:
