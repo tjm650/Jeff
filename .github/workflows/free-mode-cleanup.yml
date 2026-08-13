@@ -29,11 +29,11 @@ jobs:
           def remove_method(text, name):
               return re.sub(rf"\n    def {name}\(.*?(?=\n    def |\Z)", '\n', text, flags=re.S)
 
-          # Dedicated payment code.
-          for p in [root/'backend/payment', root/'supabase/functions/payment-webhook',
-                    root/'frontend/app/controller/initiate', root/'frontend/app/pages/cart']:
-              if p.exists():
-                  shutil.rmtree(p)
+          # Delete dedicated payment implementations.
+          for p in [root/'backend/payment', root/'backend/core/services/conversation/payment_integration.py',
+                    root/'supabase/functions/payment-webhook', root/'frontend/app/controller/initiate',
+                    root/'frontend/app/pages/cart']:
+              if p.exists(): shutil.rmtree(p) if p.is_dir() else p.unlink()
 
           # Conversation workflow.
           p = root/'backend/core/services/conversation_workflow.py'
@@ -43,29 +43,25 @@ jobs:
               s = s.replace('        self.payment_integration = payment_integration_handler\n', '')
               s = s.replace("        'token_check',       # Step 2: Token Check\n", '')
               s = re.sub(r"            elif message_classification == 'P':.*?(?=            elif message_classification == 'G':)",
-                         "            elif message_classification == 'P':\n                # Legacy payment-like messages are treated as accommodation enquiries.\n                message_classification = 'A'\n\n", s, flags=re.S)
-              s = re.sub(r"            elif current_step == 'token_check':.*?\n", '', s)
-              s = re.sub(r"            elif current_step == 'payment_confirmation':.*?\n", '', s)
-              for name in ['_handle_payment_request','_handle_payment_confirmation_step','_show_payment_instructions', '_handle_token_check_step']:
+                         "            elif message_classification == 'P':\n                # Legacy payment-like messages are treated as normal accommodation enquiries.\n                message_classification = 'A'\n\n", s, flags=re.S)
+              s = re.sub(r"\n            elif current_step == 'token_check':\n                return self\.step_handlers\._handle_token_check_step\(conversation, message\)", '', s)
+              s = re.sub(r"\n            elif current_step == 'payment_confirmation':\n                return self\.payment_integration\.handle_payment_confirmation_step\(conversation, message\)", '', s)
+              for name in ['_handle_payment_request','_handle_payment_confirmation_step','_show_payment_instructions','_handle_token_check_step','handle_payment_webhook','_show_properties_and_payment_instructions']:
                   s = remove_method(s, name)
-              s = re.sub(r"\n    def _show_properties_and_payment_instructions\(.*?(?=\n    def |\Z)", '\n', s, flags=re.S)
-              # Remove the legacy PayNow webhook method.
-              s = remove_method(s, 'handle_payment_webhook')
               p.write_text(s)
 
-          # Step handlers: direct free search and booking.
+          # Step handlers: remove every token gate and payment helper.
           p = root/'backend/core/services/conversation/step_handlers.py'
           if p.exists():
               s = p.read_text()
               s = s.replace('from .payment_integration import payment_integration_handler\n', '')
               s = s.replace('        self.payment_integration = payment_integration_handler\n', '')
-              s = re.sub(r"                # Check token validity before proceeding.*?\n                \s*return self\._show_payment_instructions\(conversation\)\n\s*", '', s, flags=re.S)
-              s = re.sub(r"                # Determine next step based on token validity.*?\n\s*return self\._show_payment_instructions\(conversation\)\n\s*", '', s, flags=re.S)
-              s = re.sub(r"\n            # First check if user has a valid token.*?return self\._show_payment_instructions\(conversation\)\n", '\n', s, flags=re.S)
+              exact_token_check = '''            # Check token validity\n            from payment.handlers.token import token_handler\n            valid_token = token_handler.get_valid_token(conversation.cell_number)\n            if valid_token and token_handler.validate_token_usage(valid_token):\n                return self._show_properties_and_payment_instructions(conversation, {})\n            else:\n                return self._show_payment_instructions(conversation)\n'''
+              s = s.replace(exact_token_check, '')
+              exact_property_gate = '''            # First check if user has a valid token\n            from payment.handlers.token import token_handler\n            valid_token = token_handler.get_valid_token(conversation.cell_number)\n            if not valid_token or not token_handler.validate_token_usage(valid_token):\n                return self._show_payment_instructions(conversation)\n            \n'''
+              s = s.replace(exact_property_gate, '')
               for name in ['_handle_token_check_step','_show_payment_instructions','_show_properties_and_payment_instructions']:
                   s = remove_method(s, name)
-              # Remove any remaining inline token-gate imports/blocks.
-              s = re.sub(r"\n\s*from payment\.handlers\.token import token_handler.*?(?=\n\s*#|\n\s*[A-Za-z_].*?:|\Z)", '\n', s, flags=re.S)
               p.write_text(s)
 
           # NLP: new searches go straight to property listings.
@@ -77,83 +73,59 @@ jobs:
               s = s.replace("            return step_handlers._handle_token_check_step(conversation, message)", "            return step_handlers._handle_property_listings_step(conversation, message)")
               p.write_text(s)
 
-          # Property search: all users have access.
+          # Property search: remove token lookup and retain normal recommendation flow.
           p = root/'backend/core/services/conversation/property_search.py'
           if p.exists():
               s = p.read_text()
-              s = re.sub(r"            # Check if user has a valid token.*?            # Import recommendation service", "            # Free mode: every user receives the same recommendation flow.\n            has_valid_token = True\n\n            # Import recommendation service", s, flags=re.S)
+              old = '''            # Check if user has a valid token\n            has_valid_token = False\n            if cell_number:\n                try:\n                    from payment.handlers.token import token_handler\n                    valid_token = token_handler.get_valid_token(cell_number)\n                    has_valid_token = valid_token and token_handler.validate_token_usage(valid_token)\n                    logger.info(f"Token status for {cell_number}: has_valid_token={has_valid_token}")\n                except Exception as e:\n                    logger.warning(f"Failed to check token status for {cell_number}: {e}")\n\n'''
+              s = s.replace(old, '            has_valid_token = True\n\n')
               s = s.replace('Notifies both token-paid and non-token users with recommendations.', 'Notifies users with recommendations.')
-              s = re.sub(r"            # Generate recommendation summary based on token status\n", '', s)
-              s = re.sub(r"                # Generate recommendation summary using MCP for both token and non-token users\n", '', s)
-              s = re.sub(r"            # Add appropriate notification based on token status\n", '', s)
-              s = s.replace('                # Token user - show recommendation without payment instructions\n', '')
-              s = s.replace('                # Non-token user - show recommendation without payment instructions\n', '')
               p.write_text(s)
 
-          # Help: remove token/payment help and make media handling generic.
+          # Help and conversation exports.
           p = root/'backend/core/services/conversation/help_utils.py'
           if p.exists():
               s = p.read_text()
               s = s.replace("            elif current_step == 'token_check':\n                return self._get_token_help(context_data)\n", '')
               s = remove_method(s, '_get_token_help')
               s = re.sub(r"    def handle_media_message\(.*?(?=\n\n# Global instance|\Z)",
-                         "    def handle_media_message(self, cell_number: str, media_url: str, caption: str) -> str:\n        \"\"\"Handle an optional media message.\"\"\"\n        return \"Thanks. I can help you continue your accommodation search. Please send your requirements or a property selection.\"\n\n", s, flags=re.S)
+                         "    def handle_media_message(self, cell_number: str, media_url: str, caption: str) -> str:\n        \"\"\"Handle optional media without payment workflows.\"\"\"\n        return \"Thanks. Please continue with your accommodation requirements or property selection.\"\n\n", s, flags=re.S)
               p.write_text(s)
-
-          # Conversation package exports.
           p = root/'backend/core/services/conversation/__init__.py'
           if p.exists():
-              s = p.read_text()
-              s = re.sub(r".*payment_integration.*\n", '', s)
-              p.write_text(s)
+              p.write_text(re.sub(r".*payment_integration.*\n", '', p.read_text()))
 
-          # Django views: remove payment endpoints and payment-only stats.
+          # Views and analytics: no payment or revenue endpoints/metrics.
           p = root/'backend/core/views.py'
           if p.exists():
               s = p.read_text()
               s = re.sub(r"from payment\.payment_handler import payment_handler\n", '', s)
               s = re.sub(r"\n@require_http_methods\(\[\"POST\"\]\)\ndef verify_payment\(.*?(?=\n@require_http_methods|\Z)", '\n', s, flags=re.S)
               s = s.replace('        from .models import Property, Token, Transaction, Conversation\n', '        from .models import Property, Conversation\n')
-              s = re.sub(r"            'active_tokens': Token\.objects\.filter\(is_active=True\)\.count\(\),\n            'total_transactions': Transaction\.objects\.count\(\),\n", '', s)
+              s = re.sub(r"\s*'active_tokens': Token\.objects\.filter\(is_active=True\)\.count\(\),\n\s*'total_transactions': Transaction\.objects\.count\(\),\n", '\n', s)
               s = re.sub(r"\n@require_http_methods\(\[\"GET\"\]\)\ndef revenue_analytics\(.*?(?=\n@require_http_methods|\n\ndef download_documentation|\Z)", '\n', s, flags=re.S)
               p.write_text(s)
 
-          # Django models: remove payment models and payment conversation states.
-          p = root/'backend/core/models.py'
-          if p.exists():
-              s = p.read_text()
-              s = re.sub(r'\nclass Token\(models\.Model\):.*?(?=\nclass Booking\(models\.Model\):)', '\n', s, flags=re.S)
-              s = re.sub(r'\nclass Transaction\(models\.Model\):.*?(?=\nclass Booking\(models\.Model\):)', '\n', s, flags=re.S)
-              s = re.sub(r"    STEPS = \[.*?\n    \]", "    STEPS = [\n        ('inquiry', 'Inquiry'),\n        ('property_listings', 'Property Listings'),\n        ('name_collection', 'Name Collection'),\n        ('booking_request', 'Booking Request'),\n        ('provider_response', 'Provider Response'),\n        ('info_request', 'Additional Info'),\n        ('booking_confirmation', 'Booking Confirmation'),\n        ('cleanup', 'Completed'),\n    ]", s, count=1, flags=re.S)
-              p.write_text(s)
-
-          # Analytics: remove token/transaction/revenue metrics entirely.
           p = root/'backend/core/analytics.py'
           if p.exists():
-              p.write_text('''from django.db.models import Count, Avg\nfrom django.utils import timezone\nfrom datetime import timedelta\n\nfrom .models import Property, Conversation, Booking, Review\n\n\nclass JeffAnalytics:\n    """Analytics for accommodation search and booking activity."""\n\n    def get_dashboard_metrics(self):\n        now = timezone.now()\n        last_24h = now - timedelta(hours=24)\n        last_30d = now - timedelta(days=30)\n        return {\n            'total_properties': Property.objects.filter(is_active=True).count(),\n            'total_conversations': Conversation.objects.count(),\n            'total_bookings': Booking.objects.count(),\n            'recent_conversations': Conversation.objects.filter(last_message_at__gte=last_24h).count(),\n            'recent_bookings': Booking.objects.filter(created_at__gte=last_30d).count(),\n            'average_property_rating': Property.objects.filter(is_active=True).aggregate(avg=Avg('rating'))['avg'] or 0,\n        }\n\n    def get_conversation_analytics(self, days=7):\n        start = timezone.now() - timedelta(days=days)\n        return {'conversations': Conversation.objects.filter(last_message_at__gte=start).count()}\n\n    def get_property_analytics(self):\n        return {'active_properties': Property.objects.filter(is_active=True).count()}\n\n    def get_booking_analytics(self, days=30):\n        start = timezone.now() - timedelta(days=days)\n        return {'bookings': Booking.objects.filter(created_at__gte=start).count()}\n\n\nanalytics = JeffAnalytics()\n''')
+              p.write_text('''from django.db.models import Avg\nfrom django.utils import timezone\nfrom datetime import timedelta\nfrom .models import Property, Conversation, Booking\n\nclass JeffAnalytics:\n    """Analytics for accommodation search and booking activity."""\n    def get_dashboard_metrics(self):\n        now = timezone.now()\n        last_24h = now - timedelta(hours=24)\n        last_30d = now - timedelta(days=30)\n        return {\n            'total_properties': Property.objects.filter(is_active=True).count(),\n            'total_conversations': Conversation.objects.count(),\n            'total_bookings': Booking.objects.count(),\n            'recent_conversations': Conversation.objects.filter(last_message_at__gte=last_24h).count(),\n            'recent_bookings': Booking.objects.filter(created_at__gte=last_30d).count(),\n            'average_property_rating': Property.objects.filter(is_active=True).aggregate(avg=Avg('rating'))['avg'] or 0,\n        }\n    def get_conversation_analytics(self, days=7):\n        start = timezone.now() - timedelta(days=days)\n        return {'conversations': Conversation.objects.filter(last_message_at__gte=start).count()}\n    def get_property_analytics(self):\n        return {'active_properties': Property.objects.filter(is_active=True).count()}\n    def get_booking_analytics(self, days=30):\n        start = timezone.now() - timedelta(days=days)\n        return {'bookings': Booking.objects.filter(created_at__gte=start).count()}\n\nanalytics = JeffAnalytics()\n''')
 
-          # Middleware: remove Paynow CSP origins.
+          # Remove Paynow CSP entries and WhatsApp payment confirmation helper.
           p = root/'backend/core/middleware.py'
           if p.exists():
-              s = p.read_text()
-              s = re.sub(r"\s*https://js\.paynow\.co\.zw;?", '', s)
-              s = re.sub(r"\s*https://api\.paynow\.co\.zw;?", '', s)
+              s = p.read_text().replace('https://js.paynow.co.zw', '').replace('https://api.paynow.co.zw', '')
               p.write_text(s)
-
-          # WhatsApp service: remove payment confirmation helper.
           p = root/'backend/whatsapp/utils/whatsapp_service.py'
-          if p.exists():
-              s = remove_method(p.read_text(), 'send_payment_confirmation')
-              p.write_text(s)
+          if p.exists(): p.write_text(remove_method(p.read_text(), 'send_payment_confirmation'))
 
-          # Matching help text: remove payment instructions.
+          # Remove payment-specific matching/help text without changing search logic.
           p = root/'backend/matching/nlp_processor.py'
           if p.exists():
               s = p.read_text()
-              s = re.sub(r"\n.*(?:Payment|PayNow|token).*", '', s, flags=re.I)
+              s = re.sub(r'^.*(?:Payment|PayNow|token).*$', '', s, flags=re.I|re.M)
               p.write_text(s)
 
-          # Remove payment-specific tests while retaining general workflow/booking tests.
+          # Remove payment imports/tests.
           p = root/'backend/core/tests/test_workflow.py'
           if p.exists():
               s = p.read_text()
@@ -161,25 +133,27 @@ jobs:
               s = re.sub(r"from payment\..*\n", '', s)
               s = re.sub(r"\ndef test_token_and_payment_flow\(.*?(?=\ndef |\Z)", '\n', s, flags=re.S)
               p.write_text(s)
-
           p = root/'backend/whatsapp/tests.py'
           if p.exists():
               s = re.sub(r"\ndef test_.*?payment.*?(?=\ndef |\Z)", '\n', s, flags=re.S|re.I)
-              s = re.sub(r"\s*patch\('payment\..*?\) as payment_mock,?", '', s)
-              s = re.sub(r"\s*patch\('payment\..*?\),?", '', s)
+              s = re.sub(r".*patch\('payment\..*\n", '', s)
               p.write_text(s)
 
-          # Remove generated bytecode and local logs from source control.
+          # Remove generated caches/logs and payment-only files.
           for p in root.rglob('__pycache__'):
               if p.is_dir(): shutil.rmtree(p, ignore_errors=True)
-          if (root/'backend/logs/django.log').exists():
-              (root/'backend/logs/django.log').unlink()
+          for p in list(root.rglob('*')):
+              if p.is_file() and '.git' not in p.parts and p.name.lower() in {
+                  'paynow_service.py','payment_processor.py','payment_handler.py','payment_integration.py'}:
+                  try: p.unlink()
+                  except OSError: pass
+          if (root/'backend/logs/django.log').exists(): (root/'backend/logs/django.log').unlink()
 
-          # Add a migration that removes payment models from existing Django databases.
+          # Remove payment models from existing Django databases on migration.
           mig = root/'backend/core/migrations/0002_remove_payment_models.py'
-          mig.write_text('''from django.db import migrations\n\n\nclass Migration(migrations.Migration):\n    dependencies = [('core', '0001_initial')]\n\n    operations = [\n        migrations.DeleteModel(name='Token'),\n        migrations.DeleteModel(name='Transaction'),\n    ]\n''')
+          mig.write_text('''from django.db import migrations\n\nclass Migration(migrations.Migration):\n    dependencies = [('core', '0001_initial')]\n    operations = [migrations.DeleteModel(name='Token'), migrations.DeleteModel(name='Transaction')]\n''')
 
-          # Remove payment app references from settings/URLs.
+          # Settings/URLs: remove payment app/config references.
           for path in [root/'backend/backend/settings.py', root/'backend/backend/urls.py']:
               if path.exists():
                   s = path.read_text()
@@ -187,23 +161,13 @@ jobs:
                   s = re.sub(r".*payment\.urls.*\n", '', s)
                   s = re.sub(r'(?im)^.*(?:PAYNOW|PAYMENT|TOKEN_PRICE|TOKEN_USES).*$\n?', '', s)
                   path.write_text(s)
-
-          # Remove payment-only frontend/source files that remain by name.
-          for p in list(root.rglob('*')):
-              if not p.is_file() or '.git' in p.parts:
-                  continue
-              if p.name.lower() in {'payment.ts','payment.tsx','payment.js','payment.jsx','paynow_service.py','payment_processor.py','payment_handler.py'}:
-                  try: p.unlink()
-                  except OSError: pass
           PY
 
-      - name: Verify free mode
+      - name: Verify free mode and syntax
         shell: bash
         run: |
           set -e
-          # Exclude this temporary migration workflow, historical migrations, docs, logs and binary artifacts.
-          if git grep -nEi 'paynow|payment_integration|payment-webhook|payment_handler|token_handler|TOKEN_PRICE|TOKEN_USES|/payment/|payment_confirmation|token_check' -- \
-              ':!.github/workflows/free-mode-cleanup.yml' ':!*.md' ':!privacy/*' ':!*.lock' ':!supabase/migrations/*' ':!backend/core/migrations/*' ':!*.pyc' ':!backend/db.sqlite3'; then
+          if git grep -nEi 'paynow|payment_integration|payment-webhook|payment_handler|token_handler|TOKEN_PRICE|TOKEN_USES|/payment/|payment_confirmation|token_check' -- ':!.github/workflows/free-mode-cleanup.yml' ':!*.md' ':!privacy/*' ':!*.lock' ':!supabase/migrations/*' ':!backend/core/migrations/*' ':!*.pyc' ':!backend/db.sqlite3'; then
             echo 'Payment-related active source references remain.'
             exit 1
           fi
