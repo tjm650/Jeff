@@ -1,0 +1,79 @@
+name: Fix free-mode CI cleanup
+on:
+  push:
+    branches: [remove-payment-free-mode]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix remaining syntax and payment remnants
+        run: |
+          set -e
+          git fetch origin main --depth=1
+          git show origin/main:backend/backend/settings.py > backend/backend/settings.py
+          git show origin/main:backend/core/admin.py > backend/core/admin.py
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          # Settings: remove whole lines, never regex-match inside os.getenv arguments.
+          p = Path('backend/backend/settings.py')
+          lines = p.read_text().splitlines()
+          out = []
+          in_payment_block = False
+          for line in lines:
+              if line.strip() == '# Payment settings':
+                  in_payment_block = True
+                  continue
+              if in_payment_block and line.strip() == '# File upload settings':
+                  in_payment_block = False
+                  out.append(line)
+                  continue
+              if in_payment_block:
+                  continue
+              if "'payment'," in line or "'TOKEN_PRICE':" in line or "'TOKEN_USES':" in line:
+                  continue
+              out.append(line)
+          p.write_text('\n'.join(out) + '\n')
+
+          # Admin: remove Token/Transaction registrations as complete blocks.
+          p = Path('backend/core/admin.py')
+          s = p.read_text()
+          s = re.sub(r"@admin\.register\((?:Token|Transaction)\).*?(?=\n@admin\.register|\Z)", '', s, flags=re.S)
+          s = s.replace('from .models import AccommodationProvider, Property, Token, Transaction, Booking, ConversationState, Review, Conversation', 'from .models import AccommodationProvider, Property, Booking, ConversationState, Review, Conversation')
+          p.write_text(s)
+
+          # Models: remove token/transaction classes and payment-specific conversation states.
+          p = Path('backend/core/models.py')
+          s = p.read_text()
+          s = re.sub(r"\nclass Token\(models\.Model\):.*?(?=\nclass Booking\(models\.Model\):)", '\n', s, flags=re.S)
+          s = re.sub(r"\nclass Transaction\(models\.Model\):.*?(?=\nclass Booking\(models\.Model\):)", '\n', s, flags=re.S)
+          s = re.sub(r"\n\s*STEPS = \[.*?\]\n\n\s*id = models\.UUIDField\(primary_key=True, default=uuid\.uuid4, editable=False\)", "\n    STEPS = [('inquiry', 'Inquiry'), ('property_listings', 'Property Listings'), ('name_collection', 'Name Collection'), ('booking_request', 'Booking Request'), ('provider_response', 'Provider Response'), ('info_request', 'Info Request'), ('booking_confirmation', 'Booking Confirmation'), ('cleanup', 'Cleanup')]\n\n    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)", s, count=1, flags=re.S)
+          p.write_text(s)
+
+          # Remove Paynow CSP lines and stale text/logs.
+          p = Path('backend/core/middleware.py')
+          if p.exists():
+              p.write_text('\n'.join(x for x in p.read_text().splitlines() if 'paynow.co.zw' not in x) + '\n')
+          p = Path('backend/matching/nlp_processor.py')
+          if p.exists():
+              p.write_text(p.read_text().replace('*Payment:* $1.00 (or ZWL equivalent) via PayNow to view property details.', '*Access:* Jeff is currently free to use for property search and booking.'))
+          p = Path('backend/core/services/conversation/help_utils.py')
+          if p.exists():
+              p.write_text('\n'.join(x for x in p.read_text().splitlines() if 'Paynow/EcoCash APIs' not in x) + '\n')
+          p = Path('backend/core/services/conversation/__init__.py')
+          if p.exists():
+              p.write_text('\n'.join(x for x in p.read_text().splitlines() if 'payment_integration_handler' not in x) + '\n')
+          p = Path('backend/logs/django.log')
+          if p.exists():
+              p.unlink()
+          PY
+          python -m compileall -q backend
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Fix free-mode settings and remove payment remnants' || true
+          git push
