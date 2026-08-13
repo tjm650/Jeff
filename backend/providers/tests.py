@@ -67,4 +67,5 @@ class InsightsHandlerTests(TestCase):
             insights=insights,
         )
         self.assertFalse(res['success'])
-        self.assertIn('not found for this provider', res['message'])
+        self.assertIn('Property AB-1234 not found', res['message'])
+        self.assertIn('Contact Support', res['message'])
