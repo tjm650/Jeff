@@ -115,16 +115,6 @@ def property_analytics(request):
 
 
 @require_http_methods(["GET"])
-def revenue_analytics(request):
-    try:
-        days = int(request.GET.get('days', 30))
-        return JsonResponse({'status': 'ok', 'analytics': analytics.get_revenue_analytics(days), 'period_days': days, 'timestamp': timezone.now().isoformat()})
-    except Exception as exc:
-        logger.error("Analytics error: %s", exc)
-        return JsonResponse({'status': 'error', 'message': 'failed generating analytics'}, status=500)
-
-
-@require_http_methods(["GET"])
 def download_documentation(request, filename):
     try:
         import os
@@ -141,5 +131,5 @@ def download_documentation(request, filename):
     except Http404:
         return HttpResponse("File not found", status=404)
     except Exception as exc:
-        logger.error("Error serving documentation file %s: %s", filename, exc)
+        logger.error("Error serving documentation file %s", filename, exc)
         return HttpResponse("Internal server error", status=500)
