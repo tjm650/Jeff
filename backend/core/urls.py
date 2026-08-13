@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     whatsapp_webhook, health_check, system_status,
-    analytics_dashboard, conversation_analytics, property_analytics, revenue_analytics,
+    analytics_dashboard, conversation_analytics, property_analytics,
     download_documentation,
 )
 
@@ -13,7 +13,6 @@ urlpatterns = [
     path('status/', system_status, name='status'),
     path('analytics/dashboard/', analytics_dashboard, name='analytics_dashboard'),
     path('analytics/conversations/', conversation_analytics, name='conversation_analytics'),
-    path('analytics/properties/', property_analytics, name='property_analytics'),
-    path('analytics/revenue/', revenue_analytics, name='revenue_analytics'),
+    path('analytics/properties/', property_analytics, name='analytics_properties'),
     path('docs/<str:filename>/', download_documentation, name='download_documentation'),
 ]
