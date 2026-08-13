@@ -1,10 +1,10 @@
 import json
 import time
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from core.diagnostics import new_correlation_id, record_event, set_context, stable_payload_id
+from core.diagnostics import new_correlation_id, record_event, set_context
 from core.diagnostic_models import WhatsAppDiagnosticEvent
 from .whatsapp_handler import whatsapp_webhook as meta_whatsapp_webhook
 
@@ -31,7 +31,7 @@ def _first_status(payload):
 
 @csrf_exempt
 def diagnostic_whatsapp_webhook(request):
-    """Instrument the existing Meta webhook without changing its business behavior."""
+    """Instrument Meta WhatsApp webhooks and acknowledge delivery-status events."""
     if request.method == 'GET':
         return meta_whatsapp_webhook(request)
 
@@ -46,8 +46,8 @@ def diagnostic_whatsapp_webhook(request):
     except Exception:
         payload = {}
 
-    message, value = _first_message(payload)
-    status, status_value = _first_status(payload)
+    message, _ = _first_message(payload)
+    status, _ = _first_status(payload)
     if message:
         correlation_id = message.get('id') or correlation_id
         phone_number = message.get('from') or ''
@@ -69,6 +69,8 @@ def diagnostic_whatsapp_webhook(request):
     elif status:
         status_name = status.get('status', 'unknown')
         record_event(correlation_id=correlation_id, direction='inbound', event_type='message_status', stage='meta_delivery', status='failed' if status_name == 'failed' else 'ok', phone_number=phone_number, external_id=external_id, metadata={'status': status_name, 'errors': status.get('errors') or []})
+        record_event(correlation_id=correlation_id, direction='system', event_type='message_status', stage='webhook_response', status='ok', phone_number=phone_number, external_id=external_id, duration_ms=int((time.monotonic() - started) * 1000), metadata={'http_status': 200})
+        return JsonResponse({'status': 'ok', 'event': 'message_status'})
 
     try:
         record_event(correlation_id=correlation_id, direction='system', event_type=event_type, stage='business_processing', status='started', phone_number=phone_number, external_id=external_id)
