@@ -3,129 +3,117 @@ import { NextRequest, NextResponse } from 'next/server';
 interface PaymentResponse {
   success: boolean;
   reference?: string;
+  paynow_reference?: string;
+  poll_url?: string | null;
+  redirect_url?: string | null;
+  transaction_id?: string;
   message?: string;
-  amount?: number;
+  instructions?: string;
+  amount?: string | number;
   currency?: string;
 }
 
-interface PaymentPayload {
-  [key: string]: unknown;
-}
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const MAX_RETRIES = parseInt(process.env.API_MAX_RETRIES || '2');
+const TIMEOUT = parseInt(process.env.API_REQUEST_TIMEOUT_MS || '10000');
 
-class SecureAPIClient {
-  private apiKey: string;
-  private baseUrl: string;
-  private maxRetries: number;
-  private timeout: number;
-  private requestTimes: number[] = [];
-  private maxRequestsPerMinute: number;
+async function callPaymentFunction(body: Record<string, unknown>, retry = 0): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
 
-  constructor() {
-    this.apiKey = process.env.DJANGO_API_KEY || '';
-    this.baseUrl = process.env.DJANGO_API_URL || '';
-    this.maxRetries = parseInt(process.env.API_MAX_RETRIES || '3');
-    this.timeout = parseInt(process.env.API_REQUEST_TIMEOUT_MS || '10000');
-    this.maxRequestsPerMinute = parseInt(process.env.API_RATE_LIMIT_REQUESTS_PER_MINUTE || '30');
-  }
+  try {
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/payment-initiate`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        apikey: SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
 
-  private checkRateLimit(): boolean {
-    const now = Date.now();
-    const oneMinuteAgo = now - 60000;
-    this.requestTimes = this.requestTimes.filter(time => time > oneMinuteAgo);
-    if (this.requestTimes.length >= this.maxRequestsPerMinute) {
-      console.warn('Client-side rate limit exceeded');
-      return false;
-    }
-    this.requestTimes.push(now);
-    return true;
-  }
-
-  private async makeRequest(url: string, options: RequestInit, retryCount = 0): Promise<Response> {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), this.timeout);
-    try {
-      const response = await fetch(url, {
-        ...options,
-        signal: controller.signal,
-        headers: {
-          ...options.headers,
-          'X-API-Key': this.apiKey,
-          'Content-Type': 'application/json',
-        },
-      });
-      clearTimeout(timeoutId);
-      return response;
-    } catch (error) {
-      clearTimeout(timeoutId);
-      if (error instanceof Error && error.name === 'AbortError') throw new Error('Request timeout');
-      if (retryCount < this.maxRetries && error instanceof TypeError) {
-        console.warn(`Request failed, retrying (${retryCount + 1}/${this.maxRetries}):`, error);
-        await this.delay(1000 * (retryCount + 1));
-        return this.makeRequest(url, options, retryCount + 1);
-      }
-      throw error;
-    }
-  }
-
-  private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  private validatePaymentResponse(data: unknown): PaymentResponse {
-    if (typeof data !== 'object' || data === null) throw new Error('Invalid response format');
-    const value = data as PaymentPayload;
-    const response: PaymentResponse = {
-      success: Boolean(value.success),
-      reference: typeof value.reference === 'string' ? value.reference : undefined,
-      message: typeof value.message === 'string' ? value.message : undefined,
-      amount: typeof value.amount === 'number' ? value.amount : undefined,
-      currency: typeof value.currency === 'string' ? value.currency : undefined,
-    };
-    if (response.success && !response.reference) throw new Error('Payment reference missing from successful response');
-    if (response.amount !== undefined && response.amount < 0) throw new Error('Invalid payment amount');
+    clearTimeout(timeoutId);
     return response;
-  }
+  } catch (error) {
+    clearTimeout(timeoutId);
 
-  async post(endpoint: string, body: PaymentPayload): Promise<PaymentResponse> {
-    if (!this.checkRateLimit()) throw new Error('Rate limit exceeded. Please try again later.');
-    try {
-      const response = await this.makeRequest(`${this.baseUrl}${endpoint}`, {
-        method: 'POST',
-        body: JSON.stringify(body),
-      });
-      const data: unknown = await response.json();
-      if (!response.ok) {
-        console.error('API Error:', { status: response.status, statusText: response.statusText, data });
-        throw new Error('Transaction failed. Please try again');
-      }
-      return this.validatePaymentResponse(data);
-    } catch (error) {
-      console.error('Secure API Client Error:', error);
-      throw error;
+    if (retry < MAX_RETRIES && error instanceof TypeError) {
+      await new Promise(resolve => setTimeout(resolve, 1000 * (retry + 1)));
+      return callPaymentFunction(body, retry + 1);
     }
+
+    throw error;
   }
 }
-
-const apiClient = new SecureAPIClient();
 
 export async function POST(request: NextRequest) {
   try {
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      return NextResponse.json(
+        { success: false, message: 'Payment service is not configured.' },
+        { status: 500 },
+      );
+    }
+
     const { whatsapp_number, payment_number } = await request.json();
-    if (!whatsapp_number || !payment_number) return NextResponse.json({ success: false, message: 'WhatsApp number and payment number are required' }, { status: 400 });
-    if (typeof whatsapp_number !== 'string' || typeof payment_number !== 'string') return NextResponse.json({ success: false, message: 'Invalid input format' }, { status: 400 });
-    if (!/^(\+263|0)[0-9]{9,10}$/.test(whatsapp_number)) return NextResponse.json({ success: false, message: 'Invalid WhatsApp number format' }, { status: 400 });
-    const data = await apiClient.post('/api/payment/v1/initiate_paynow/', { whatsapp_number, payment_number });
+
+    if (!whatsapp_number || !payment_number) {
+      return NextResponse.json(
+        { success: false, message: 'WhatsApp number and payment number are required' },
+        { status: 400 },
+      );
+    }
+
+    if (typeof whatsapp_number !== 'string' || typeof payment_number !== 'string') {
+      return NextResponse.json(
+        { success: false, message: 'Invalid input format' },
+        { status: 400 },
+      );
+    }
+
+    if (!/^(\+263|0)[0-9]{9,10}$/.test(whatsapp_number)) {
+      return NextResponse.json(
+        { success: false, message: 'Invalid WhatsApp number format' },
+        { status: 400 },
+      );
+    }
+
+    const response = await callPaymentFunction({
+      whatsapp_number,
+      payment_number,
+    });
+
+    const data: PaymentResponse = await response.json().catch(() => ({
+      success: false,
+      message: 'Invalid response from payment service.',
+    }));
+
+    if (!response.ok) {
+      return NextResponse.json(
+        { success: false, message: data.message || 'Transaction failed. Please try again' },
+        { status: response.status >= 500 ? 502 : response.status },
+      );
+    }
+
     return NextResponse.json(data);
   } catch (error) {
     console.error('Payment initiation error:', error);
+
     let message = 'Internal server error';
     let status = 500;
+
     if (error instanceof Error) {
-      if (error.message.includes('timeout')) { message = 'Request timed out. Please try again.'; status = 408; }
-      else if (error.message.includes('network') || error.message.includes('fetch')) { message = 'Network error. Please check your connection and try again.'; status = 503; }
-      else if (error.message.includes('Invalid response format')) { message = 'Invalid response from payment service.'; status = 502; }
-      else message = error.message;
+      if (error.name === 'AbortError') {
+        message = 'Request timed out. Please try again.';
+        status = 408;
+      } else if (error.message.includes('fetch')) {
+        message = 'Network error. Please check your connection and try again.';
+        status = 503;
+      }
     }
+
     return NextResponse.json({ success: false, message }, { status });
   }
 }
