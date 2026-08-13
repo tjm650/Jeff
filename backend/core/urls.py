@@ -14,5 +14,3 @@ urlpatterns = [
     path('analytics/dashboard/', analytics_dashboard, name='analytics_dashboard'),
     path('analytics/properties/', property_analytics, name='property_analytics'),
 ]
-
->>>>>>> origin/main

@@ -126,23 +126,6 @@ def whatsapp_webhook(request):
         if message_data['media_url']:
             return handle_media_message(message_data)
 
-        body = message_body.strip()
-
-        if body.lower() == 'status':
-            logger.info("[HANDLER] Processing status request")
-            return handle_status_request(message_data)
-
-        if re.search(r'(USD|ZWL)\s+PAY\s+[0-9]+', body, re.IGNORECASE):
-            logger.info("[HANDLER] Processing payment request (legacy format)")
-            return handle_payment_request(message_data)
-
-        match = re.match(r'^(usd|zwg)\s+pay\s+([0-9\+]+)$', body, re.IGNORECASE)
-        if match:
-            currency = match.group(1).upper()
-            payment_number = match.group(2)
-            logger.info(f"[HANDLER] Processing payment request ({currency}: {payment_number})")
-            return handle_currency_payment_request(message_data, currency, payment_number)
-
         logger.info("[HANDLER] Processing as accommodation request")
         return handle_accommodation_request(message_data)
 
