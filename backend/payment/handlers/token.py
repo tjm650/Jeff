@@ -1,74 +1,44 @@
-"""
-Token management handlers
+"""Free-access compatibility layer.
 
-This module handles token-specific operations including:
-- Token validation and retrieval
-- Token status checking
-- Token usage tracking
-- Token expiration handling
+Payment and paid token enforcement are disabled while Jeff is in free-use mode.
+This module remains temporarily so older conversation workflow imports continue
+working without introducing a payment dependency.
 """
 
-import logging
-from typing import Optional, Dict
-from django.db.models import F
-from django.utils import timezone
 
-from core.models import Token
+class FreeAccess:
+    """Truthy access object used by legacy token checks."""
 
-logger = logging.getLogger(__name__)
+    is_active = True
+    total_uses = 0
+    used_count = 0
+
+    def remaining_uses(self):
+        return 0
+
+    def is_valid(self):
+        return True
+
+    def use_token(self):
+        return True
 
 
 class TokenHandler:
-    """Token management functionality"""
+    """Compatibility API that always grants free access."""
 
-    def get_valid_token(self, student_phone: str) -> Optional[Token]:
-        """Get valid token for user if exists"""
-        try:
-            # Find active tokens that haven't expired and have remaining uses
-            valid_tokens = Token.objects.filter(
-                cell_number=student_phone,
-                is_active=True,
-                expires_at__gt=timezone.now(),
-                used_count__lt=F('total_uses')
-            )
+    def get_valid_token(self, student_phone: str):
+        return FreeAccess()
 
-            return valid_tokens.first() if valid_tokens.exists() else None
+    def validate_token_usage(self, token) -> bool:
+        return True
 
-        except Exception as e:
-            logger.error(f"Token validation error: {str(e)}")
-            return None
-
-    def validate_token_usage(self, token: Token) -> bool:
-        """Validate if token can be used"""
-        try:
-            return (
-                token.is_active and
-                token.expires_at > timezone.now() and
-                token.used_count < token.total_uses
-            )
-        except Exception as e:
-            logger.error(f"Token usage validation error: {str(e)}")
-            return False
-
-    def get_token_status(self, token: Token) -> Dict:
-        """Get detailed token status information"""
-        try:
-            return {
-                'token_number': token.token_number,
-                'is_active': token.is_active,
-                'expires_at': token.expires_at.isoformat(),
-                'total_uses': token.total_uses,
-                'used_count': token.used_count,
-                'remaining_uses': token.remaining_uses(),
-                'is_expired': token.expires_at <= timezone.now(),
-                'can_use': self.validate_token_usage(token)
-            }
-        except Exception as e:
-            logger.error(f"Token status error: {str(e)}")
-            return {
-                'error': 'Unable to retrieve token status'
-            }
+    def get_token_status(self, token):
+        return {
+            "free_access": True,
+            "can_use": True,
+            "message": "Jeff is currently free to use.",
+        }
 
 
-# Global instance
+# Legacy import compatibility. No payment or token purchase is performed.
 token_handler = TokenHandler()
