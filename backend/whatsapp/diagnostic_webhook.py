@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from core.diagnostics import new_correlation_id, record_event, set_context
 from core.diagnostic_models import WhatsAppDiagnosticEvent
-from .whatsapp_handler import whatsapp_webhook as meta_whatsapp_webhook
+from .whatsapp_handler import _verify_meta_signature, whatsapp_webhook as meta_whatsapp_webhook
 
 
 def _first_message(payload):
@@ -63,6 +63,10 @@ def diagnostic_whatsapp_webhook(request):
     set_context(correlation_id, phone_number)
     started = time.monotonic()
     record_event(correlation_id=correlation_id, direction='inbound', event_type=event_type, stage='webhook_received', status='started', phone_number=phone_number, external_id=external_id, metadata={'object': payload.get('object', ''), 'field': 'messages' if message else 'statuses' if status else 'unknown'})
+
+    if status and not _verify_meta_signature(request):
+        record_event(correlation_id=correlation_id, direction='system', event_type='message_status', stage='signature_verification', status='failed', phone_number=phone_number, external_id=external_id, error_message='Invalid or missing X-Hub-Signature-256')
+        return JsonResponse({'status': 'error', 'message': 'Invalid signature'}, status=403)
 
     if message:
         record_event(correlation_id=correlation_id, direction='inbound', event_type='message_received', stage='message_extracted', status='ok', phone_number=phone_number, external_id=external_id, metadata={'message_type': message.get('type', 'unknown')})
