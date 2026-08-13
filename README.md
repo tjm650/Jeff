@@ -1,38 +1,43 @@
 # Jeff - Student Accommodation Platform
 
-Jeff is an AI-powered student accommodation platform that helps students at NUST (National University of Science and Technology) find suitable accommodation near campus through WhatsApp conversations.
+Jeff is an AI-powered student accommodation platform that helps students find suitable accommodation near campus through WhatsApp conversations.
 
-## Project Overview
+## Current Free-Use Mode
 
-Jeff provides a conversational AI agent that operates via WhatsApp to help students:
-- Find accommodation based on their specific requirements
-- Process payments for property search tokens
-- Facilitate booking requests and provider responses
-- Provide personalized recommendations using NLP and AI
+Jeff is currently **free to use**. Payment processing and paid search tokens are disabled while the core accommodation workflow is being stabilized.
+
+Users can:
+- Find accommodation based on their requirements
+- Receive property recommendations
+- Select properties
+- Submit booking requests
+- Communicate with accommodation providers
+- Receive booking confirmations
+
+Payment architecture will be reintroduced later as a separate, deliberate feature once search and booking are fully stable.
 
 ## Architecture
 
-The project follows a full-stack microservices architecture:
-
 ### Backend (`/backend`)
-- **Framework**: Django 5.1.1 with Django REST Framework
-- **Database**: SQLite3 (development), PostgreSQL (production-ready)
+- **Framework**: Django with Django REST Framework
+- **Database**: SQLite for development, PostgreSQL for production
 - **Real-time Communication**: Channels and WebSockets
-- **Payment Integration**: Paynow gateway for mobile money payments
-- **AI Services**: Integration with OpenAI, Google Gemini, and Anthropic for NLP processing
-- **WhatsApp Integration**: Twilio for WhatsApp messaging
+- **AI Services**: OpenAI, Google Gemini, and Anthropic integrations for NLP processing
+- **WhatsApp Integration**: WhatsApp/Meta and Twilio support
+- **Matching**: Property search and recommendation workflow
+- **Bookings**: Provider-facing booking and confirmation workflow
 
 ### Frontend (`/frontend`)
-- **Framework**: Next.js 16.0.1 with TypeScript
+- **Framework**: Next.js with TypeScript
 - **Styling**: Tailwind CSS
-- **Animation**: Motion library for smooth UI interactions
+- **Animation**: Motion library
 
 ## Quick Start
 
 ### Prerequisites
 - Python 3.8+
 - Node.js 16+
-- PostgreSQL (for production)
+- PostgreSQL for production deployments
 
 ### Development Setup
 
@@ -47,7 +52,6 @@ The project follows a full-stack microservices architecture:
    cd backend
    pip install -r requirements.txt
    cp .env.example .env
-   # Edit .env with your configuration
    python manage.py migrate
    python manage.py runserver
    ```
@@ -59,105 +63,72 @@ The project follows a full-stack microservices architecture:
    npm run dev
    ```
 
-4. **Access the application**
-   <!-- - Frontend: https://
-   - Backend API: https:// -->
-
 ## Project Structure
 
-```
+```text
 Jeff/
 ├── backend/                 # Django backend API server
-│   ├── README.md            # Backend-specific documentation
-│   ├── core/                # Main application logic
-│   ├── payment/             # Payment processing system
+│   ├── core/                # Conversation, search, booking and shared logic
 │   ├── matching/            # Property matching algorithms
-│   ├── providers/           # Provider management
+│   ├── providers/           # Provider management and booking workflow
 │   └── whatsapp/            # WhatsApp integration
 ├── frontend/                # Next.js frontend application
-│   ├── README.md            # Frontend-specific documentation
-│   ├── app/                 # App router pages
-│   ├── components/         # Reusable UI components
-│   └── public/              # Static assets
+├── supabase/                # Supabase functions and infrastructure
 ├── privacy/                 # Documentation and privacy policies
 ├── Makefile                 # Development commands
-├── render.yaml              # Production deployment configuration
-└── README.md                # This file
+├── render.yaml              # Legacy backend deployment configuration
+└── README.md                # Project documentation
 ```
 
 ## Key Features
 
 ### Core Functionality
-- **8-Step Conversation Workflow**: Guided accommodation search process
-- **Token-based Access**: Students purchase tokens for property search capabilities
-- **NLP Processing**: Advanced natural language processing for requirement extraction
-- **Property Matching**: AI-enhanced property recommendation system
-- **Payment Processing**: Secure mobile money payments via Paynow
-- **Provider Management**: Separate workflow for accommodation providers
-- **Analytics Dashboard**: Comprehensive metrics and insights
+- **Free accommodation search**: No payment or token purchase is required
+- **Natural-language requirements**: Users can describe what they need conversationally
+- **Property matching**: Search and recommendation based on budget, location, room configuration and amenities
+- **Booking workflow**: Users can select a property and submit a booking request
+- **Provider workflow**: Accommodation providers can respond to booking requests
+- **Booking confirmation**: The workflow supports provider responses and final confirmation
+- **Analytics**: Search and booking insights
 
 ### Security & Validation
-- **Rate Limiting**: Prevents spam and abuse
-- **Region Restriction**: Only available for Zimbabwe phone numbers
-- **Input Validation**: Comprehensive validation for all user inputs
-- **Conversation Tracking**: Security monitoring for suspicious activities
+- Rate limiting and abuse protection
+- Zimbabwe phone-number validation where applicable
+- Input validation
+- WhatsApp webhook signature validation
+- Conversation tracking and security monitoring
 
 ## Development Commands
 
-The project includes a Makefile with common development commands:
-
 ```bash
-# Start frontend development server
 make frontend
-
-# Start backend with ngrok for webhook testing
 make runserver
-
-# Create superuser
 make createsuperuser
-
-# Generate API key for frontend
 make GAK
 ```
 
-## Documentation
-
-- **[Backend Documentation](./backend/README.md)** - Detailed backend setup, API endpoints, and development guide
-- **[Frontend Documentation](./frontend/README.md)** - Frontend development guide and project structure
-
 ## Deployment
 
-### Backend (Render.com)
-The backend is configured for deployment on Render.com. The `render.yaml` file contains the deployment configuration.
-
-### Frontend (Vercel)
-The frontend is configured for deployment on Vercel with Next.js.
-
-## Environment Configuration
-
-See individual README files for detailed environment variable setup:
-- [Backend Environment Variables](./backend/README.md#environment-variables)
-- [Frontend Environment Variables](./frontend/README.md#environment-variables)
+The frontend is configured for Vercel/Next.js deployment. The existing Django backend can still run using the current deployment configuration while the broader Vercel/Supabase migration is completed.
 
 ## Testing
 
 ```bash
-# Backend tests
 cd backend
 python manage.py test
 
-# Frontend tests
-cd frontend
+cd ../frontend
 npm test
 ```
 
-## Contributing
+## Roadmap
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Stabilize free accommodation search
+2. Stabilize property selection and booking
+3. Stabilize provider responses and confirmations
+4. Complete the Vercel/Supabase backend migration
+5. Add observability and end-to-end diagnostics
+6. Design and implement payment architecture as a separate future phase
 
 ## License
 
