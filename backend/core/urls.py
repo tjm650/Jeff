@@ -4,11 +4,13 @@ from .views import (
     analytics_dashboard, conversation_analytics, property_analytics, revenue_analytics,
     download_documentation
 )
+from .whatsapp_diagnostics_view import whatsapp_diagnostics
 
 app_name = 'core'
 
 urlpatterns = [
     path('whatsapp/', whatsapp_webhook, name='whatsapp_webhook'),
+    path('whatsapp/diagnostics/', whatsapp_diagnostics, name='whatsapp_diagnostics'),
     path('health/', health_check, name='health_check'),
     path('status/', system_status, name='status'),
     path('payment/verify/', verify_payment, name='verify_payment'),
