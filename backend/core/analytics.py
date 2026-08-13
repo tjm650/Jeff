@@ -9,7 +9,7 @@ from datetime import timedelta
 from typing import Dict, List
 import logging
 
-from .models import Property, Token, Transaction, Conversation, Booking, Review
+from .models import Property, Conversation, Booking, Review
 
 logger = logging.getLogger(__name__)
 
@@ -26,8 +26,7 @@ class JeffAnalytics:
             
             # Basic counts
             total_properties = Property.objects.filter(is_active=True).count()
-            total_tokens = Token.objects.count()
-            total_transactions = Transaction.objects.count()
+
             total_conversations = Conversation.objects.count()
             
             # Recent activity
@@ -35,34 +34,12 @@ class JeffAnalytics:
                 last_message_at__gte=last_24h
             ).count()
             
-            recent_transactions = Transaction.objects.filter(
-                created_at__gte=last_24h
-            ).count()
             
             recent_bookings = Booking.objects.filter(
                 created_at__gte=last_24h
             ).count()
             
-            # Revenue metrics
-            total_revenue = Transaction.objects.aggregate(
-                total=Sum('amount')
-            )['total'] or 0
             
-            recent_revenue = Transaction.objects.filter(
-                created_at__gte=last_7d
-            ).aggregate(
-                total=Sum('amount')
-            )['total'] or 0
-            
-            # Token usage
-            active_tokens = Token.objects.filter(
-                is_active=True,
-                expires_at__gt=now
-            ).count()
-            
-            expired_tokens = Token.objects.filter(
-                expires_at__lte=now
-            ).count()
             
             # Property statistics
             avg_property_rating = Property.objects.aggregate(
@@ -76,24 +53,11 @@ class JeffAnalytics:
             return {
                 'overview': {
                     'total_properties': total_properties,
-                    'total_tokens': total_tokens,
-                    'total_transactions': total_transactions,
                     'total_conversations': total_conversations,
                 },
                 'recent_activity': {
                     'conversations_24h': recent_conversations,
-                    'transactions_24h': recent_transactions,
                     'bookings_24h': recent_bookings,
-                },
-                'revenue': {
-                    'total_revenue': float(total_revenue),
-                    'revenue_7d': float(recent_revenue),
-                    'avg_transaction_value': float(total_revenue / total_transactions) if total_transactions > 0 else 0,
-                },
-                'tokens': {
-                    'active_tokens': active_tokens,
-                    'expired_tokens': expired_tokens,
-                    'utilization_rate': (active_tokens / total_tokens * 100) if total_tokens > 0 else 0,
                 },
                 'properties': {
                     'avg_rating': round(avg_property_rating, 2),
@@ -225,57 +189,5 @@ class JeffAnalytics:
             logger.error(f"Error getting property analytics: {str(e)}")
             return {'error': str(e)}
     
-    def get_revenue_analytics(self, days: int = 30) -> Dict:
-        """Get revenue analytics for the last N days"""
-        try:
-            end_date = timezone.now()
-            start_date = end_date - timedelta(days=days)
-            
-            # Daily revenue
-            daily_revenue = Transaction.objects.filter(
-                created_at__gte=start_date,
-                status='verified'
-            ).extra(
-                select={'day': 'date(created_at)'}
-            ).values('day').annotate(
-                revenue=Sum('amount'),
-                count=Count('id')
-            ).order_by('day')
-            
-            # Payment method distribution
-            payment_methods = Transaction.objects.filter(
-                created_at__gte=start_date,
-                status='verified'
-            ).values('payment_method').annotate(
-                count=Count('id'),
-                revenue=Sum('amount')
-            ).order_by('-revenue')
-            
-            # Total metrics
-            total_revenue = Transaction.objects.filter(
-                created_at__gte=start_date,
-                status='verified'
-            ).aggregate(
-                total=Sum('amount')
-            )['total'] or 0
-            
-            total_transactions = Transaction.objects.filter(
-                created_at__gte=start_date,
-                status='verified'
-            ).count()
-            
-            return {
-                'period_days': days,
-                'daily_revenue': list(daily_revenue),
-                'payment_methods': list(payment_methods),
-                'total_revenue': float(total_revenue),
-                'total_transactions': total_transactions,
-                'avg_transaction_value': float(total_revenue / total_transactions) if total_transactions > 0 else 0
-            }
-            
-        except Exception as e:
-            logger.error(f"Error getting revenue analytics: {str(e)}")
-            return {'error': str(e)}
-
 # Global instance
 analytics = JeffAnalytics()

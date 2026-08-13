@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AccommodationProvider, Property, Token, Transaction, Booking, ConversationState, Review, Conversation
+from .models import AccommodationProvider, Property, Booking, ConversationState, Review, Conversation
 
 @admin.register(AccommodationProvider)
 class AccommodationProviderAdmin(admin.ModelAdmin):
@@ -71,53 +71,8 @@ class PropertyAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('provider')
 
-@admin.register(Token)
-class TokenAdmin(admin.ModelAdmin):
-    list_display = ['token_number', 'cell_number', 'remaining_uses', 'is_active', 'expires_at']
-    list_filter = ['is_active', 'expires_at', 'purchased_at']
-    search_fields = ['token_number', 'cell_number']
-    readonly_fields = ['id', 'token_number', 'purchased_at']
 
-    fieldsets = (
-        ('Token Information', {
-            'fields': ('token_number', 'cell_number')
-        }),
-        ('Usage', {
-            'fields': ('total_uses', 'used_count', 'is_active')
-        }),
-        ('Validity', {
-            'fields': ('purchased_at', 'expires_at')
-        }),
-        ('Transaction', {
-            'fields': ('transaction',)
-        }),
-    )
 
-    def get_queryset(self, request):
-        return super().get_queryset(request).select_related('transaction')
-
-@admin.register(Transaction)
-class TransactionAdmin(admin.ModelAdmin):
-    list_display = ['transaction_number', 'cell_number', 'amount', 'payment_method', 'status', 'created_at']
-    list_filter = ['status', 'payment_method', 'created_at']
-    search_fields = ['transaction_number', 'cell_number']
-    readonly_fields = ['id', 'transaction_number', 'created_at']
-
-    fieldsets = (
-        ('Transaction Information', {
-            'fields': ('transaction_number', 'cell_number', 'amount', 'payment_method')
-        }),
-        ('Payment Proof', {
-            'fields': ('pop_image',)
-        }),
-        ('Verification', {
-            'fields': ('pop_verified', 'status', 'verified_at')
-        }),
-        ('Timestamps', {
-            'fields': ('created_at',),
-            'classes': ('collapse',)
-        }),
-    )
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):

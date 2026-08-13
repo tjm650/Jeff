@@ -107,103 +107,6 @@ class Property(models.Model):
     def __str__(self):
         return f'{self.name}'
 
-class Token(models.Model):
-    """Token model for payment-based search access"""
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-    # User identification
-    cell_number = models.CharField(max_length=20, db_index=True)
-
-    # Token details
-    token_number = models.CharField(max_length=20, unique=True, db_index=True)
-    total_uses = models.PositiveIntegerField(default=1)
-    used_count = models.PositiveIntegerField(default=0)
-    is_active = models.BooleanField(default=True)
-
-    # Validity period
-    purchased_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField()
-
-    # Payment reference
-    transaction = models.OneToOneField('Transaction', on_delete=models.CASCADE, related_name='token')
-
-    class Meta:
-        indexes = [
-            models.Index(fields=['token_number']),
-            models.Index(fields=['cell_number']),
-            models.Index(fields=['is_active', 'expires_at']),
-        ]
-
-    def __str__(self):
-        return f'{self.token_number} - {self.remaining_uses()} uses left'
-
-    def remaining_uses(self):
-        """Calculate remaining token uses"""
-        return max(0, self.total_uses - self.used_count)
-
-    def is_valid(self):
-        """Check if token is valid for use"""
-        return (
-            self.is_active and
-            self.remaining_uses() > 0 and
-            timezone.now() <= self.expires_at
-        )
-
-    def use_token(self):
-        """Use one token count"""
-        if self.is_valid():
-            self.used_count += 1
-            self.save()
-            return True
-        return False
-
-class Transaction(models.Model):
-    """Transaction model for payment records"""
-    PAYMENT_METHODS = [
-        ('ecocash', 'EcoCash'),
-        ('paynow', 'Paynow'),
-    ]
-
-    STATUSES = [
-        ('pending', 'Pending'),
-        ('verified', 'Verified'),
-        ('failed ', 'failed '),
-    ]
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-    # User identification
-    cell_number = models.CharField(max_length=20, db_index=True)
-
-    # Transaction details
-    transaction_number = models.CharField(max_length=50, unique=True, db_index=True)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-
-    # Payment method
-    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
-
-    # Proof of payment
-    pop_image = models.ImageField(upload_to='proofs/', blank=True, null=True)
-
-    # Verification status
-    pop_verified = models.BooleanField(default=False)
-    status = models.CharField(max_length=20, choices=STATUSES, default='pending')
-
-    # Timestamps
-    created_at = models.DateTimeField(auto_now_add=True)
-    verified_at = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        ordering = ['-created_at']
-        indexes = [
-            models.Index(fields=['transaction_number']),
-            models.Index(fields=['cell_number']),
-            models.Index(fields=['status']),
-        ]
-
-    def __str__(self):
-        return f'{self.transaction_number} - ${self.amount}'
-
 class Booking(models.Model):
     """Booking model for accommodation bookings"""
     STATUSES = [
@@ -260,8 +163,6 @@ class ConversationState(models.Model):
     """Conversation state model for WhatsApp conversation flow"""
     STEPS = [
         ('inquiry', 'Inquiry'),
-        ('token_check', 'Token Check'),
-        ('payment', 'Payment'),
         ('property_selection', 'Property Selection'),
         ('booking_confirmation', 'Booking Confirmation'),
         ('additional_info', 'Additional Info'),

@@ -67,3 +67,4 @@ def twilio_webhook(request):
     except Exception as e:
         logger.error(f"Error in Twilio webhook: {str(e)}")
         return JsonResponse({'error': 'Internal server error'}, status=500)
+    

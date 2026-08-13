@@ -12,7 +12,6 @@ from datetime import timedelta
 
 from .models import Property, Booking, ConversationState, Conversation
 from .analytics import analytics
-from payment.payment_handler import payment_handler
 from whatsapp.whatsapp_handler import whatsapp_webhook as meta_whatsapp_webhook
 
 logger = logging.getLogger(__name__)
@@ -52,17 +51,6 @@ def process_text_message(cell_number: str, message: str) -> str:
         return " Sorry, I encountered an some problems. Please try again or send help for assistance."
 
 
-@require_http_methods(["POST"])
-def verify_payment(request):
-    """Payment verification endpoint"""
-    try:
-        # TODO: Implement payment verification logic
-        return JsonResponse({'status': 'not_implemented'})
-
-    except Exception as e:
-        logger.error(f'Payment verification error: {str(e)}')
-        return JsonResponse({'error': 'Internal server error'}, status=500)
-
 @require_http_methods(["GET"])
 def health_check(request):
     """Health check endpoint"""
@@ -99,8 +87,7 @@ def system_status(request):
         from .models import Property, Token, Transaction, Conversation
         stats = {
             'total_properties': Property.objects.filter(is_active=True).count(),
-            'active_tokens': Token.objects.filter(is_active=True).count(),
-            'total_transactions': Transaction.objects.count(),
+            
             'active_conversations': Conversation.objects.filter(
                 last_message_at__gte=timezone.now() - timedelta(hours=24)
             ).count()
@@ -174,26 +161,6 @@ def property_analytics(request):
             'status': 'error',
             'message': 'failed generating property analytics'
         }, status=500)
-
-@require_http_methods(["GET"])
-def revenue_analytics(request):
-    """Revenue analytics endpoint"""
-    try:
-        days = int(request.GET.get('days', 30))
-        data = analytics.get_revenue_analytics(days)
-        
-        return JsonResponse({
-            'status': 'ok',
-            'analytics': data,
-            'timestamp': timezone.now().isoformat()
-        })
-    except Exception as e:
-        logger.error(f"Revenue analytics error: {str(e)}")
-        return JsonResponse({
-            'status': 'error',
-            'message': 'failed generating revenue analytics'
-        }, status=500)
-
 
 @require_http_methods(["GET"])
 def download_documentation(request, filename):
