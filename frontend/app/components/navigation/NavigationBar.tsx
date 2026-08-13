@@ -67,14 +67,14 @@ const NavigationBar: React.FC = () => {
               >
                 Home
               </Link>
-              <Link
+              {/* <Link
                 href="/cart"
                 className={`${
                   pathname === "/cart" ? "text-[#1F4788]" : ""
                 } hover:text-[#1F4788] transition-colors duration-200`}
               >
                 Cart
-              </Link>
+              </Link> */}
               <Link
                 href="/privacy"
                 className={`${
@@ -242,7 +242,7 @@ const NavigationBar: React.FC = () => {
             >
               Home
             </Link>
-            <Link
+            {/* <Link
               href="/cart"
               className={`block ${
                 pathname === "/cart" ? "text-[#1F4788]" : "text-gray-900"
@@ -250,7 +250,7 @@ const NavigationBar: React.FC = () => {
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Cart
-            </Link>
+            </Link> */}
             <Link
               href="/privacy"
               className={`block ${
