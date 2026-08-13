@@ -1,0 +1,48 @@
+name: Finalize free source cleanup
+on:
+  push:
+    branches: [remove-payment-free-mode]
+permissions:
+  contents: write
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove remaining payment source references
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, shutil
+          payment_dir = Path('backend/payment')
+          if payment_dir.exists():
+              shutil.rmtree(payment_dir)
+          for path in [Path('supabase/functions/payment-webhook'), Path('supabase/functions/payment-initiate'), Path('frontend/app/controller/initiate')]:
+              if path.exists():
+                  shutil.rmtree(path)
+          p = Path('backend/backend/urls.py')
+          if p.exists():
+              s = p.read_text()
+              s = re.sub(r'^.*payment.*$\n?', '', s, flags=re.I|re.M)
+              p.write_text(s)
+          for p in [Path('backend/requirements.txt'), Path('requirements.txt')]:
+              if p.exists():
+                  p.write_text('\n'.join(x for x in p.read_text().splitlines() if 'paynow' not in x.lower()) + '\n')
+          for p in Path('backend').rglob('*.py'):
+              if 'payment' in p.parts or '__pycache__' in p.parts:
+                  continue
+              s = p.read_text(errors='ignore')
+              s = re.sub(r'^\s*(?:from|import) payment\..*\n', '', s, flags=re.M)
+              s = re.sub(r'^\s*from \.payment_integration import .*\n', '', s, flags=re.M)
+              p.write_text(s)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Remove remaining payment source code' || true
+          git push
+      - name: Verify no payment runtime references
+        run: |
+          set -e
+          ! grep -RniE --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=.next --exclude='*.md' 'paynow|PAYNOW|payment_integration|payment-webhook|payment-initiate|from payment|import payment' backend frontend supabase 2>/dev/null
+          python -m compileall -q backend
