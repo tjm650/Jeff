@@ -1,0 +1,30 @@
+name: Apply free-mode settings
+on:
+  push:
+    branches: [remove-payment-free-mode]
+permissions:
+  contents: write
+jobs:
+  settings:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove payment settings
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('backend/backend/settings.py')
+          s = p.read_text()
+          s = s.replace("    'payment',\n", '')
+          s = re.sub(r"\n\s*# Payment settings.*?(?=\n\s*# File upload settings)", "", s, flags=re.S)
+          s = re.sub(r"\n\s*'TOKEN_PRICE':.*?,", "", s)
+          s = re.sub(r"\n\s*'TOKEN_USES':.*?,", "", s)
+          s = s.replace("        'payment': {\n            'handlers': ['console', 'file'],\n            'level': 'INFO',\n            'propagate': False,\n        },\n", '')
+          p.write_text(s)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add backend/backend/settings.py
+          git commit -m 'Remove payment configuration from Django settings' || true
+          git push
