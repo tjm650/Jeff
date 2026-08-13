@@ -138,4 +138,4 @@ This project is proprietary software. All rights reserved.
 
 For questions or support, please contact the development team.
 
-<!-- Free-mode cleanup rerun -->
+<!-- Final free-mode verification -->
