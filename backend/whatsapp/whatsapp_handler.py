@@ -24,11 +24,12 @@ def _verify_meta_signature(request) -> bool:
         or ''
     )
     if not app_secret:
-        logger.warning('META_APP_SECRET not configured; skipping Meta signature verification')
-        return True
+        logger.error('META_APP_SECRET/META_WEBHOOK_SECRET is not configured')
+        return False
 
     signature = request.META.get('HTTP_X_HUB_SIGNATURE_256', '')
     if not signature:
+        logger.warning('Missing X-Hub-Signature-256 header')
         return False
 
     expected_signature = 'sha256=' + hmac.new(
@@ -39,62 +40,82 @@ def _verify_meta_signature(request) -> bool:
     return hmac.compare_digest(signature, expected_signature)
 
 
-def _extract_meta_message_data(request):
+def _parse_meta_payload(request):
     body = request.body.decode('utf-8') if getattr(request, 'body', b'') else ''
     if not body:
         return None
-
     try:
-        payload = json.loads(body)
+        return json.loads(body)
     except json.JSONDecodeError:
+        logger.warning('WhatsApp webhook contained invalid JSON')
         return None
+
+
+def _extract_events(payload):
+    """Return all message and status events from a Meta webhook payload."""
+    events = []
+    if not payload:
+        return events
 
     for entry in payload.get('entry', []):
         for change in entry.get('changes', []):
-            value = change.get('value', {})
-            messages = value.get('messages', [])
-            if not messages:
-                continue
+            value = change.get('value') or {}
+            metadata = value.get('metadata') or {}
 
-            message = messages[0]
-            from_number = (message.get('from') or '').strip()
-            text_body = ''
-            if message.get('text'):
-                text_body = (message.get('text', {}).get('body') or '').strip()
-            elif message.get('interactive'):
-                text_body = (
-                    message.get('interactive', {})
-                    .get('button_reply', {})
-                    .get('title', '')
-                    .strip()
-                )
+            for status in value.get('statuses', []) or []:
+                events.append({
+                    'type': 'status',
+                    'status': status.get('status'),
+                    'message_id': status.get('id'),
+                    'recipient_id': status.get('recipient_id'),
+                    'timestamp': status.get('timestamp'),
+                    'errors': status.get('errors') or [],
+                    'phone_number_id': metadata.get('phone_number_id'),
+                    'display_phone_number': metadata.get('display_phone_number'),
+                })
 
-            return {
-                'from_number': _normalize_phone_number(from_number),
-                'to_number': _normalize_phone_number(
-                    (value.get('metadata') or {}).get('display_phone_number', '')
-                ),
-                'message_body': text_body,
-                'media_url': '',
-            }
+            for message in value.get('messages', []) or []:
+                text_body = ''
+                if message.get('text'):
+                    text_body = (message.get('text', {}).get('body') or '').strip()
+                elif message.get('interactive'):
+                    interactive = message.get('interactive') or {}
+                    button_reply = interactive.get('button_reply') or {}
+                    list_reply = interactive.get('list_reply') or {}
+                    text_body = (button_reply.get('title') or list_reply.get('title') or '').strip()
 
-    return None
+                events.append({
+                    'type': 'message',
+                    'message_id': message.get('id'),
+                    'from_number': _normalize_phone_number(message.get('from', '')),
+                    'to_number': _normalize_phone_number(metadata.get('display_phone_number', '')),
+                    'message_body': text_body,
+                    'message_type': message.get('type', ''),
+                    'media_url': '',
+                })
+
+    return events
+
+
+def _send_text_response(to_number: str, message: str) -> bool:
+    from whatsapp.utils.whatsapp_service import whatsapp_service
+    return whatsapp_service.send_text_message(to_number, message)
 
 
 @csrf_exempt
 def whatsapp_webhook(request):
-    """Handle inbound WhatsApp messages for the free Jeff workflow."""
+    """Handle Meta WhatsApp verification, inbound messages, and status callbacks."""
     if request.method == 'GET':
         mode = request.GET.get('hub.mode', '')
         verify_token = request.GET.get('hub.verify_token', '')
         challenge = request.GET.get('hub.challenge', '')
-        expected_token = (
-            dj_settings.JEFF_SETTINGS.get('META_VERIFY_TOKEN')
-            or dj_settings.JEFF_SETTINGS.get('WEBHOOK_SECRET')
-            or ''
-        )
-        if mode == 'subscribe' and verify_token and challenge and verify_token == expected_token:
+        expected_token = dj_settings.JEFF_SETTINGS.get('META_VERIFY_TOKEN') or ''
+
+        if mode == 'subscribe' and challenge and verify_token == expected_token:
+            logger.info('WhatsApp webhook verification succeeded')
             return HttpResponse(challenge, content_type='text/plain')
+
+        logger.warning('WhatsApp webhook verification failed')
         return HttpResponse('Forbidden', status=403)
 
     if request.method != 'POST':
@@ -104,17 +125,72 @@ def whatsapp_webhook(request):
         if not _verify_meta_signature(request):
             return JsonResponse({'status': 'error', 'message': 'Invalid signature'}, status=403)
 
-        message_data = _extract_meta_message_data(request)
-        if not message_data:
-            return JsonResponse({'status': 'error', 'message': 'Empty request'}, status=400)
+        payload = _parse_meta_payload(request)
+        events = _extract_events(payload)
 
-        if not message_data['from_number']:
-            return JsonResponse({'status': 'error', 'message': 'Missing sender number'}, status=400)
+        # Meta sends status-only callbacks for outbound messages. These are valid
+        # webhooks and must be acknowledged with 200, not treated as empty messages.
+        if not events:
+            logger.info('WhatsApp webhook acknowledged: no message/status events')
+            return JsonResponse({'status': 'ok', 'action': 'acknowledged'})
 
-        if message_data['media_url']:
-            return handle_media_message(message_data)
+        processed = []
+        for event in events:
+            if event['type'] == 'status':
+                logger.info(
+                    'WhatsApp outbound status: id=%s status=%s recipient=%s errors=%s',
+                    event['message_id'], event['status'], event['recipient_id'], event['errors'],
+                )
+                processed.append({
+                    'type': 'status',
+                    'message_id': event['message_id'],
+                    'status': event['status'],
+                })
+                continue
 
-        return handle_accommodation_request(message_data)
+            from_number = event['from_number']
+            message_body = event['message_body']
+            logger.info(
+                'WhatsApp inbound message: id=%s from=%s type=%s',
+                event['message_id'], from_number, event['message_type'],
+            )
+
+            if not from_number:
+                logger.warning('WhatsApp message missing sender number')
+                continue
+
+            if event['media_url']:
+                processed.append({'type': 'media', 'message_id': event['message_id']})
+                continue
+
+            if not message_body:
+                sent = _send_text_response(
+                    from_number,
+                    'Please send your accommodation requirements so I can search for you.',
+                )
+                processed.append({
+                    'type': 'message',
+                    'message_id': event['message_id'],
+                    'response_sent': sent,
+                })
+                continue
+
+            from core.services.conversation_workflow import ConversationWorkflow
+            workflow = ConversationWorkflow()
+            response_message = workflow.process_message(from_number, message_body)
+            sent = _send_text_response(from_number, response_message)
+            logger.info(
+                'WhatsApp response: inbound_id=%s sent=%s response_length=%s',
+                event['message_id'], sent, len(response_message or ''),
+            )
+            processed.append({
+                'type': 'message',
+                'message_id': event['message_id'],
+                'response_sent': sent,
+            })
+
+        # Always acknowledge successfully after valid Meta payload handling.
+        return JsonResponse({'status': 'ok', 'processed': processed})
 
     except Exception as exc:
         logger.error('[ERROR] Exception in WhatsApp webhook: %s', exc, exc_info=True)
@@ -122,29 +198,14 @@ def whatsapp_webhook(request):
 
 
 def handle_accommodation_request(message_data):
-    """Route every user message into the free accommodation workflow."""
+    """Backward-compatible helper for callers that use the old interface."""
     from core.services.conversation_workflow import ConversationWorkflow
-    from whatsapp.utils.whatsapp_service import whatsapp_service
 
     from_number = message_data['from_number']
     message_body = message_data['message_body']
-
-    if not message_body or not message_body.strip():
-        whatsapp_service.send_text_message(
-            from_number,
-            'Please send your accommodation requirements so I can search for you.'
-        )
-        return JsonResponse({'status': 'success', 'action': 'empty_message'})
-
-    workflow = ConversationWorkflow()
-    response_message = workflow.process_message(from_number, message_body)
-    whatsapp_service.send_text_message(from_number, response_message)
-    return JsonResponse({
-        'status': 'success',
-        'action': 'accommodation_request',
-        'response_length': len(response_message),
-        'mode': 'free',
-    })
+    response_message = ConversationWorkflow().process_message(from_number, message_body)
+    sent = _send_text_response(from_number, response_message)
+    return JsonResponse({'status': 'success', 'action': 'accommodation_request', 'response_sent': sent})
 
 
 def handle_media_message(message_data):
