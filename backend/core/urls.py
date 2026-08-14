@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
-    whatsapp_webhook, verify_payment, health_check, system_status,
-    analytics_dashboard, conversation_analytics, property_analytics, revenue_analytics,
+    whatsapp_webhook, health_check, system_status,
+    analytics_dashboard, conversation_analytics, property_analytics,
     download_documentation
 )
 
