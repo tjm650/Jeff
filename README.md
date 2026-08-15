@@ -23,7 +23,7 @@ Payment architecture will be reintroduced later as a separate, deliberate featur
 - **Database**: SQLite for development, PostgreSQL for production
 - **Real-time Communication**: Channels and WebSockets
 - **AI Services**: OpenAI, Google Gemini, and Anthropic integrations for NLP processing
-- **WhatsApp Integration**: WhatsApp/Meta and Twilio support
+- **WhatsApp Integration**: Meta WhatsApp Cloud API
 - **Matching**: Property search and recommendation workflow
 - **Bookings**: Provider-facing booking and confirmation workflow
 
@@ -31,6 +31,41 @@ Payment architecture will be reintroduced later as a separate, deliberate featur
 - **Framework**: Next.js with TypeScript
 - **Styling**: Tailwind CSS
 - **Animation**: Motion library
+
+### WhatsApp transport
+
+Meta WhatsApp Cloud API is the only supported production WhatsApp transport.
+
+The public Meta webhook is owned by the Supabase Edge Function `whatsapp-webhook`.
+
+The webhook:
+1. verifies the Meta signature;
+2. records every inbound/status event in Supabase;
+3. deduplicates Meta retries by event key;
+4. records inbound/outbound message state;
+5. invokes the existing JEFF conversation engine;
+6. records Meta outbound message IDs and delivery states.
+
+The Django WhatsApp client remains available to domain workflows such as provider notifications, but it is Meta-only. It must not use Twilio credentials or Twilio Content SIDs.
+
+### Required server-side environment
+
+Meta/Supabase:
+- `WHATSAPP_VERIFY_TOKEN`
+- `WHATSAPP_APP_SECRET`
+- `WHATSAPP_ACCESS_TOKEN`
+- `WHATSAPP_PHONE_NUMBER_ID`
+- `WHATSAPP_GRAPH_VERSION` (optional)
+- `JEFF_CONVERSATION_FUNCTION_URL` (optional)
+
+Django provider notifications:
+- `META_ACCESS_TOKEN` or `WHATSAPP_ACCESS_TOKEN`
+- `META_PHONE_NUMBER_ID` or `WHATSAPP_PHONE_NUMBER_ID`
+- `META_API_VERSION`
+- `META_TEMPLATE_LANGUAGE`
+- `META_TEMPLATE_PROVIDER_INFO_RESPONSE`
+
+Do not configure or commit Twilio credentials for JEFF WhatsApp.
 
 ## Quick Start
 
@@ -41,27 +76,10 @@ Payment architecture will be reintroduced later as a separate, deliberate featur
 
 ### Development Setup
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd Jeff
-   ```
-
-2. **Set up the backend**
-   ```bash
-   cd backend
-   pip install -r requirements.txt
-   cp .env.example .env
-   python manage.py migrate
-   python manage.py runserver
-   ```
-
-3. **Set up the frontend**
-   ```bash
-   cd ../frontend
-   npm install
-   npm run dev
-   ```
+1. Clone the repository.
+2. Set up the backend with the project's environment configuration.
+3. Set up the frontend.
+4. For WhatsApp development, use Meta's test assets and a dedicated test number.
 
 ## Project Structure
 
@@ -71,13 +89,11 @@ Jeff/
 │   ├── core/                # Conversation, search, booking and shared logic
 │   ├── matching/            # Property matching algorithms
 │   ├── providers/           # Provider management and booking workflow
-│   └── whatsapp/            # WhatsApp integration
+│   └── whatsapp/            # Meta WhatsApp client and compatibility webhook
 ├── frontend/                # Next.js frontend application
 ├── supabase/                # Supabase functions and infrastructure
 ├── privacy/                 # Documentation and privacy policies
-├── Makefile                 # Development commands
-├── render.yaml              # Legacy backend deployment configuration
-└── README.md                # Project documentation
+└── README.md
 ```
 
 ## Key Features
@@ -97,29 +113,22 @@ Jeff/
 - Input validation
 - WhatsApp webhook signature validation
 - Conversation tracking and security monitoring
-
-## Development Commands
-
-```bash
-make frontend
-make runserver
-make createsuperuser
-make GAK
-```
+- Durable WhatsApp event/message tracing
 
 ## Deployment
 
-The frontend is configured for Vercel/Next.js deployment. The existing Django backend can still run using the current deployment configuration while the broader Vercel/Supabase migration is completed.
+The frontend is configured for Vercel/Next.js deployment. The Django backend can still run using the existing deployment configuration while the broader Vercel/Supabase migration is completed.
+
+The Meta WhatsApp callback must point to the deployed Supabase `whatsapp-webhook` Edge Function, not the legacy Django webhook.
 
 ## Testing
 
 ```bash
 cd backend
 python manage.py test
-
-cd ../frontend
-npm test
 ```
+
+For WhatsApp, test the real Meta webhook with a controlled phone number after deployment.
 
 ## Roadmap
 
@@ -127,7 +136,7 @@ npm test
 2. Stabilize property selection and booking
 3. Stabilize provider responses and confirmations
 4. Complete the Vercel/Supabase backend migration
-5. Add observability and end-to-end diagnostics
+5. Complete WhatsApp observability and end-to-end diagnostics
 6. Design and implement payment architecture as a separate future phase
 
 ## License
@@ -137,5 +146,3 @@ This project is proprietary software. All rights reserved.
 ## Contact
 
 For questions or support, please contact the development team.
-
-<!-- Final free-mode verification -->
