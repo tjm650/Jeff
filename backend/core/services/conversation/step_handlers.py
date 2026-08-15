@@ -13,7 +13,6 @@ from whatsapp.utils.whatsapp_service import whatsapp_service
 from providers.services.workflow import provider_workflow
 from .message_classifier import message_classifier
 from .property_search import property_search_handler
-from .payment_integration import payment_integration_handler
 from .help_utils import help_utils_handler
 from .nlp_processor import nlp_processor_handler
 from .utils import conversation_utils
@@ -27,7 +26,6 @@ class StepHandlers:
     def __init__(self):
         self.message_classifier = message_classifier
         self.property_search = property_search_handler
-        self.payment_integration = payment_integration_handler
         self.help_utils = help_utils_handler
         self.nlp_processor = nlp_processor_handler
         self.utils = conversation_utils
@@ -71,11 +69,6 @@ class StepHandlers:
             if requirements:
                 # Store requirements in conversation state
                 conversation.context_data['requirements'] = requirements
-                # Check token validity before proceeding
-                from payment.handlers.token import token_handler
-                valid_token = token_handler.get_valid_token(conversation.cell_number)
-                if not valid_token or not token_handler.validate_token_usage(valid_token):
-                    return self._show_payment_instructions(conversation)
                     
                 # Add invert_sort flag to sort properties with high prices at the top
                 requirements['invert_sort'] = True
@@ -83,11 +76,6 @@ class StepHandlers:
                 # Store requirements in conversation state regardless of token status
                 conversation.context_data['requirements'] = requirements
 
-                # Determine next step based on token validity
-                if not valid_token or not token_handler.validate_token_usage(valid_token):
-                    conversation.current_step = 'token_check'
-                    conversation.save()
-                    return self._show_payment_instructions(conversation)
                 
                 # Proceed to property search
                 # If period was auto-selected (not specified by user), show recommendation message first
@@ -321,34 +309,12 @@ class StepHandlers:
             logger.error(f"Error handling insights command: {str(e)}")
             return "Error retrieving insights. Please try again later."
 
-    def _handle_token_check_step(self, conversation: ConversationState, message: str) -> str:
-        """Step 2: Check if student has valid tokens"""
-        try:
-            # Check for abort command
-            if message.lower().strip() in ['abort', 'restart', 'start over', 'cancel']:
-                return self._reset_conversation(conversation)
-
-            # Check token validity
-            from payment.handlers.token import token_handler
-            valid_token = token_handler.get_valid_token(conversation.cell_number)
-            if valid_token and token_handler.validate_token_usage(valid_token):
-                return self._show_properties_and_payment_instructions(conversation, {})
-            else:
-                return self._show_payment_instructions(conversation)
-        except Exception as e:
-            logger.error(f"Error in token check step: {str(e)}")
-            return "Error checking tokens. Please try again."
 
     def _handle_property_listings_step(self, conversation: ConversationState, message: str) -> str:
         """Step 3: Handle property selection"""
         try:
             message = message.lower().strip()
 
-            # First check if user has a valid token
-            from payment.handlers.token import token_handler
-            valid_token = token_handler.get_valid_token(conversation.cell_number)
-            if not valid_token or not token_handler.validate_token_usage(valid_token):
-                return self._show_payment_instructions(conversation)
             
             # Check if user wants to see more properties
             if message == 'show-more':
@@ -423,26 +389,7 @@ class StepHandlers:
             # Extract name from "name-(user's name)" format
             name = self._extract_name_from_message(message)
             if name:
-                # First check and deduct token
-                from payment.handlers.token import token_handler
-                valid_token = token_handler.get_valid_token(conversation.cell_number)
-                
-                if not valid_token:
-                    return "No valid token found. Please purchase a token before proceeding with the booking."
-                    
-                if not token_handler.validate_token_usage(valid_token):
-                    return "Your token cannot be used. It may have expired or reached its usage limit. Please purchase a new token."
-
-                # Deduct token usage
-                try:
-                    valid_token.used_count += 1
-                    valid_token.save()
-                    logger.info(f"Token usage deducted for {conversation.cell_number}, new count: {valid_token.used_count}")
-                except Exception as e:
-                    logger.error(f"Error deducting token usage: {str(e)}")
-                    return "Error processing your token. Please try again or contact support."
-                    
-                # Create booking after successful token deduction
+                # Create booking without payment/token gating.
                 booking, is_new = self._create_booking(conversation, name.strip())
                 if booking:
                     if not is_new:
@@ -682,111 +629,7 @@ Response Time: {conversation.context_data['provider_response_timestamp']}
             logger.error(f"Error in cleanup step: {str(e)}")
             return "Error during cleanup."
 
-    def _show_properties_and_payment_instructions(self, conversation: ConversationState, requirements: Dict) -> str:
-        """Show properties and payment instructions"""
-        try:
-            # First check if user has a valid token
-            from payment.handlers.token import token_handler
-            valid_token = token_handler.get_valid_token(conversation.cell_number)
-            if not valid_token or not token_handler.validate_token_usage(valid_token):
-                return self._show_payment_instructions(conversation)
 
-            # If token is valid, proceed with property search
-            result = self.property_search.proceed_to_property_search(conversation, requirements)
-            if result:
-                if isinstance(result, str):
-                    logger.info(f"Property search completed with message for {conversation.cell_number}")
-                else:
-                    properties_count = len(conversation.context_data.get('search_results', [])) if conversation.context_data else 0
-                    logger.info(f"Property search completed for {conversation.cell_number}: Found {properties_count} properties")
-                return result
-            else:
-                # Import recommendation service from MCP integration
-                from ..mcp.integration import get_mcp_integration
-                mcp_integration = get_mcp_integration()
-                if mcp_integration and mcp_integration.recommendation_service:
-                    return mcp_integration.recommendation_service.generate_recommendation_summary(requirements)
-                else:
-                    # Fallback when MCP integration is not available
-                    return self._get_fallback_recommendation_message(requirements)
-        except Exception as e:
-            logger.error(f"Error showing properties: {str(e)}")
-            return "Error retrieving properties."
-
-    def _show_payment_instructions(self, conversation: ConversationState) -> str:
-        """Show payment instructions for token purchase or recommendations when no properties found"""
-        try:
-            # Get requirements from conversation context and search for properties
-            requirements = conversation.context_data.get('requirements', {}) if getattr(conversation, 'context_data', None) is not None else {}
-            
-            # Search for properties
-            try:
-                result = self.property_search.proceed_to_property_search(conversation, requirements)
-                if isinstance(result, str):
-                    # If we got a string result, check if it's a recommendation message (no properties found)
-                    logger.info(f"Property search returned message for {conversation.cell_number}: {result[:100]}")
-                    
-                    # If result contains recommendation/no properties message, return it directly
-                    # (these are generated by _get_no_properties_message with recommendations, no payment instructions)
-                    if "No Properties Found" in result or "No available Accommodation" in result or "No properties found matching" in result:
-                        logger.info(f"Returning no properties recommendation for {conversation.cell_number}")
-                        return result
-                    else:
-                        # Other error messages
-                        return result
-                else:
-                    # Properties were found - now check the count
-                    properties = conversation.context_data.get('search_results', [])
-                    properties_count = len(properties)
-                    logger.info(f"Property search completed for {conversation.cell_number}: Found {properties_count} properties")
-                    
-                    if properties_count == 0:
-                        # No properties found, should have been handled by proceed_to_property_search
-                        logger.warning(f"Unexpected: properties_count is 0 but no string result returned for {conversation.cell_number}")
-                        requirements_obj = conversation.context_data.get('search_requirements', {})
-                        return self.property_search._get_no_properties_message(requirements_obj, conversation.cell_number)
-            except Exception as e:
-                logger.error(f"Error searching for properties: {str(e)}")
-                return "Error searching for properties. Please try again."
-
-            # Properties found, show payment instructions header
-            properties_count = len(conversation.context_data.get('search_results', [])) if conversation.context_data else 0
-            
-            header = f"""*PROPERTY LISTINGS* 🏡
-*Properties Found:* {properties_count}
-• To view Property listing details and book accommodation, you need a token.\n
-"""
-
-            frontend_url = os.getenv('NEXT_PUBLIC_FRONTEND_URL')
-            instructions = (f"""*HOW TO PURCHASE A TOKEN*
-• Visit: {frontend_url}/cart
-
-• _*Questions*? Send 'help' anytime._
-• _Send 'Jeff' message for more info about the service, Terms & Privacy Policy of Jeff or visit {frontend_url}._
-• _After purchasing a token, send your accommodation requirements again to continue searching for properties._"""
-)
-
-            return header + instructions
-
-        except Exception as e:
-            logger.error(f"Error building payment instructions with listings: {str(e)}")
-            # Even in error case, try to get property count from context
-            properties_count = len(conversation.context_data.get('search_results', [])) if conversation.context_data else 0
-            
-            header = f"""*PROPERTY LISTINGS* 🏡
-*Properties Found:* {properties_count}
-• To view Property listing details and book accommodation, you need a token.\n
-"""
-
-            frontend_url = os.getenv('NEXT_PUBLIC_FRONTEND_URL')
-            token_instructions = f"""*HOW TO PURCHASE A TOKEN*
-• _Visit: {frontend_url}/cart._
-
-• _*Questions?* Send 'help' anytime._
-• _Send 'Jeff' message for more info about the service, Privacy Policy and Terms & Conditions of service._
-• _After purchasing a token, send your accommodation requirements again to continue searching for properties._"""
-
-            return header + token_instructions
 
     def _process_property_selection(self, conversation: ConversationState, selection: int) -> str:
         """Process property selection"""

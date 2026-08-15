@@ -1,0 +1,92 @@
+name: Payment cleanup (branch)
+
+on:
+  push:
+    branches: [cleanup/remove-payment-code]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: cleanup/remove-payment-code
+
+      - name: Remove obsolete payment runtime code
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re, shutil
+          root=Path('.')
+          def remove_method(text,name):
+              return re.sub(rf"\n    def {re.escape(name)}\(.*?(?=\n    def |\n# Global instance|\Z)","\n",text,flags=re.S)
+          for rel in ['backend/payment','backend/core/services/conversation/payment_integration.py','supabase/functions/payment-webhook','supabase/functions/payment-initiate','frontend/app/controller/initiate','frontend/app/pages/cart']:
+              p=root/rel
+              if p.exists(): shutil.rmtree(p) if p.is_dir() else p.unlink()
+          for p in root.rglob('__pycache__'):
+              if p.is_dir(): shutil.rmtree(p,ignore_errors=True)
+          for rel in ['backend/logs/django.log']:
+              p=root/rel
+              if p.exists(): p.unlink()
+          p=root/'backend/backend/settings.py'
+          if p.exists():
+              s=p.read_text().replace("    'payment',\n","")
+              s=re.sub(r"\n\s*# Payment settings.*?(?=\n\s*# File upload settings)","\n",s,flags=re.S)
+              s=re.sub(r"^\s*'(?:PAYNOW_[A-Z0-9_]+|TOKEN_PRICE(?:_USD|_ZWG)?|TOKEN_USES|PAYMENT_TIMEOUT_SECONDS)':.*\n","",s,flags=re.M)
+              p.write_text(s)
+          p=root/'backend/core/services/conversation_workflow.py'
+          if p.exists():
+              s=p.read_text(); s=re.sub(r"^from \.conversation\.payment_integration.*\n",'',s,flags=re.M); s=re.sub(r"^\s*self\.payment_integration = .*\n",'',s,flags=re.M); s=s.replace("        'token_check',       # Step 2: Token Check\n",""); s=re.sub(r"\n            elif message_classification == 'P':.*?(?=\n            elif message_classification == 'G':)","\n            elif message_classification == 'P':\n                message_classification = 'A'\n",s,flags=re.S); s=re.sub(r"\n            elif current_step == 'token_check':\n                return self\.step_handlers\._handle_token_check_step\(conversation, message\)","",s); s=re.sub(r"\n            elif current_step == 'payment_confirmation':\n                return self\.payment_integration\.handle_payment_confirmation_step\(conversation, message\)","",s)
+              for n in ['_handle_token_check_step','_handle_payment_request','_handle_payment_confirmation_step','_show_properties_and_payment_instructions','_show_payment_instructions']: s=remove_method(s,n)
+              p.write_text(s)
+          p=root/'backend/core/services/conversation/step_handlers.py'
+          if p.exists():
+              s=p.read_text(); s=re.sub(r"^from \.payment_integration.*\n",'',s,flags=re.M); s=re.sub(r"^\s*self\.payment_integration = .*\n",'',s,flags=re.M)
+              s=re.sub(r"\n                # Check token validity before proceeding\n                from payment\.handlers\.token import token_handler\n                valid_token = token_handler\.get_valid_token\(conversation\.cell_number\)\n                if not valid_token or not token_handler\.validate_token_usage\(valid_token\):\n                    return self\._show_payment_instructions\(conversation\)\n",'\n',s)
+              s=re.sub(r"\n                # Determine next step based on token validity\n                if not valid_token or not token_handler\.validate_token_usage\(valid_token\):\n                    conversation\.current_step = 'token_check'\n                    conversation\.save\(\)\n                    return self\._show_payment_instructions\(conversation\)\n",'\n',s)
+              s=re.sub(r"\n            # First check if user has a valid token\n            from payment\.handlers\.token import token_handler\n            valid_token = token_handler\.get_valid_token\(conversation\.cell_number\)\n            if not valid_token or not token_handler\.validate_token_usage\(valid_token\):\n                return self\._show_payment_instructions\(conversation\)\n",'\n',s)
+              s=re.sub(r"\n                # First check and deduct token.*?\n                # Create booking after successful token deduction\n",'\n                # Create booking without payment/token gating.\n',s,flags=re.S)
+              for n in ['_handle_token_check_step','_show_properties_and_payment_instructions','_show_payment_instructions']: s=remove_method(s,n)
+              p.write_text(s)
+          p=root/'backend/core/services/conversation/property_search.py'
+          if p.exists():
+              s=p.read_text()
+              s=re.sub(r"^\s*from payment\.handlers\.token import token_handler.*\n",'',s,flags=re.M)
+              s=re.sub(r"^\s*valid_token = token_handler\.get_valid_token\(cell_number\)\n\s*has_valid_token = valid_token and token_handler\.validate_token_usage\(valid_token\)\n",'',s,flags=re.M)
+              p.write_text(s)
+          p=root/'backend/core/services/conversation/__init__.py'
+          if p.exists(): p.write_text(re.sub(r"^.*payment_integration.*\n",'',p.read_text(),flags=re.M))
+          for p in root.rglob('*.py'):
+              if '.git' in p.parts or '__pycache__' in p.parts or p.name=='models.py': continue
+              s=p.read_text(errors='ignore'); s=re.sub(r"^\s*(?:from|import) payment(?:\.[\w_]+)*.*\n",'',s,flags=re.M); p.write_text(s)
+          PY
+
+      - name: Verify touched Python files
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile backend/backend/settings.py
+          python -m py_compile backend/core/services/conversation_workflow.py
+          python -m py_compile backend/core/services/conversation/step_handlers.py
+          python -m py_compile backend/core/services/conversation/property_search.py
+          python -m py_compile backend/core/services/conversation/__init__.py
+          ! git grep -nE 'from payment|import payment|payment_integration|payment-webhook|payment-initiate|token_handler|TOKEN_PRICE|TOKEN_USES|PAYNOW_' -- ':!.github/workflows/*' ':!*.md' ':!backend/core/migrations/*' ':!backend/payment/*'
+
+      - name: Commit cleanup
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --quiet && exit 0
+          git commit -m 'refactor: remove obsolete payment and token runtime code'
+          git push origin HEAD:cleanup/remove-payment-code

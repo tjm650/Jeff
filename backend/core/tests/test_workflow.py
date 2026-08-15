@@ -25,8 +25,6 @@ from core.models import (
 )
 from core.services.conversation_workflow import ConversationWorkflow
 from core.services.booking_workflow import BookingWorkflow
-from payment.token_service import token_service
-from payment.payment_handler import payment_handler
 
 
 def create_test_data():

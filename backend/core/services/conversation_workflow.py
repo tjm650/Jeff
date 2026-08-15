@@ -23,7 +23,6 @@ from core.models import ConversationState, AccommodationProvider
 # Import specialized conversation components
 from .conversation.message_classifier import message_classifier
 from .conversation.property_search import property_search_handler
-from .conversation.payment_integration import payment_integration_handler
 from .conversation.help_utils import help_utils_handler
 from .conversation.nlp_processor import nlp_processor_handler
 from .conversation.utils import conversation_utils
@@ -38,7 +37,6 @@ class ConversationWorkflow:
     # Conversation steps as per PDF specification
     STEPS = [
         'inquiry',           # Step 1: Student Inquiry
-        'token_check',       # Step 2: Token Check
         'property_listings', # Step 3: Show Property Listings
         'name_collection',   # Step 4: Collect user name for booking
         'booking_request',   # Step 5: Booking Request
@@ -54,7 +52,6 @@ class ConversationWorkflow:
         # Initialize specialized components
         self.message_classifier = message_classifier
         self.property_search = property_search_handler
-        self.payment_integration = payment_integration_handler
         self.help_utils = help_utils_handler
         self.nlp_processor = nlp_processor_handler
         self.utils = conversation_utils
@@ -123,9 +120,7 @@ class ConversationWorkflow:
                 return self.help_utils.get_comprehensive_help_message()
 
             elif message_classification == 'P':
-                # Payment message - handle payment request directly
-                logger.info(f"Payment message detected for {cell_number}")
-                return self.payment_integration.handle_payment_request(conversation, message)
+                message_classification = 'A'
 
             elif message_classification == 'G':
                 # Greeting message - handle with enhanced greeting flow
@@ -218,8 +213,6 @@ class ConversationWorkflow:
 
             if current_step == 'inquiry':
                 return self.step_handlers._handle_inquiry_step(conversation, message)
-            elif current_step == 'token_check':
-                return self.step_handlers._handle_token_check_step(conversation, message)
             elif current_step == 'property_listings':
                 return self.step_handlers._handle_property_listings_step(conversation, message)
             elif current_step == 'name_collection':
@@ -232,8 +225,6 @@ class ConversationWorkflow:
                 return self.step_handlers._handle_info_request_step(conversation, message)
             elif current_step == 'booking_confirmation':
                 return self.step_handlers._handle_booking_confirmation_step(conversation, message)
-            elif current_step == 'payment_confirmation':
-                return self.payment_integration.handle_payment_confirmation_step(conversation, message)
             elif current_step == 'cleanup':
                 return self.step_handlers._handle_cleanup_step(conversation, message)
             else:
@@ -266,33 +257,12 @@ class ConversationWorkflow:
         """Step 1: Handle student inquiry with comprehensive NLP processing"""
         return self.step_handlers._handle_inquiry_step(conversation, message)
 
-    def _handle_token_check_step(self, conversation: ConversationState, message: str) -> str:
-        """Step 2: Check if student has valid tokens"""
-        return self.step_handlers._handle_token_check_step(conversation, message)
 
-    def _handle_payment_request(self, conversation: ConversationState, message: str) -> str:
-        """Handle payment request in format '{CURRENCY} PAY {payment_number}'"""
-        return self.payment_integration.handle_payment_request(conversation, message)
 
-    def _handle_payment_confirmation_step(self, conversation: ConversationState, message: str) -> str:
-        """Handle payment confirmation step"""
-        return self.payment_integration.handle_payment_confirmation_step(conversation, message)
 
     def _proceed_to_property_search(self, conversation: ConversationState, requirements: Dict) -> str:
         """Proceed with property search using enhanced NLP requirements"""
         return self.property_search.proceed_to_property_search(conversation, requirements)
-
-    def _show_properties_and_payment_instructions(self, conversation: ConversationState, requirements: Dict) -> str:
-        """Show properties found count and payment instructions together"""
-        # This method is now handled in step_handlers
-        return self.step_handlers._show_properties_and_payment_instructions(conversation, requirements)
-
-    def _show_payment_instructions(self, conversation: ConversationState) -> str:
-        """Show payment instructions for token purchase (matches PDF specification)"""
-        # This method is now handled in step_handlers
-        return self.step_handlers._show_payment_instructions(conversation)
-
-
 
 
 
@@ -376,8 +346,6 @@ class ConversationWorkflow:
 
     def handle_payment_webhook(self, payment_data: Dict) -> Dict:
         """Handle payment webhook from PayNow and update conversation workflow"""
-        from payment.models import Payment
-        from payment.utils.payment_processor import payment_processor
 
         try:
             # Extract payment reference
