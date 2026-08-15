@@ -1,0 +1,1 @@
+Trigger payment cleanup verification after the workflow was hardened.
