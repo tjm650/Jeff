@@ -1,28 +1,20 @@
-"""
-Conversation workflow components for modular conversation processing
+"""Legacy conversation components retained only for Django compatibility.
 
-This module contains specialized components for different aspects of conversation processing:
-- Message classification and routing
-- Property search and formatting
-- Payment handling integration
-- Help and utility functions
-- NLP processing and validation
-- Conversation utilities
+Production WhatsApp traffic is handled by Supabase Edge Functions. The legacy
+property-search shadow hook is intentionally removed because Supabase is now the
+single property-search authority.
 """
 
 from .message_classifier import message_classifier
 from .property_search import property_search_handler
-from .property_search_shadow import install_property_search_shadow
 from .help_utils import help_utils_handler
 from .nlp_processor import nlp_processor_handler
 from .utils import conversation_utils
 
-install_property_search_shadow(property_search_handler)
-
 __all__ = [
-    'message_classifier',
-    'property_search_handler',
-    'help_utils_handler',
-    'nlp_processor_handler',
-    'conversation_utils'
+    "message_classifier",
+    "property_search_handler",
+    "help_utils_handler",
+    "nlp_processor_handler",
+    "conversation_utils",
 ]
