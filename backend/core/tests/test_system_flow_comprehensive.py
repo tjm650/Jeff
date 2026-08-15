@@ -42,7 +42,6 @@ from core.models import (
 )
 from core.services.conversation_workflow import ConversationWorkflow
 from matching.property_matcher import property_matcher
-from payment.token_service import token_service
 from whatsapp.utils.whatsapp_service import whatsapp_service
 from core.services.mcp import mcp_integration
 
