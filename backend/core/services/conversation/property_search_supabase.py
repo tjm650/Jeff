@@ -2,7 +2,7 @@
 import json
 import logging
 import os
-import urllib.error
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 from typing import Dict, List, Optional
@@ -25,18 +25,14 @@ def _post_json(url: str, payload: Dict, timeout: float = 8.0) -> Dict:
     request = urllib.request.Request(
         url,
         data=json.dumps(payload).encode("utf-8"),
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {key}",
-            "apikey": key,
-        },
+        headers={"Content-Type": "application/json", "Authorization": f"Bearer {key}", "apikey": key},
         method="POST",
     )
     with urllib.request.urlopen(request, timeout=timeout) as response:
         return json.loads(response.read().decode("utf-8"))
 
 
-def _rest(method: str, table: str, payload: Optional[Dict] = None, query: str = "") -> Dict:
+def _rest(method: str, table: str, payload: Optional[Dict] = None, query: str = ""):
     base = _supabase_url()
     key = _supabase_key()
     if not base or not key:
@@ -60,7 +56,7 @@ def _rest(method: str, table: str, payload: Optional[Dict] = None, query: str = 
 
 
 class SupabasePropertySearch:
-    """Small compatibility layer with no Django ORM/model dependency."""
+    """Compatibility layer with no Django ORM/model dependency."""
 
     def search(self, requirements: Dict, limit: int = 5) -> List[Dict]:
         result = _post_json(
@@ -72,12 +68,13 @@ class SupabasePropertySearch:
     def save_search_state(self, phone_number: str, requirements: Dict, properties: List[Dict]) -> Optional[Dict]:
         if not phone_number:
             return None
+        encoded_phone = urllib.parse.quote(phone_number, safe="")
         rows = _rest(
             "GET",
             "conversations",
             query=(
                 "?select=id,current_step,context_data,selected_properties"
-                f"&phone_number=eq.{urllib.parse.quote(phone_number, safe='')}"
+                f"&phone_number=eq.{encoded_phone}"
                 "&status=eq.active&order=updated_at.desc&limit=1"
             ),
         )
