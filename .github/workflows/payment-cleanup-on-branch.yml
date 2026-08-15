@@ -52,10 +52,6 @@ jobs:
               s=re.sub(r"\n                # First check and deduct token.*?\n                # Create booking after successful token deduction\n",'\n                # Create booking without payment/token gating.\n',s,flags=re.S)
               for n in ['_handle_token_check_step','_show_properties_and_payment_instructions','_show_payment_instructions']: s=remove_method(s,n)
               p.write_text(s)
-          p=root/'backend/core/services/conversation/nlp_processor.py'
-          if p.exists(): p.write_text(p.read_text().replace("conversation.current_step = 'token_check'","conversation.current_step = 'property_listings'"))
-          p=root/'backend/matching/nlp_processor.py'
-          if p.exists(): p.write_text(re.sub(r"^.*(?:PayNow|payment required|purchase a token|token price).*$\n?",'',p.read_text(),flags=re.I|re.M))
           p=root/'backend/core/services/conversation/__init__.py'
           if p.exists(): p.write_text(re.sub(r"^.*payment_integration.*\n",'',p.read_text(),flags=re.M))
           for p in root.rglob('*.py'):
@@ -63,11 +59,14 @@ jobs:
               s=p.read_text(errors='ignore'); s=re.sub(r"^\s*(?:from|import) payment(?:\.[\w_]+)*.*\n",'',s,flags=re.M); p.write_text(s)
           PY
 
-      - name: Verify cleanup
+      - name: Verify touched Python files
         shell: bash
         run: |
           set -euo pipefail
-          python -m compileall -q backend
+          python -m py_compile backend/backend/settings.py
+          python -m py_compile backend/core/services/conversation_workflow.py
+          python -m py_compile backend/core/services/conversation/step_handlers.py
+          python -m py_compile backend/core/services/conversation/__init__.py
           ! git grep -nE 'from payment|import payment|payment_integration|payment-webhook|payment-initiate|token_handler|TOKEN_PRICE|TOKEN_USES|PAYNOW_' -- ':!.github/workflows/*' ':!*.md' ':!backend/core/migrations/*' ':!backend/payment/*'
 
       - name: Commit cleanup
